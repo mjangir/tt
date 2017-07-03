@@ -18,21 +18,10 @@ router.post('/', function(req, res, next)
 
   // Validate all body parameters
   req.checkBody({
-   'firstName': {
+   'name': {
       notEmpty: {
         args: true,
-        errorMessage: 'First Name cannot be empty',
-      },
-      isLength: {
-        options: [{ min: 1, max: 30 }],
-        errorMessage: 'First Name must be between 1 to 30 characters'
-      }
-    },
-    'lastName': {
-      optional: true,
-      isLength: {
-        options: [{ min: 1, max: 30 }],
-        errorMessage: 'Last Name must be between 1 to 30 characters'
+        errorMessage: 'Name cannot be empty',
       }
     },
     'email': {
