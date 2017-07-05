@@ -9,10 +9,10 @@ import expressConf from './config/express';
 import routesConf from './routes';
 
 // Populate databases with sample data
-if(config.seedDB)
-{
-	require('./config/seed');
-}
+// if(config.seedDB)
+// {
+// 	require('./config/seed');
+// }
 
 // Setup express web server and socket.io
 const app 		= express();
@@ -35,7 +35,7 @@ function startServer()
 }
 
 // Sync Sequelize Database
-sqldb.sequelize.sync()
+sqldb.sequelize.sync({force: true})
   .then(startServer)
   .catch(function(err)
   {
