@@ -46,7 +46,65 @@ const index = function(req, res)
  */
 const update = function(req, res)
 {
+  logger.debug("Updating user profile");
 
+  User.find({
+    where: {
+      id: req.user.user_id
+    }
+  })
+  .then((function saveUpdates(updates)
+  {
+    return function(entity)
+    {
+      return entity.updateAttributes(updates)
+        .then(function(updated)
+        {
+          return res.status(200).json({
+            'status': 'success',
+            'message': 'Profile updated successfully',
+            'data': updated.get({plain: true})
+          });
+        });
+    };
+  }(req.body)))
+  .catch(sequelizeErrorHandler(res));
+};
+
+/**
+ * Update avatar
+ *
+ * @param  {Object} req
+ * @param  {Object} res
+ * @return {*}
+ */
+const avatar = function(req, res)
+{
+  if(req.file && req.file.filename)
+  {
+    User.find({
+      where: {
+        id: req.user.user_id
+      }
+    })
+    .then((function savePicture(filename)
+    {
+      return function(entity)
+      {
+        return entity.updateAttributes({image: filename})
+          .then(function(updated)
+          {
+            const image = updated.get({plain: true}).image;
+            return res.status(200).json({
+              'status': 'success',
+              'message': 'Profile picture successfully',
+              'avatar_url': image
+            });
+          });
+      };
+    }(req.file.filename)))
+    .catch(sequelizeErrorHandler(res));
+  }
 };
 
 /**
@@ -110,6 +168,7 @@ const changePassword = function(req, res, next)
 export default {
   index,
   update,
+  avatar,
   statistics,
   changePassword
 }

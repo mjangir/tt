@@ -16,7 +16,7 @@ router.post('/', function(req, res, next)
 
     if(error)
     {
-      logger.debug('LOGIN::Send all authencation errors in JSON response...');
+      logger.debug(error);
 
       return res.status(error.code).json(error);
     }

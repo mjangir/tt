@@ -4,7 +4,7 @@ import express from 'express';
 import sqldb from './sqldb';
 import config from './config/environment';
 import http from 'http';
-import socketioConf from './config/socketio';
+import socketioConf from './sockets';
 import expressConf from './config/express';
 import routesConf from './routes';
 
@@ -18,8 +18,8 @@ if(config.seedDB)
 const app 		= express();
 const server 	= http.createServer(app);
 const socketio 	= require('socket.io')(server, {
-  serveClient: config.env !== 'production',
-  path: '/socket.io-client'
+  serveClient : config.env !== 'production',
+  path        : '/ticktock/socket.io'
 });
 socketioConf(socketio);
 expressConf(app);

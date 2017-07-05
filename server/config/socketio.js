@@ -3,6 +3,8 @@
 import config from './environment';
 import {register as registerUserSocket} from '../api/user/user.socket';
 
+var time = 60;
+
 // When the user disconnects.. perform this
 function onDisconnect(socket)
 {
@@ -17,6 +19,13 @@ function onConnect(socket)
   {
     socket.log(JSON.stringify(data, null, 2));
   });
+
+
+
+setInterval(function(){
+socket.emit('message', 'Time is ' + --time);
+}, 1000);
+
 
   // Importing all model sockets
   registerUserSocket(socket);

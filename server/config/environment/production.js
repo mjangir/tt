@@ -31,7 +31,7 @@ module.exports = {
           username  : 'root',
           password  : 'root'
         },
-        write : { 
+        write : {
           host      : 'localhost',
           username  : 'root',
           password  : 'root'

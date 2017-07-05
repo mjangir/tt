@@ -9,6 +9,9 @@ export default function(app)
   app.use('/api/me', require('./api/me'));
   app.use('/auth', require('./auth'));
 
+  // Static contents route
+  app.use('/api/static', require('./api/static'));
+
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth)/*')
    .get(errors[404]);

@@ -21,6 +21,7 @@ import liveErrorHandler from '../utils/LiveErrorHandler';
 import expressValidator from 'express-validator';
 import ejs from 'ejs';
 import connectLiveReload from 'connect-livereload';
+import cors from 'cors';
 
 export default function(app)
 {

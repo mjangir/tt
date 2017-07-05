@@ -1,5 +1,7 @@
 'use strict';
 
+import multer from 'multer';
+import path from 'path';
 import * as constants from '../../config/constants';
 
 /**
@@ -25,7 +27,7 @@ export const index = function(request, response, next)
  */
 export const update = function(request, response, next)
 {
-
+console.log(request.body.name);
   let errors = [];
 
   // Validate all body parameters
@@ -35,12 +37,6 @@ export const update = function(request, response, next)
         args: true,
         errorMessage: 'Name cannot be empty',
       }
-    },
-    'email': {
-      isEmail: {
-        args: true,
-        errorMessage: 'Email is not valid'
-      },
     }
   });
 
@@ -125,4 +121,22 @@ export const changePassword = function(request, response, next)
 export const statistics = function(request, response, next)
 {
   next();
+};
+
+/**
+ * Validations for update avatar
+ *
+ * @param  {Object}   request
+ * @param  {Object}   response
+ * @param  {Function} next
+ * @return {*}
+ */
+export const avatar = function(request, response, next)
+{
+  // Upload the file
+  const upload = multer({
+    dest: path.join(__dirname, '../../uploads/users/' + request.user.user_id)
+  });
+
+  next(upload.single('name'));
 };
