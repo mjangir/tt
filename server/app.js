@@ -35,7 +35,7 @@ function startServer()
 }
 
 // Sync Sequelize Database
-sqldb.sequelize.sync({force: true})
+sqldb.sequelize.sync()
   .then(startServer)
   .catch(function(err)
   {

@@ -13,7 +13,7 @@ router.get('/profile', [auth.isAuthenticated(), validators.index], controller.in
 
 router.put('/profile', [auth.isAuthenticated(), validators.update], controller.update);
 
-router.post('/avatar', [auth.isAuthenticated(), userAvatarMulter().single('name')], controller.avatar);
+router.post('/avatar', [auth.isAuthenticated(), userAvatarMulter().single('photo')], controller.avatar);
 
 router.put('/change-password', [auth.isAuthenticated(), validators.changePassword], controller.changePassword);
 

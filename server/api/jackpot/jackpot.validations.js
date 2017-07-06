@@ -2,13 +2,27 @@
 
 import * as constants from '../../config/constants';
 
-// Validate get all jackpot request
+/**
+ * Validations For Get All Jackpots
+ *
+ * @param  {Object}   request
+ * @param  {Object}   response
+ * @param  {Function} next
+ * @return {*}
+ */
 export const index = function(request, response, next)
 {
   next();
 }
 
-// Validate get a single jackpot request
+/**
+ * Validations For Show Single Jackpot
+ *
+ * @param  {Object}   request
+ * @param  {Object}   response
+ * @param  {Function} next
+ * @return {*}
+ */
 export const show = function(request, response, next)
 {
 
@@ -21,7 +35,8 @@ export const show = function(request, response, next)
   errors = request.validationErrors();
 
   // Send errors as JSON response if any
-  if(errors) {
+  if(errors)
+  {
     response.status(400);
     response.json({
       status: 'error',
@@ -36,8 +51,15 @@ export const show = function(request, response, next)
   next();
 }
 
-// Validate create or update jackpot request
-export const createOrUpdate = function(request, response, next) {
+/**
+ * Validations For Create Jackpot
+ *
+ * @param  {Object}   request
+ * @param  {Object}   response
+ * @param  {Function} next
+ * @return {*}
+ */
+export const create = function(request, response, next) {
 
   let errors = null;
 
@@ -48,8 +70,13 @@ export const createOrUpdate = function(request, response, next) {
       errorMessage: 'Jackpot Title cannot be empty'
     },
     'amount': {
-      notEmpty: true,
-      errorMessage: 'Jackpot Amount cannot be empty'
+      notEmpty: {
+        args: true,
+        errorMessage: 'Jackpot Amount cannot be empty',
+      },
+      isInt: {
+        errorMessage: 'Jackpot Amount must be numeric value'
+      }
     },
     'gameClockTime': {
       isInt: {
@@ -67,7 +94,8 @@ export const createOrUpdate = function(request, response, next) {
   errors = request.validationErrors();
 
   // Send errors as JSON response if any
-  if(errors) {
+  if(errors)
+  {
     response.status(422);
     response.json({
       status: 'error',
@@ -85,7 +113,64 @@ export const createOrUpdate = function(request, response, next) {
   next();
 }
 
-// Validate delete jackpot request
+/**
+ * Validations For Update Jackpot
+ *
+ * @param  {Object}   request
+ * @param  {Object}   response
+ * @param  {Function} next
+ * @return {*}
+ */
+export const update = function(request, response, next) {
+
+  let errors = null;
+
+  request.checkBody({
+   'title': {
+      notEmpty: true,
+      errorMessage: 'Jackpot Title cannot be empty'
+    },
+    'amount': {
+      notEmpty: {
+        args: true,
+        errorMessage: 'Jackpot Amount cannot be empty',
+      },
+      isInt: {
+        errorMessage: 'Jackpot Amount must be numeric value'
+      }
+    }
+  });
+
+  // Get all error messages
+  errors = request.validationErrors();
+
+  // Send errors as JSON response if any
+  if(errors)
+  {
+    response.status(422);
+    response.json({
+      status: 'error',
+      code: constants.VALIDATION_ERROR.code,
+      message: constants.VALIDATION_ERROR.message,
+      errors
+    }).end();
+    return null;
+  }
+
+  request.body.updatedBy = request.user.user_id;
+
+  // Pass to the next middleware
+  next();
+}
+
+/**
+ * Delete Jackpot
+ *
+ * @param  {Object}   request
+ * @param  {Object}   response
+ * @param  {Function} next
+ * @return {*}
+ */
 export const destroy = function(request, response, next) {
 
   let errors = null;
@@ -97,7 +182,8 @@ export const destroy = function(request, response, next) {
   errors = request.validationErrors();
 
   // Send errors as JSON response if any
-  if(errors) {
+  if(errors)
+  {
     response.status(400);
     response.json({
       status: 'error',

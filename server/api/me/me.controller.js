@@ -21,14 +21,14 @@ const index = function(req, res)
   User.find({
     where: {
       id: req.user.user_id
+    },
+    attributes: {
+        exclude: ['password', 'salt']
     }
   })
   .then(function(user)
   {
     user = user.get({plain: true});
-
-    delete user.password;
-    delete user.salt;
 
     return res.status(200).json({
       'status': 'success',
@@ -60,10 +60,16 @@ const update = function(req, res)
       return entity.updateAttributes(updates)
         .then(function(updated)
         {
+          updated = updated.get({plain: true});
+
+          delete updated.password;
+          delete updated.salt;
+
           return res.status(200).json({
+            'code': 200,
             'status': 'success',
             'message': 'Profile updated successfully',
-            'data': updated.get({plain: true})
+            'data': updated
           });
         });
     };
@@ -96,9 +102,10 @@ const avatar = function(req, res)
           {
             const image = updated.get({plain: true}).image;
             return res.status(200).json({
+              'code': 200,
               'status': 'success',
               'message': 'Profile picture successfully',
-              'avatar_url': image
+              'image': image
             });
           });
       };
@@ -148,6 +155,7 @@ const changePassword = function(req, res, next)
         .then(function()
         {
           return res.status(200).json({
+            'code': 200,
             'status': 'success',
             'message': 'Password changed successfully'
           });

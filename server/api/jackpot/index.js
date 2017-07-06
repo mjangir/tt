@@ -15,13 +15,13 @@ router.get('/', [auth.isAuthenticated(), validators.index], controller.index);
 router.get('/:id', [auth.isAuthenticated(), validators.show], controller.show);
 
 // Create a new jackpot
-router.post('/', [auth.isAuthenticated(), validators.createOrUpdate], controller.create);
+router.post('/', [auth.isAuthenticated(), validators.create], controller.create);
 
 // Update a jackpot using PUT
-router.put('/:id', [auth.isAuthenticated(), validators.createOrUpdate], controller.update);
+router.put('/:id', [auth.isAuthenticated(), validators.update], controller.update);
 
 // Update a jackpot using PATCH
-router.patch('/:id', [auth.isAuthenticated(), validators.createOrUpdate], controller.update);
+router.patch('/:id', [auth.isAuthenticated(), validators.update], controller.update);
 
 // Delete a jackpot
 router.delete('/:id', [auth.isAuthenticated(), validators.destroy], controller.destroy);

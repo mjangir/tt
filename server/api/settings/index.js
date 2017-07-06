@@ -8,22 +8,22 @@ import auth from '../../auth/auth.service';
 // Create router object
 const router = express.Router();
 
-// Get all settingss
+// Get all settings
 router.get('/', [auth.isAuthenticated(), validators.index], controller.index);
 
-// Get a single settings
+// Get a single setting
 router.get('/:id', [auth.isAuthenticated(), validators.show], controller.show);
 
-// Create a new settings
-router.post('/', [auth.isAuthenticated(), validators.createOrUpdate], controller.create);
+// Create a new setting
+router.post('/', [auth.isAuthenticated(), validators.create], controller.create);
 
-// Update a settings using PUT
-router.put('/:id', [auth.isAuthenticated(), validators.createOrUpdate], controller.update);
+// Update a setting using PUT
+router.put('/:id', [auth.isAuthenticated(), validators.update], controller.update);
 
-// Update a settings using PATCH
-router.patch('/:id', [auth.isAuthenticated(), validators.createOrUpdate], controller.update);
+// Update a setting using PATCH
+router.patch('/:id', [auth.isAuthenticated(), validators.update], controller.update);
 
-// Delete a settings
+// Delete a setting
 router.delete('/:id', [auth.isAuthenticated(), validators.destroy], controller.destroy);
 
 //Export the router

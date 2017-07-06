@@ -65,13 +65,20 @@ module.exports = function(sequelize, DataTypes)
       comment       : "Jackpot game status"
     },
 
+    uniqueId  : {
+      field       : "unique_id",
+      type        : DataTypes.STRING(32),
+      allowNull   : false,
+      comment     : "Jackpot Unique ID"
+    },
+
     startedOn : {
       field         : "started_on",
       type          : DataTypes.DATE,
       allowNull     : true,
       comment       : "It will have datetime as soon as the game status goes to STARTED"
     },
-    
+
     status: {
       field         : "status",
       type          : DataTypes.ENUM('ACTIVE','INACTIVE'),
@@ -95,7 +102,7 @@ module.exports = function(sequelize, DataTypes)
             allowNull : true
           }
         });
-        
+
         Jackpot.belongsTo(models.User, {
           as          : 'UpdatedByUser',
           constraints : false,
@@ -110,7 +117,7 @@ module.exports = function(sequelize, DataTypes)
           as          : 'UserJackpots',
           constraints : false,
           foreignKey  : {
-            name      : 'jackpot_id',
+            name      : 'jackpotId',
             field     : 'jackpot_id',
             allowNull : false
           }

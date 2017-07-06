@@ -101,22 +101,6 @@ module.exports = function(sequelize, DataTypes)
       allowNull     : false,
       defaultValue  : 'ACTIVE',
       comment       : "User is active, inactive or deleted"
-    },
-
-    createdBy : {
-      field         : "created_by",
-      type          : DataTypes.INTEGER(11),
-      allowNull     : true,
-      defaultValue  : null,
-      comment       : "User ID who created this user"
-    },
-
-    updatedBy: {
-      field         : "updated_by",
-      type          : DataTypes.INTEGER(11),
-      allowNull     : true,
-      defaultValue  : null,
-      comment       : "User ID who updated this user"
     }
   },
   {
@@ -342,26 +326,32 @@ module.exports = function(sequelize, DataTypes)
       associate:function(models)
       {
         User.belongsTo(models.User, {
-          as: 'CreatedByUser',
-          foreignKey: {
-            name: 'created_by',
-            allowNull: true
+          as          : 'CreatedByUser',
+          constraints : false,
+          foreignKey  : {
+            name      : 'createdBy',
+            field     : 'created_by',
+            allowNull : true
           }
         });
-        
+
         User.belongsTo(models.User, {
-          as: 'UpdatedByUser',
-          foreignKey: {
-            name: 'updated_by',
-            allowNull: true
+          as          : 'UpdatedByUser',
+          constraints : false,
+          foreignKey  : {
+            name      : 'updatedBy',
+            field     : 'updated_by',
+            allowNull : true
           }
         });
 
         User.hasMany(models.UserJackpot, {
-          as: 'UserJackpots',
-          foreignKey: {
-            name: 'user_id',
-            allowNull: false
+          as          : 'UserJackpots',
+          constraints : false,
+          foreignKey  : {
+            name      : 'userId',
+            field     : 'user_id',
+            allowNull : false
           }
         });
       }

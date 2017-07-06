@@ -7,6 +7,7 @@ export default function(app)
 {
   app.use('/api/users', require('./api/user'));
   app.use('/api/jackpots', require('./api/jackpot'));
+  app.use('/api/settings', require('./api/settings'));
   app.use('/api/me', require('./api/me'));
   app.use('/auth', require('./auth'));
 

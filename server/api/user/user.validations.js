@@ -2,13 +2,27 @@
 
 import * as constants from '../../config/constants';
 
-// Validate get all users request
+/**
+ * Validate Get All Users
+ *
+ * @param  {Object}   request
+ * @param  {Object}   response
+ * @param  {Function} next
+ * @return {*}
+ */
 export const index = function(request, response, next)
 {
   next();
 }
 
-// Validate get a single user request
+/**
+ * Validate Show User
+ *
+ * @param  {Object}   request
+ * @param  {Object}   response
+ * @param  {Function} next
+ * @return {*}
+ */
 export const show = function(request, response, next)
 {
   let errors = null;
@@ -36,43 +50,42 @@ export const show = function(request, response, next)
   next();
 }
 
-// Validate create or update user request
-export const createOrUpdate = function(request, response, next)
+/**
+ * Create A User
+ *
+ * @param  {Object}   request
+ * @param  {Object}   response
+ * @param  {Function} next
+ * @return {*}
+ */
+export const create = function(request, response, next)
 {
 
-  let errors = [];
+  let errors      = [],
+      validatios  = {};
 
   // Validate all body parameters
-  request.checkBody({
-   'firstName': {
-      notEmpty: {
-        args: true,
-        errorMessage: 'First Name cannot be empty',
-      },
-      isLength: {
-        options: [{ min: 1, max: 30 }],
-        errorMessage: 'First Name must be between 1 to 30 characters'
-      }
-    },
-    'lastName': {
-      optional: true,
-      isLength: {
-        options: [{ min: 1, max: 30 }],
-        errorMessage: 'Last Name must be between 1 to 30 characters'
-      }
-    },
-    'email': {
-      isEmail: {
-        args: true,
-        errorMessage: 'Email is not valid'
-      },
+  validatios['name'] = {
+    notEmpty: {
+      args: true,
+      errorMessage: 'Name cannot be empty',
     }
-  });
+  };
 
-  if(request.method === 'POST')
-  {
-    request.checkBody('password', 'Invalid Password').notEmpty().withMessage('Password can not be empty');
-  }
+  validatios['email'] = {
+    isEmail: {
+      args: true,
+      errorMessage: 'Email is not valid'
+    }
+  };
+  validatios['password'] = {
+    notEmpty: {
+      args: true,
+      errorMessage: 'Password cannot be empty',
+    }
+  };
+
+  request.checkBody(validatios);
 
   // Get all error messages
   errors = request.validationErrors();
@@ -96,7 +109,58 @@ export const createOrUpdate = function(request, response, next)
   next();
 }
 
-// Validate delete user request
+/**
+ * Update A User
+ *
+ * @param  {Object}   request
+ * @param  {Object}   response
+ * @param  {Function} next
+ * @return {*}
+ */
+export const update = function(request, response, next)
+{
+  let errors      = [],
+      validatios  = {};
+
+  // Validate all body parameters
+  validatios['name'] = {
+    notEmpty: {
+      args: true,
+      errorMessage: 'Name cannot be empty',
+    }
+  };
+
+  request.checkBody(validatios);
+
+  // Get all error messages
+  errors = request.validationErrors();
+
+  // Send errors as JSON response if any
+  if(errors)
+  {
+    response.status(422);
+    response.json({
+      status  : 'error',
+      code    : constants.VALIDATION_ERROR.code,
+      message : constants.VALIDATION_ERROR.message,
+      errors
+    }).end();
+    return null;
+  }
+
+  // Pass to the next middleware
+  request.body.updated_by = request.user.user_id;
+  next();
+}
+
+/**
+ * Delete User
+ *
+ * @param  {Object}   request
+ * @param  {Object}   response
+ * @param  {Function} next
+ * @return {*}
+ */
 export const destroy = function(request, response, next)
 {
   let errors = [];

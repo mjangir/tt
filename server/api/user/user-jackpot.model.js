@@ -11,20 +11,6 @@ module.exports = function(sequelize, DataTypes)
       comment         : "Primary and auto increment key of the table"
     },
 
-    userId : {
-      field       : "user_id",
-      type        : DataTypes.INTEGER(11),
-      allowNull   : false,
-      comment     : "Bidding User ID"
-    },
-
-    jackpotId : {
-      field       : "jackpot_id",
-      type        : DataTypes.INTEGER(11),
-      allowNull   : false,
-      comment     : "Jackpot ID"
-    },
-
     status : {
       field         : "status",
       type          : DataTypes.ENUM('NOT_STARTED','STARTED','QUITTED', 'FINISHED'),
@@ -46,19 +32,34 @@ module.exports = function(sequelize, DataTypes)
     tableName         : 'user_jackpots',
 
     classMethods:{
-      associate:function(models){
+      associate:function(models)
+      {
         UserJackpot.belongsTo(models.Jackpot, {
           as          : 'Jackpot',
+          constraints : false,
           foreignKey  : {
-            name      : 'jackpot_id',
+            field     : 'jackpot_id',
+            name      : 'jackpotId',
             allowNull : false
           }
         });
-        
+
         UserJackpot.belongsTo(models.User, {
           as          : 'BidUser',
+          constraints : false,
           foreignKey  : {
-            name      : 'user_id',
+            field     : 'user_id',
+            name      : 'userId',
+            allowNull : false
+          }
+        });
+
+        UserJackpot.hasMany(models.UserJackpotBid, {
+          as          : 'UserJackpotBids',
+          constraints : false,
+          foreignKey  : {
+            name      : 'userJackpotId',
+            field     : 'user_jackpot_id',
             allowNull : false
           }
         });

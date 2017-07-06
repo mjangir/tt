@@ -11,13 +11,6 @@ module.exports = function(sequelize, DataTypes)
       comment         : "Primary and auto increment key of the table"
     },
 
-    userJackpotId : {
-      field       : "user_jackpot_id",
-      type        : DataTypes.INTEGER(11),
-      allowNull   : false,
-      comment     : "User Jackpot ID"
-    },
-
     bidStartTime : {
       field         : "bid_start_time",
       type          : DataTypes.DATE,
@@ -45,11 +38,14 @@ module.exports = function(sequelize, DataTypes)
     tableName         : 'user_jackpot_bids',
 
     classMethods:{
-      associate:function(models){
+      associate:function(models)
+      {
         UserJackpotBid.belongsTo(models.UserJackpot, {
           as          : 'UserJackpot',
+          constraints : false,
           foreignKey  : {
-            name      : 'user_jackpot_id',
+            name      : 'userJackpotId',
+            field     : 'user_jackpot_id',
             allowNull : false
           }
         });
