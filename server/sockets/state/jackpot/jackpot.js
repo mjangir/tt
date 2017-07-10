@@ -54,6 +54,11 @@ Jackpot.prototype.isCurrentlyBeingPlayed = function()
     return this.metaData.gameStatus == 'STARTED';
 }
 
+Jackpot.prototype.finishGame = function()
+{
+    this.metaData.gameStatus = 'FINISHED';
+}
+
 Jackpot.prototype.emitUpdatesToItsRoom = function()
 {
     var roomName = this.getRoomName();

@@ -34,6 +34,12 @@ export default function(socketio)
     }(socketio)));
 }
 
+/**
+ * Handle On Socket Connection
+ *
+ * @param  {Socket} socket
+ * @return {*}
+ */
 function handleOnConnection(socket)
 {
     var stateInst   = global.globalJackpotSocketState,
@@ -42,13 +48,17 @@ function handleOnConnection(socket)
         userJackpot,
         pickNewJackpot;
 
+    // Get Jackpot to which user is already joined
     userJackpot = stateInst.getUserJackpot(userId);
 
+    // If no Jackpot found, then get a new jackpot for this user
     if(!userJackpot || !userJackpot.isCurrentlyBeingPlayed())
     {
         pickNewJackpot = stateInst.pickupNewJackpot();
     }
 
+    // If new Jackpot found, add this user to it's room and emit
+    // updates to all the users joined in this room
     if(pickNewJackpot)
     {
         pickNewJackpot.addUser(userId);
@@ -59,6 +69,7 @@ function handleOnConnection(socket)
 
 function startJackpotsClockCountDown()
 {
+    // Decrease the Jackpots clock if they are in "STARTED" status
     setInterval(function()
     {
         var jackpotInstances    = global.globalJackpotSocketState.getJackpots(),
@@ -77,8 +88,15 @@ function startJackpotsClockCountDown()
             jackpot     = jackpotInstances[uniqueId];
             metaData    = jackpot.getMetaData();
 
-            // Count down the jackpot if game started
-            if(metaData.gameStatus != 'STARTED')
+            // If both game and dooms day clock has become zero
+            // Finish this game
+            if(metaData.gameClockRemaining == 0 && metaData.doomsDayRemaining == 0)
+            {
+                jackpot.finishGame();
+            }
+
+            // Count down the jackpot if game is in "STARTED" status
+            if(metaData.gameStatus == 'STARTED')
             {
                 jackpot.countDown();
             }
@@ -88,6 +106,7 @@ function startJackpotsClockCountDown()
             gameClockTime   = jackpot.getHumanGameClock();
             doomsDayTime    = jackpot.getHumanDoomsDayClock();
 
+            // Emit the updated jackpot timer to everybody in its room
             global.jackpotSocketNamespace.in(roomName).emit('update_jackpot_timer', {
                 gameClockTime:      gameClockTime,
                 doomsDayClockTime:  doomsDayTime
