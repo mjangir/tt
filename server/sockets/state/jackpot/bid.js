@@ -11,11 +11,6 @@ import battle from './battle';
  */
 export default function(socketio)
 {
-    global.globalJackpotSocketState = null;
-    global.globalBattleSocketState  = null;
-    global.jackpotSocketNamespace   = null;
-    global.battleSocketNamespace    = null;
-
     // Configure jackpot socket.io
     jackpot(socketio);
 
