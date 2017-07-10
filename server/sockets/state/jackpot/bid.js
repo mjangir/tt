@@ -1,19 +1,18 @@
 'use strict';
 
-import jackpot from './jackpot';
-import battle from './battle';
+import moment from 'moment';
 
-/**
- * Configure socketio for both Jackpot and Battle
- *
- * @param  {Object} socketio
- * @return {*}
- */
-export default function(socketio)
+function Bid()
 {
-    // Configure jackpot socket.io
-    jackpot(socketio);
-
-    // Configure battle socket.io
-    battle(socketio);
+	this.startTime 	= new Date();
+	this.endTime 	= null;
+	this.duration 	= null;
 }
+
+Bid.prototype.updateDuration = function()
+{
+	this.endTime 	= new Date();
+	this.duration 	= moment(this.endTime).diff(moment(this.startTime), "seconds");
+}
+
+export default Bid;

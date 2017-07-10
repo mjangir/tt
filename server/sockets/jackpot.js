@@ -46,25 +46,121 @@ function handleOnConnection(socket)
         handshake   = socket.handshake,
         userId      = handshake.query.userId,
         userJackpot,
-        pickNewJackpot;
+        pickNewJackpot,
+        jackpotUser;
 
     // Get Jackpot to which user is already joined
     userJackpot = stateInst.getUserJackpot(userId);
 
-    // If no Jackpot found, then get a new jackpot for this user
-    if(!userJackpot || !userJackpot.isCurrentlyBeingPlayed())
+    // If user is already joined to a jackpot
+    if(userJackpot)
     {
+        // Get that JackpotUser instance
+        jackpotUser = userJackpot.getUser(userId);
+
+        jackpotUser.isActive = true;
+
+        // If this jackpot is currently being played and user has not quitted yet OR
+        // User is joined earlier but the jackpot still has not started, so he can join the same
+        if((userJackpot.isCurrentlyBeingPlayed() && jackpotUser.gameStatus != 'QUITTED') || userJackpot.getMetaData().gameStatus == 'NOT_STARTED')
+        {
+            socket.currentRoom  = userJackpot.getRoomName();
+            socket.jackpot      = userJackpot;
+            socket.jackpotUser  = jackpotUser;
+
+            socket.join(userJackpot.getRoomName());
+
+            socket.emit('me_joined', {
+                jackpotUniqueId: userJackpot.getMetaData().uniqueId
+            });
+            userJackpot.emitUpdatesToItsRoom();
+        }
+        else
+        {
+            // Otherwise pickup a new jackpot which is currently being played and its
+            // Doomsday is not overed OR any jackpot which is not started yet
+            pickNewJackpot = stateInst.pickupNewJackpot();
+        }
+    }
+    else
+    {
+        // If this is very new user, get a new jackpot for him
         pickNewJackpot = stateInst.pickupNewJackpot();
     }
 
-    // If new Jackpot found, add this user to it's room and emit
-    // updates to all the users joined in this room
-    if(pickNewJackpot)
+    // If this is really new user, add him/her to this jackpot room
+    if(typeof pickNewJackpot != 'undefined')
     {
-        pickNewJackpot.addUser(userId);
-        socket.join(pickNewJackpot.getRoomName());
-        pickNewJackpot.emitUpdatesToItsRoom();
+        pickNewJackpot.addUser(userId, function(error, jackpotUser)
+        {
+            if(error == null)
+            {
+                socket.currentRoom  = pickNewJackpot.getRoomName();
+                socket.jackpot      = pickNewJackpot;
+                socket.jackpotUser  = jackpotUser;
+
+                socket.join(pickNewJackpot.getRoomName());
+                socket.emit('me_joined', {
+                    jackpotUniqueId: pickNewJackpot.getMetaData().uniqueId
+                });
+                pickNewJackpot.emitUpdatesToItsRoom();
+            }
+            else
+            {
+                socket.emit('me_join_error', {error: error});
+            }
+        });
     }
+
+
+    // Register Further Events
+    socket.on('place_bid', (function(socket)
+    {
+        return function(data)
+        {
+            handlePlaceNewBid(data, socket);
+        };
+    }(socket)));
+
+    // On socket disconnect
+    socket.on('disconnect', function()
+    {
+        socket.jackpotUser.isActive = false;
+        global.jackpotSocketNamespace.in(socket.currentRoom).emit('updated_jackpot_data', socket.jackpot.getUpdatedJackpotData());
+        
+    });
+}
+
+function handlePlaceNewBid(data, socket)
+{
+    var jackpotInstance,
+        jackpotUserInstance,
+        newBid;
+
+    if(!data.jackpotUniqueId || !data.userId || !global.globalJackpotSocketState.hasJackpot(data.jackpotUniqueId))
+    {
+        socket.emit('place_bid_error', {
+            error: "Invalid User or Jackpot ID"
+        });
+    }
+    else
+    {
+        jackpotInstance     = global.globalJackpotSocketState.getJackpot(data.jackpotUniqueId);
+        jackpotUserInstance = jackpotInstance.getUser(data.userId);
+    }
+
+    if(jackpotInstance.isNotStarted())
+    {
+        jackpotInstance.startGame();
+    }
+    
+    newBid = jackpotUserInstance.placeNewBid();
+
+    jackpotInstance.increaseGameClockOnNewBid();
+
+    jackpotInstance.updateLastBidDuration(newBid, jackpotUserInstance);
+
+    jackpotInstance.emitUpdatesToItsRoom();
 }
 
 function startJackpotsClockCountDown()

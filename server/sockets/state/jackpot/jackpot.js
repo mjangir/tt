@@ -1,11 +1,17 @@
 'use strict';
 
+import sqldb from '../../../sqldb';
 import User from './user';
+import lodash from 'lodash';
+
+const UserModel = sqldb.User;
 
 function Jackpot(data)
 {
-    this.metaData   = data;
-    this.users      = {};
+    this.metaData   	= data;
+    this.users      	= {};
+    this.lastBid 		= null;
+    this.lastBidUser  	= null;
 
     this.setRoomName();
 }
@@ -49,9 +55,24 @@ Jackpot.prototype.hasUser = function(userId)
     return this.users.hasOwnProperty(userId);
 }
 
+Jackpot.prototype.getUser = function(userId)
+{
+    return this.users[userId] ? this.users[userId] : false;
+}
+
 Jackpot.prototype.isCurrentlyBeingPlayed = function()
 {
     return this.metaData.gameStatus == 'STARTED';
+}
+
+Jackpot.prototype.isNotStarted = function()
+{
+	return this.metaData.gameStatus == 'NOT_STARTED';
+}
+
+Jackpot.prototype.startGame = function()
+{
+    this.metaData.gameStatus = 'STARTED';
 }
 
 Jackpot.prototype.finishGame = function()
@@ -63,26 +84,53 @@ Jackpot.prototype.emitUpdatesToItsRoom = function()
 {
     var roomName = this.getRoomName();
 
-    global.jackpotSocketNamespace.in(roomName).emit('updated_jackpot_data', {data: this.getUpdatedJackpotData()});
+    global.jackpotSocketNamespace.in(roomName).emit('updated_jackpot_data', this.getUpdatedJackpotData());
 }
 
 Jackpot.prototype.getUpdatedJackpotData = function()
 {
-    return {
-        totalUsers: this.users.length
-    }
+	var placedBids 	= this.getAllBids();
+
+	if(this.isCurrentlyBeingPlayed())
+	{
+		return {
+	        totalUsers 		: Object.keys(this.users).length,
+	        totalBids 		: placedBids.length,
+	        longestBid 		: this.getLongestBid(),
+	        activePlayers 	: this.getActiveUsers().length,
+	        remainingPlayers: this.getInActiveUsers().length,
+	        averageBidBank 	: this.getAverageBidBank(),
+	        currentBidUser 	: {
+	        	name: this.lastBidUser.getMetaData().name
+	        }
+	    } 
+	}
+
+	return {};    
 }
 
-Jackpot.prototype.addUser = function(userId)
+Jackpot.prototype.addUser = function(userId, callback)
 {
+	var context = this;
+
     if(this.users.hasOwnProperty(userId))
     {
-        return this.users[userId];
+    	callback.call(global, null, this.users[userId]);
     }
 
-    this.users[userId] = new User(userId);
-
-    return this.users[userId];
+    UserModel.find({
+    	where: {id: userId},
+    	raw: true
+    })
+    .then(function(user)
+    {
+    	context.users[userId] = new User(user);
+    	callback.call(global, null, context.users[userId]);
+    })
+    .catch(function(err)
+    {
+    	callback.call(global, err);
+    });
 }
 
 Jackpot.prototype.removeUser = function()
@@ -115,6 +163,95 @@ Jackpot.prototype.convertSecondsToCounterTime = function(seconds)
     }
 
     return hours + ":" + minutes + ":" + remainingSeconds;
+}
+
+Jackpot.prototype.updateLastBidDuration = function(newBid, newBidUser)
+{
+	var lastBid = this.lastBid;
+
+	if(lastBid)
+	{
+		lastBid.updateDuration();
+	}
+
+	this.lastBid 		= newBid;
+	this.lastBidUser 	= newBidUser;
+}
+
+Jackpot.prototype.increaseGameClockOnNewBid = function()
+{
+	this.metaData.gameClockRemaining += 10;
+}
+
+Jackpot.prototype.getActiveUsers = function()
+{
+	var context = this;
+
+	return Object.keys(this.users).filter(function(id)
+	{
+		return context.users[id].isActive == true;
+	});
+}
+
+Jackpot.prototype.getInActiveUsers = function()
+{
+	var context = this;
+
+	return Object.keys(this.users).filter(function(id)
+	{
+		return context.users[id].isActive != true;
+	});
+}
+
+Jackpot.prototype.getAverageBidBank = function()
+{
+	var totalAvailableBids = 0;
+	var context = this;
+
+	Object.keys(this.users).map(function(id)
+	{
+		totalAvailableBids += context.users[id].availableBids;
+	});
+
+	return Math.round(totalAvailableBids/Object.keys(this.users).length);
+}
+
+Jackpot.prototype.getAllBids = function()
+{
+	var placedBids 	= [],
+		userKeys 	= Object.keys(this.users),
+		usersLength = userKeys.length,
+		userId,
+		user;
+
+	if(usersLength > 0)
+	{
+		for(var i = 0; i < usersLength; i++)
+		{
+			userId 		= userKeys[i];
+			user 		= this.users[userId];
+			placedBids.push(user.placedBids);
+		}
+
+		placedBids = [].concat.apply([], placedBids);
+	}
+
+	return placedBids;
+}
+
+Jackpot.prototype.getLongestBid = function()
+{
+	var bids = this.getAllBids();
+
+	if(bids.length > 1)
+	{
+		bids = bids.sort(function(a, b)
+		{
+		    return (b.duration != null) ? b.duration - a.duration : 1;
+		});
+	}
+
+	return bids[0];
 }
 
 export default Jackpot;

@@ -88,14 +88,17 @@ JackpotState.prototype.removeJackpot = function(uniqueId)
 JackpotState.prototype.getUserJackpot = function(userId)
 {
     var jackpots    = this.jackpots,
-        length      = jackpots.length,
+        uniqueIds   = Object.keys(jackpots),
+        length      = uniqueIds.length,
+        uniqueId,
         jackpot;
 
     if(length)
     {
         for(var i = 0; i < length; i++)
         {
-            jackpot = jackpots[i];
+            uniqueId    = uniqueIds[i];
+            jackpot     = jackpots[uniqueId];
 
             if(jackpot.hasUser(userId))
             {
@@ -113,7 +116,9 @@ JackpotState.prototype.pickupNewJackpot = function()
         uniqueIds   = Object.keys(jackpots),
         length      = uniqueIds.length,
         uniqueId,
-        jackpot;
+        jackpot,
+        foundJackpot,
+        metaData;
 
     if(length > 0)
     {
@@ -121,14 +126,46 @@ JackpotState.prototype.pickupNewJackpot = function()
         {
             uniqueId    = uniqueIds[i];
             jackpot     = jackpots[uniqueId];
-            if(jackpot.getMetaData().gameStatus == 'NOT_STARTED')
+            metaData    = jackpot.getMetaData();
+
+            if(metaData.gameStatus == 'STARTED' && metaData.doomsDayRemaining > 0)
             {
-                return jackpot;
+                foundJackpot = jackpot;
             }
+        }
+
+        if(typeof foundJackpot == 'undefined')
+        {
+            for(var i = 0; i < length; i++)
+            {
+                uniqueId    = uniqueIds[i];
+                jackpot     = jackpots[uniqueId];
+                metaData    = jackpot.getMetaData();
+
+                if(metaData.gameStatus == 'NOT_STARTED')
+                {
+                    foundJackpot = jackpot;
+                }
+            }
+        }
+
+        if(typeof foundJackpot != 'undefined')
+        {
+            return foundJackpot;
         }
     }
 
     return false;
+}
+
+JackpotState.prototype.hasJackpot = function(uniqueId)
+{
+    return this.jackpots.hasOwnProperty(uniqueId);
+}
+
+JackpotState.prototype.getJackpot = function(uniqueId)
+{
+    return this.jackpots[uniqueId];
 }
 
 export default JackpotState;
