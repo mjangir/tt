@@ -108,6 +108,7 @@ Jackpot.prototype.getUpdatedJackpotData = function()
 	        activePlayers 	: this.getActiveUsers().length,
 	        remainingPlayers: this.getInActiveUsers().length,
 	        averageBidBank 	: this.getAverageBidBank(),
+	        canIBid 		: true,
 	        currentBidUser 	: {
 	        	name: this.lastBidUser.getMetaData().name
 	        }

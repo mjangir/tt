@@ -162,6 +162,8 @@ function handlePlaceNewBid(data, socket)
     jackpotInstance.updateLastBidDuration(newBid, jackpotUserInstance);
 
     jackpotInstance.emitUpdatesToItsRoom();
+
+    socket.emit('can_i_bid', {canIBid: false});
 }
 
 function startJackpotsClockCountDown()
