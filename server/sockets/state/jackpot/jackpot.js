@@ -42,12 +42,20 @@ Jackpot.prototype.getMetaData = function()
 
 Jackpot.prototype.getHumanGameClock = function()
 {
-    return this.convertSecondsToCounterTime(this.metaData.gameClockRemaining);
+    var time = this.convertSecondsToCounterTime(this.metaData.gameClockRemaining);
+	return time.hours + ":" + time.minutes + ":" + time.seconds;
 }
 
 Jackpot.prototype.getHumanDoomsDayClock = function()
 {
-    return this.convertSecondsToCounterTime(this.metaData.doomsDayRemaining);
+	var time = this.convertSecondsToCounterTime(this.metaData.doomsDayRemaining);
+	return time.hours + ":" + time.minutes + ":" + time.seconds;
+}
+
+Jackpot.prototype.getHumanLastBidDuration = function()
+{
+	var time = this.lastBid != null ? this.convertSecondsToCounterTime(this.lastBid.getRealTimeDuration()) : {minutes: '00', seconds: '00'};
+	return time.minutes + ":" + time.seconds;
 }
 
 Jackpot.prototype.hasUser = function(userId)
@@ -162,7 +170,11 @@ Jackpot.prototype.convertSecondsToCounterTime = function(seconds)
         remainingSeconds = "0" + remainingSeconds;
     }
 
-    return hours + ":" + minutes + ":" + remainingSeconds;
+    return {
+    	hours: hours,
+    	minutes: minutes,
+    	seconds: remainingSeconds
+    };
 }
 
 Jackpot.prototype.updateLastBidDuration = function(newBid, newBidUser)

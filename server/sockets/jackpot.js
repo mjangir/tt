@@ -2,6 +2,7 @@
 
 import logger from '../utils/logger';
 import jackpotState from './state/jackpot';
+import moment from 'moment';
 
 /**
  * Configure Jackpot SocketIO
@@ -176,7 +177,8 @@ function startJackpotsClockCountDown()
             uniqueId,
             roomName,
             gameClockTime,
-            doomsDayTime;
+            doomsDayTime,
+            lastBidDuration;
 
         for(var i = 0; i < length; i++)
         {
@@ -201,11 +203,13 @@ function startJackpotsClockCountDown()
             roomName        = jackpot.getRoomName();
             gameClockTime   = jackpot.getHumanGameClock();
             doomsDayTime    = jackpot.getHumanDoomsDayClock();
+            lastBidDuration = jackpot.getHumanLastBidDuration();
 
             // Emit the updated jackpot timer to everybody in its room
             global.jackpotSocketNamespace.in(roomName).emit('update_jackpot_timer', {
                 gameClockTime:      gameClockTime,
-                doomsDayClockTime:  doomsDayTime
+                doomsDayClockTime:  doomsDayTime,
+                lastBidDuration:    lastBidDuration
             });
         }
     }, 1000);
