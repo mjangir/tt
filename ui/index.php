@@ -55,6 +55,7 @@ $user = isset($_GET['user']) ? $_GET['user'] : 1;
 	<h4>Average Bid Bank: <span class="jackpot-param" id="average-bid-bank"></span></h4>
 	<h4>Current Bid User: <span class="jackpot-param" id="current-bid-user"></span></h4>
 	<h4>Current Bid Duration: <span class="jackpot-param" id="current-bid-duration"></span></h4>
+    <h4>Longest Bid Duration: <span class="jackpot-param" id="longest-bid-duration"></span></h4>
 	<h4>Total Bids: <span class="jackpot-param" id="total-bids"></span></h4>
 	<h4>Total Users: <span class="jackpot-param" id="total-users"></span></h4>
 
@@ -70,7 +71,7 @@ $user = isset($_GET['user']) ? $_GET['user'] : 1;
     text-align: center;
 ">
 	<button id="place-bid">Place A Bid</button>
-	
+
 </div>
 
 
@@ -82,7 +83,7 @@ $user = isset($_GET['user']) ? $_GET['user'] : 1;
 var socket;
 	jQuery(document).ready(function()
 	{
-		socket = io.connect('ws://127.0.0.1:9000/jackpot', {
+		socket = io.connect('ws://192.192.8.44:9000/jackpot', {
 			path: '/ticktock/socket.io',
 			query: {
 				userId: <?php echo $user;?>
@@ -106,7 +107,8 @@ var socket;
 				jQuery('#game-clock').html(data.gameClockTime);
 				jQuery('#doomsday-clock').html(data.doomsDayClockTime);
 				jQuery('#current-bid-duration').html(data.lastBidDuration);
-				
+                 jQuery('#longest-bid-duration').html(data.longestBidDuration);
+
 			});
 
 			// Updated jackpot data
@@ -114,13 +116,14 @@ var socket;
 			{
 				if(data.activePlayers)
 				{
+                    console.log(data);
 					jQuery('#active-players').html(data.activePlayers);
 					jQuery('#remaining-players').html(data.remainingPlayers);
 					jQuery('#average-bid-bank').html(data.averageBidBank);
 					jQuery('#total-users').html(data.totalUsers);
 					jQuery('#total-bids').html(data.totalBids);
 					jQuery('#current-bid-user').html(data.currentBidUser.name);
-					
+
 					if(data.canIBid == true)
 					{
 						jQuery('#place-bid').show();
@@ -139,6 +142,16 @@ var socket;
 					jQuery('#place-bid').hide();
 				}
 			});
+
+            // Game finished
+            socket.on('game_finished', function(data){
+                console.log(data);
+            });
+
+            // Show quit button
+            socket.on('show_quit_button', function(data){
+                console.log("show quit button");
+            });
 		})
 	});
 
