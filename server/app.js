@@ -8,12 +8,6 @@ import socketioConf from './sockets';
 import expressConf from './config/express';
 import routesConf from './routes';
 
-// Populate databases with sample data
-// if(config.seedDB)
-// {
-// 	require('./config/seed');
-// }
-
 // Setup express web server and socket.io
 const app 		= express();
 const server 	= http.createServer(app);

@@ -109,6 +109,7 @@
   "scripts": {
     "start": "node server",
     "test": "grunt test",
+    "migrate": "node server/tools/migration",
     "update-webdriver": "node node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
   },
   "private": true
