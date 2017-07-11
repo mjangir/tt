@@ -2,12 +2,23 @@
 
 import sqldb from '../../../sqldb';
 import User from './user';
+import moment from 'moment';
 import lodash from 'lodash';
+
+import {
+    EVT_EMIT_UPDATE_JACKPOT_DATA,
+} from '../../events/jackpot/constants';
 
 const UserModel = sqldb.User;
 
+/**
+ * Jackpot Constructor
+ *
+ * @param {Object} data
+ */
 function Jackpot(data)
 {
+    data['finishedOn']  = null;
     this.metaData   	= data;
     this.users      	= {};
     this.lastBid 		= null;
@@ -16,6 +27,10 @@ function Jackpot(data)
     this.setRoomName();
 }
 
+/**
+ * Set socket room name
+ *
+ */
 Jackpot.prototype.setRoomName = function()
 {
     var roomPrefix  = 'JACKPOT_ROOM_';
@@ -24,77 +39,167 @@ Jackpot.prototype.setRoomName = function()
     this.roomName   = roomName;
 }
 
+/**
+ * Get Socket room name
+ *
+ * @return {String}
+ */
 Jackpot.prototype.getRoomName = function()
 {
     return this.roomName;
 }
 
+/**
+ * Count down the timer
+ *
+ * @return {*}
+ */
 Jackpot.prototype.countDown = function()
 {
-    this.metaData.gameClockRemaining    -= 1;
-    this.metaData.doomsDayRemaining     -= 1;
+    if(this.metaData.gameClockRemaining  > 0)
+    {
+        this.metaData.gameClockRemaining -= 1;
+    }
+    if(this.metaData.doomsDayRemaining  > 0)
+    {
+        this.metaData.doomsDayRemaining -= 1;
+    }
 }
 
+/**
+ * Get jackpot meta data
+ *
+ * @return {Object}
+ */
 Jackpot.prototype.getMetaData = function()
 {
     return this.metaData;
 }
 
+/**
+ * Get Human Readable Game Clock Time
+ *
+ * @return {String}
+ */
 Jackpot.prototype.getHumanGameClock = function()
 {
     var time = this.convertSecondsToCounterTime(this.metaData.gameClockRemaining);
 	return time.hours + ":" + time.minutes + ":" + time.seconds;
 }
 
+/**
+ * Get Human Readable Doomds Day Clock
+ *
+ * @return {String}
+ */
 Jackpot.prototype.getHumanDoomsDayClock = function()
 {
 	var time = this.convertSecondsToCounterTime(this.metaData.doomsDayRemaining);
 	return time.hours + ":" + time.minutes + ":" + time.seconds;
 }
 
+/**
+ * Get Human Readable Last Bid Duration (It will always be
+ * in real time)
+ *
+ * @return {String}
+ */
 Jackpot.prototype.getHumanLastBidDuration = function()
 {
 	var time = this.lastBid != null ? this.convertSecondsToCounterTime(this.lastBid.getRealTimeDuration()) : {minutes: '00', seconds: '00'};
 	return time.minutes + ":" + time.seconds;
 }
 
+/**
+ * Check if jackpot has user
+ *
+ * @param  {Integer}  userId
+ * @return {Boolean}
+ */
 Jackpot.prototype.hasUser = function(userId)
 {
     return this.users.hasOwnProperty(userId);
 }
 
+/**
+ * Get Jackpot User Instance
+ *
+ * @param  {Integer}  userId
+ * @return {JackpotUser}
+ */
 Jackpot.prototype.getUser = function(userId)
 {
     return this.users[userId] ? this.users[userId] : false;
 }
 
+/**
+ * Check if jackpot is currently being played
+ *
+ * @return {Boolean}
+ */
 Jackpot.prototype.isCurrentlyBeingPlayed = function()
 {
     return this.metaData.gameStatus == 'STARTED';
 }
 
+/**
+ * Check if jackpot is in non started mode
+ *
+ * @return {Boolean}
+ */
 Jackpot.prototype.isNotStarted = function()
 {
 	return this.metaData.gameStatus == 'NOT_STARTED';
 }
 
+/**
+ * Change jackpot game status to "STARTED"
+ *
+ * @return {Boolean}
+ */
 Jackpot.prototype.startGame = function()
 {
-    this.metaData.gameStatus = 'STARTED';
+    this.metaData.startedOn     = new Date();
+    this.metaData.gameStatus    = 'STARTED';
 }
 
-Jackpot.prototype.finishGame = function()
+/**
+ * Finish Jackpot Game
+ *
+ * @return {*}
+ */
+Jackpot.prototype.finishGame = function(callback)
 {
-    this.metaData.gameStatus = 'FINISHED';
+    var jackpotFullData;
+
+    this.metaData.gameStatus    = 'FINISHED';
+    this.metaData.finishedOn    = new Date();
+
+    if(typeof callback == 'function')
+    {
+        jackpotFullData = this.getJackpotCompleteData();
+
+        callback.call(global, this, jackpotFullData);
+    }
 }
 
+/**
+ * Emit Jackpot newly updated data to every person in that room
+ *
+ * @return {*}
+ */
 Jackpot.prototype.emitUpdatesToItsRoom = function()
 {
     var roomName = this.getRoomName();
 
-    global.jackpotSocketNamespace.in(roomName).emit('updated_jackpot_data', this.getUpdatedJackpotData());
+    global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_UPDATE_JACKPOT_DATA, this.getUpdatedJackpotData());
 }
 
+/**
+ * Get jackpot updated data (Important Method)
+ *
+ * @return {Object}
+ */
 Jackpot.prototype.getUpdatedJackpotData = function()
 {
 	var placedBids 	= this.getAllBids();
@@ -112,12 +217,18 @@ Jackpot.prototype.getUpdatedJackpotData = function()
 	        currentBidUser 	: {
 	        	name: this.lastBidUser.getMetaData().name
 	        }
-	    } 
+	    }
 	}
 
-	return {};    
+	return {};
 }
 
+/**
+ * Add a new Jackpot user
+ *
+ * @param {Integer}   userId
+ * @param {Function} callback
+ */
 Jackpot.prototype.addUser = function(userId, callback)
 {
 	var context = this;
@@ -142,11 +253,22 @@ Jackpot.prototype.addUser = function(userId, callback)
     });
 }
 
+/**
+ * Remove Jackpot User
+ *
+ * @return {*}
+ */
 Jackpot.prototype.removeUser = function()
 {
 
 }
 
+/**
+ * Convert Seconds To Hours, Minutes and Seconds
+ *
+ * @param  {Integer} seconds
+ * @return {Object}
+ */
 Jackpot.prototype.convertSecondsToCounterTime = function(seconds)
 {
     var days                = Math.floor(seconds/24/60/60),
@@ -178,6 +300,13 @@ Jackpot.prototype.convertSecondsToCounterTime = function(seconds)
     };
 }
 
+/**
+ * Update last bid duration for this jackpot
+ *
+ * @param  {Bid} newBid
+ * @param  {JackpotUser} newBidUser
+ * @return {*}
+ */
 Jackpot.prototype.updateLastBidDuration = function(newBid, newBidUser)
 {
 	var lastBid = this.lastBid;
@@ -191,11 +320,22 @@ Jackpot.prototype.updateLastBidDuration = function(newBid, newBidUser)
 	this.lastBidUser 	= newBidUser;
 }
 
+/**
+ * Increase Jackpot Game Clock By 10 Seconds
+ * TODO - Need to make it dynamic
+ *
+ * @return {*}
+ */
 Jackpot.prototype.increaseGameClockOnNewBid = function()
 {
 	this.metaData.gameClockRemaining += 10;
 }
 
+/**
+ * Get all jackpot users, who are currently viewing the game
+ *
+ * @return {Array}
+ */
 Jackpot.prototype.getActiveUsers = function()
 {
 	var context = this;
@@ -206,6 +346,11 @@ Jackpot.prototype.getActiveUsers = function()
 	});
 }
 
+/**
+ * Get all jackpot users, who are currently not viewing the game
+ *
+ * @return {Array}
+ */
 Jackpot.prototype.getInActiveUsers = function()
 {
 	var context = this;
@@ -216,6 +361,12 @@ Jackpot.prototype.getInActiveUsers = function()
 	});
 }
 
+/**
+ * Get average bid bank. The average of available bids
+ * of all the users who atleast joined this game
+ *
+ * @return {Array}
+ */
 Jackpot.prototype.getAverageBidBank = function()
 {
 	var totalAvailableBids = 0;
@@ -229,6 +380,11 @@ Jackpot.prototype.getAverageBidBank = function()
 	return Math.round(totalAvailableBids/Object.keys(this.users).length);
 }
 
+/**
+ * Get all Bid instances for this jackpot regardless user
+ *
+ * @return {Array}
+ */
 Jackpot.prototype.getAllBids = function()
 {
 	var placedBids 	= [],
@@ -252,19 +408,104 @@ Jackpot.prototype.getAllBids = function()
 	return placedBids;
 }
 
-Jackpot.prototype.getLongestBid = function()
+/**
+ * Get longest bid duration for the jackpot
+ *
+ * @param  {Boolean} humanReadable
+ * @return {Integer|String|Boolean}
+ */
+Jackpot.prototype.getLongestBidDuration = function(humanReadable)
 {
-	var bids = this.getAllBids();
+    if(this.lastBid == null)
+    {
+        return false;
+    }
 
-	if(bids.length > 1)
-	{
-		bids = bids.sort(function(a, b)
-		{
-		    return (b.duration != null) ? b.duration - a.duration : 1;
-		});
-	}
+    var longestBid  = this.getLongestBid(),
+        lastBid     = this.lastBid,
+        lastBidRTD  = lastBid.getRealTimeDuration(),
+        duration,
+        time;
 
-	return bids[0];
+    if(longestBid.duration > lastBidRTD)
+    {
+        duration = longestBid.duration;
+    }
+    else
+    {
+        duration = lastBidRTD;
+    }
+
+    if(typeof humanReadable != 'undefined' && humanReadable == true)
+    {
+        time = this.convertSecondsToCounterTime(duration);
+        return time.minutes + ':' + time.seconds;
+    }
+
+    return duration;
 }
 
+/**
+ * Get longest bid duration
+ *
+ * @return {Integer}
+ */
+Jackpot.prototype.getLongestBid = function()
+{
+	var bids = this.getAllBids(),
+        longest;
+
+	longest = bids.reduce(function(l, e)
+    {
+      return e.duration > l.duration ? e : l;
+    });
+
+    return longest;
+}
+
+/**
+ * Get Jackpot Complete Data
+ *
+ * @return {Object}
+ */
+Jackpot.prototype.getJackpotCompleteData = function()
+{
+    var jackpotCoreData = {
+        jackpotId   : this.metaData.id,
+        uniqueId    : this.metaData.uniqueId,
+        startedOn   : moment(this.metaData.startedOn).format("YYYY-MM-DD HH:mm:ss"),
+        finishedOn  : moment(this.metaData.finishedOn).format("YYYY-MM-DD HH:mm:ss")
+    },
+    jackpotUsersIds = Object.keys(this.users),
+    jackpotUser,
+    jackpotUserMetaData,
+    jackpotUserBids,
+    jackpotUserBidsLength,
+    jackpotUsersLength = jackpotUsersIds.length,
+    jackpotUserRawData = [];
+
+    for(var i = 0; i < jackpotUsersLength; i++)
+    {
+        jackpotUser             = this.users[jackpotUsersIds[i]];
+        jackpotUserMetaData     = jackpotUser.getMetaData();
+        jackpotUserBids         = jackpotUser.getMyBids(true);
+        jackpotUserBidsLength   = jackpotUserBids.length;
+
+        jackpotUserRawData.push({
+            userId              : jackpotUserMetaData.id,
+            bids                : jackpotUserBids,
+            totalBids           : jackpotUserBidsLength,
+            firstBidStartTime   : jackpotUser.firstBidStartTime,
+            lastBidStartTime    : jackpotUser.lastBidStartTime,
+            longestBidDuration  : jackpotUser.getMyLongestBidDuration()
+        });
+    }
+
+    return {
+        jackpot:    jackpotCoreData,
+        users:      jackpotUserRawData
+    };
+}
+
+// Export Jackpot
 export default Jackpot;
