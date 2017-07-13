@@ -1,6 +1,9 @@
 'use strict';
 
-import { EVT_EMIT_CAN_I_PLACE_BID } from './constants';
+import {
+    EVT_EMIT_CAN_I_PLACE_BID,
+    EVT_EMIT_MY_BID_PLACED
+} from './constants';
 
 /**
  * Handle on place bid
@@ -45,6 +48,12 @@ function handlePlaceNewBid(data, socket)
     // Once the new bid is place, update last bid duration and make it
     // last bid for the jackpot
     jackpotInstance.updateLastBidDuration(newBid, jackpotUserInstance);
+
+    // Emit user's own  updated data after placing this bid
+    socket.emit(EVT_EMIT_MY_BID_PLACED, {
+        availableBids:      jackpotUserInstance.availableBids,
+        totalPlacedBids:    jackpotUserInstance.placedBids.length
+    });
 
     // Emit the newly updated jackpot data to all members of its room
     // after placing this new bid

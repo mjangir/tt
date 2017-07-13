@@ -503,8 +503,37 @@ Jackpot.prototype.getJackpotCompleteData = function()
 
     return {
         jackpot:    jackpotCoreData,
-        users:      jackpotUserRawData
+        users:      jackpotUserRawData,
+        winnerData: this.getJackpotWinner()
     };
+}
+
+/**
+ * Get Jackpot Winner Raw Data
+ *
+ * @return {Object}
+ */
+Jackpot.prototype.getJackpotWinner = function()
+{
+    var longestBid      = this.getLongestBid(),
+        lastBidUser     = this.lastBidUser;
+
+    return {
+        longestBidUser: longestBid.user,
+        lastBidUser:    lastBidUser.getMetaData(),
+        bothAreSame:    longestBid.user.id == lastBidUser.getMetaData().id
+    }
+}
+
+/**
+ * Save Jackpot Data Into DB after game finished
+ *
+ * @param  {Object} data
+ * @return {*}
+ */
+Jackpot.prototype.saveDataIntoDB = function(data)
+{
+
 }
 
 // Export Jackpot

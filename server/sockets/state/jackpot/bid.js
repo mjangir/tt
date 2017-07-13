@@ -6,11 +6,12 @@ import moment from 'moment';
  * Constructor
  *
  */
-function Bid()
+function Bid(jackptUser)
 {
 	this.startTime 	= new Date();
 	this.endTime 	= null;
 	this.duration 	= null;
+    this.user       = jackptUser.getMetaData();
 }
 
 /**

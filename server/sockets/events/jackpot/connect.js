@@ -79,8 +79,18 @@ export default function(socket)
 
             socket.join(userJackpot.getRoomName());
 
+            // User joined to game successfully
             socket.emit(EVT_EMIT_ME_JOINED, {
-                jackpotUniqueId: userJackpot.getMetaData().uniqueId
+                jackpotInfo:    {
+                    uniqueId:    userJackpot.getMetaData().uniqueId,
+                    name:        userJackpot.getMetaData().title,
+                    amount:      userJackpot.getMetaData().amount
+                },
+                userInfo: {
+                    name:               jackpotUser.getMetaData().name,
+                    availableBids:      jackpotUser.availableBids,
+                    totalPlacedBids:    jackpotUser.placedBids.length,
+                }
             });
             userJackpot.emitUpdatesToItsRoom();
 
@@ -112,9 +122,21 @@ export default function(socket)
                 socket.jackpotUser  = jackpotUser;
 
                 socket.join(pickNewJackpot.getRoomName());
+
+                // User joined to game successfully
                 socket.emit(EVT_EMIT_ME_JOINED, {
-                    jackpotUniqueId: pickNewJackpot.getMetaData().uniqueId
+                    jackpotInfo:    {
+                        uniqueId:    pickNewJackpot.getMetaData().uniqueId,
+                        name:        pickNewJackpot.getMetaData().title,
+                        amount:      pickNewJackpot.getMetaData().amount
+                    },
+                    userInfo: {
+                        name:               jackpotUser.getMetaData().name,
+                        availableBids:      jackpotUser.availableBids,
+                        totalPlacedBids:    jackpotUser.placedBids.length,
+                    }
                 });
+
                 pickNewJackpot.emitUpdatesToItsRoom();
 
                 // Emit Can I bid event on join

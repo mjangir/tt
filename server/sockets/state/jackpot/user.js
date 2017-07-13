@@ -26,7 +26,7 @@ function User(data)
  */
 User.prototype.placeNewBid = function()
 {
-	var bid = new Bid();
+	var bid = new Bid(this);
 
 	this.placedBids.push(bid);
 

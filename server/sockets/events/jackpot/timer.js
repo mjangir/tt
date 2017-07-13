@@ -6,21 +6,7 @@ import {
     EVT_EMIT_SHOW_QUIT_BUTTON
 } from './constants';
 
-/**
- * Finish Game Callback
- *
- * @param  {Jackpot} jackpot
- * @param  {Object} fullData
- * @return {*}
- */
-function finishGameCallback(jackpot, fullData)
-{
-    var roomName = jackpot.getRoomName();
-
-    global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_GAME_FINISHED, {
-        data: fullData
-    });
-}
+import finishGameCallback from './finishgame';
 
 /**
  * Jackpot timer that will be running always to get the

@@ -19,6 +19,32 @@ $user = isset($_GET['user']) ? $_GET['user'] : 1;
 <div style="
     margin: auto;
     width: 350px;
+    height: 675px;
+    background: #EEE;
+">
+  <div style="
+    float: left;
+    width: 155px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+" id="jackpot-name"></div>
+    <div style="
+    float: right;
+    width: 155px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 1px solid #ccc;
+    text-align: right;
+" id="jackpot-amount"></div>
+
+
+<div style="
+    margin: auto;
+    width: 350px;
     height: 500px;
     background: #EEE;
 ">
@@ -64,6 +90,21 @@ $user = isset($_GET['user']) ? $_GET['user'] : 1;
 <div style="
     padding: 2%;
     margin-top: 20px;
+    border: 1px solid #ccc;
+    clear: both;
+    margin: 10px;
+    float: left;
+    width: 90%;
+">
+    <h4>My Name: <span class="jackpot-param" id="my-name"></span></h4>
+    <h4>My Available Bids: <span class="jackpot-param" id="my-available-bids"></span></h4>
+    <h4>Total Bids By Me: <span class="jackpot-param" id="total-bids-by-me"></span></h4>
+
+</div>
+
+<div style="
+    padding: 2%;
+    margin-top: 20px;
     clear: both;
     margin: 10px;
     float: left;
@@ -99,8 +140,19 @@ var socket;
 			});
 
 			socket.on('me_joined', function(data){
-				jQuery('#jackpot_id').val(data.jackpotUniqueId);
+                console.log(data);
+				jQuery('#jackpot_id').val(data.jackpotInfo.uniqueId);
+                jQuery('#jackpot-name').html(data.jackpotInfo.name);
+                jQuery('#jackpot-amount').html(data.jackpotInfo.amount);
+                jQuery('#my-name').html(data.userInfo.name);
+                jQuery('#my-available-bids').html(data.userInfo.availableBids);
+                jQuery('#total-bids-by-me').html(data.userInfo.totalPlacedBids);
 			});
+
+            socket.on('my_bid_placed', function(data){
+                jQuery('#my-available-bids').html(data.availableBids);
+                jQuery('#total-bids-by-me').html(data.totalPlacedBids);
+            });
 
 			// Update timer
 			socket.on('update_jackpot_timer', function(data){

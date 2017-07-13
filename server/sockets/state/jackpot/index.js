@@ -190,6 +190,7 @@ JackpotState.prototype.pickupNewJackpot = function()
                 if(metaData.gameStatus == 'NOT_STARTED')
                 {
                     foundJackpot = jackpot;
+                    break;
                 }
             }
         }
