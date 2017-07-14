@@ -44,7 +44,8 @@ router.post('/', function(req, res, next)
       code    : 200,
       message : 'Authentication Successful!',
       data    : {
-        token
+        token,
+        user_id
       }
     });
   })(req, res, next)
