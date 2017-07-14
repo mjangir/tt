@@ -113,8 +113,8 @@ module.exports = function(sequelize, DataTypes)
           }
         });
 
-        Jackpot.hasMany(models.UserJackpot, {
-          as          : 'UserJackpots',
+        Jackpot.hasMany(models.JackpotGame, {
+          as          : 'JackpotGames',
           constraints : false,
           foreignKey  : {
             name      : 'jackpotId',

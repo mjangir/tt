@@ -9,7 +9,10 @@ import {
     EVT_EMIT_UPDATE_JACKPOT_DATA,
 } from '../../events/jackpot/constants';
 
-const UserModel = sqldb.User;
+const UserModel                 = sqldb.User;
+const JackpotGameModel          = sqldb.JackpotGame;
+const JackpotGameUserModel      = sqldb.JackpotGameUser;
+const JackpotGameUserBidModel   = sqldb.JackpotGameUserBid;
 
 /**
  * Jackpot Constructor
@@ -412,9 +415,10 @@ Jackpot.prototype.getAllBids = function()
  * Get longest bid duration for the jackpot
  *
  * @param  {Boolean} humanReadable
+ * @param {Boolean} excludeLast
  * @return {Integer|String|Boolean}
  */
-Jackpot.prototype.getLongestBidDuration = function(humanReadable)
+Jackpot.prototype.getLongestBidDuration = function(humanReadable, excludeLast)
 {
     if(this.lastBid == null)
     {
@@ -436,6 +440,13 @@ Jackpot.prototype.getLongestBidDuration = function(humanReadable)
         duration = lastBidRTD;
     }
 
+    // If exclude last, then ignore last bid
+    if(excludeLast)
+    {
+        duration = longestBid.duration;
+    }
+
+    // Send in human readable
     if(typeof humanReadable != 'undefined' && humanReadable == true)
     {
         time = this.convertSecondsToCounterTime(duration);
@@ -455,6 +466,15 @@ Jackpot.prototype.getLongestBid = function()
 	var bids = this.getAllBids(),
         longest;
 
+    if(bids.length <= 0)
+    {
+        return null;
+    }
+    else if(bids.length == 1)
+    {
+        return bids[0];
+    }
+
 	longest = bids.reduce(function(l, e)
     {
       return e.duration > l.duration ? e : l;
@@ -464,25 +484,60 @@ Jackpot.prototype.getLongestBid = function()
 }
 
 /**
+ * Get last bid
+ *
+ * @return {Integer}
+ */
+Jackpot.prototype.getLastBid = function()
+{
+    var bids = this.getAllBids(),
+        sorted;
+
+    sorted = bids.sort(function(a, b)
+    {
+      return moment(b.startTime).unix() - moment(a.startTime).unix();
+    });
+
+    return sorted[0];
+}
+
+/**
+ * Get last bid duration
+ *
+ * @param  {Boolean} humanReadable
+ * @return {Integer}
+ */
+Jackpot.prototype.getLastBidDuration = function(humanReadable)
+{
+    var lastBid     = this.getLastBid(),
+        duration    = lastBid.getRealTimeDuration(),
+        time;
+
+    if(typeof humanReadable != 'undefined' && humanReadable == true)
+    {
+        time = this.convertSecondsToCounterTime(duration);
+        return time.minutes + ':' + time.seconds;
+    }
+
+    return duration;
+}
+
+/**
  * Get Jackpot Complete Data
  *
  * @return {Object}
  */
 Jackpot.prototype.getJackpotCompleteData = function()
 {
-    var jackpotCoreData = {
-        jackpotId   : this.metaData.id,
-        uniqueId    : this.metaData.uniqueId,
-        startedOn   : moment(this.metaData.startedOn).format("YYYY-MM-DD HH:mm:ss"),
-        finishedOn  : moment(this.metaData.finishedOn).format("YYYY-MM-DD HH:mm:ss")
-    },
-    jackpotUsersIds = Object.keys(this.users),
-    jackpotUser,
-    jackpotUserMetaData,
-    jackpotUserBids,
-    jackpotUserBidsLength,
-    jackpotUsersLength = jackpotUsersIds.length,
-    jackpotUserRawData = [];
+    var jackpotUsersIds = Object.keys(this.users),
+        jackpotCoreData,
+        jackpotUser,
+        jackpotUserMetaData,
+        jackpotUserBids,
+        jackpotUserBidsLength,
+        jackpotUsersLength  = jackpotUsersIds.length,
+        winnerData          = this.getJackpotWinner(),
+        jackpotUserRawData  = [];
 
     for(var i = 0; i < jackpotUsersLength; i++)
     {
@@ -495,10 +550,24 @@ Jackpot.prototype.getJackpotCompleteData = function()
             userId              : jackpotUserMetaData.id,
             bids                : jackpotUserBids,
             totalBids           : jackpotUserBidsLength,
+            availableBids       : jackpotUser.availableBids,
             firstBidStartTime   : jackpotUser.firstBidStartTime,
             lastBidStartTime    : jackpotUser.lastBidStartTime,
             longestBidDuration  : jackpotUser.getMyLongestBidDuration()
         });
+    }
+
+    jackpotCoreData     = {
+        jackpotId               : this.metaData.id,
+        uniqueId                : this.metaData.uniqueId,
+        totalUsersParticipated  : jackpotUsersIds.length,
+        totalNumberOfBids       : this.getAllBids().length,
+        lastBidDuration         : this.getLastBidDuration(),
+        longestBidDuration      : this.getLongestBidDuration(false, true),
+        longestBidWinnerUserId  : winnerData.longestBidUser.id,
+        lastBidWinnerUserId     : winnerData.lastBidUser.id,
+        startedOn               : moment(this.metaData.startedOn).format("YYYY-MM-DD HH:mm:ss"),
+        finishedOn              : moment(this.metaData.finishedOn).format("YYYY-MM-DD HH:mm:ss")
     }
 
     return {
@@ -533,7 +602,58 @@ Jackpot.prototype.getJackpotWinner = function()
  */
 Jackpot.prototype.saveDataIntoDB = function(data)
 {
+    var jackpotCore = data.jackpot,
+        users       = data.users,
+        context     = this,
+        insertData;
 
+    jackpotCore.JackpotGameUsers = [];
+
+    if(users.length > 0)
+    {
+        for(var k = 0; k < users.length; k++)
+        {
+            var user, bids, jpUser, jpBids;
+
+            user    = users[k];
+            bids    = user.bids;
+            jpBids  = [];
+
+            for(var j = 0; j < bids.length; j++)
+            {
+                jpBids.push({
+                    bidStartTime        : bids[j].startTime,
+                    bidEndTime          : bids[j].endTime,
+                    bidDuration         : bids[j].duration
+                });
+            }
+
+            jpUser  = {
+                remainingAvailableBids  : user.availableBids,
+                totalNumberOfBids       : user.totalBids,
+                longestBidDuration      : user.longestBidDuration,
+                joinedOn                : user.firstBidStartTime,
+                userId                  : user.userId,
+                JackpotGameUserBids     : jpBids
+            };
+
+            jackpotCore.JackpotGameUsers.push(jpUser);
+        }
+    }
+
+    JackpotGameModel.create(jackpotCore,
+     {
+        include: [
+        {
+            model   : JackpotGameUserModel,
+            as      : 'JackpotGameUsers',
+            include : [
+            {
+                model   : JackpotGameUserBidModel,
+                as      : 'JackpotGameUserBids'
+            }]
+        }]
+    });
 }
 
 // Export Jackpot

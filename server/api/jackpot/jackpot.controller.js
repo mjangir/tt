@@ -103,16 +103,38 @@ exports.index = function(req, res)
   logger.debug("Trying to find list of all jackpots.");
   Jackpot.findAll({
     include: [
-        {
-          model     : sqldb.UserJackpot,
-          as        : 'UserJackpots',
-          required  : false,
-          attributes: ['id','status', 'availableBids', 'created_at'],
-          include: [
-            {model: sqldb.User, as: 'BidUser', required: false, attributes: ['id','name', 'email']},
-            {model: sqldb.UserJackpotBid, as: 'UserJackpotBids', required: false,attributes: ['id','bidStartTime', 'bidEndTime', 'bidDuration']},
-          ]
-        }
+      {
+        model: sqldb.JackpotGame,
+        as: 'JackpotGames',
+        required: false,
+        include: [
+          {
+            model: sqldb.User,
+            as: 'LongestBidWinnerUser',
+            required: false,
+            attributes: ['id', 'name', 'email']
+          },
+          {
+            model: sqldb.User,
+            as: 'LastBidWinnerUser',
+            required: false,
+            attributes: ['id', 'name', 'email']
+          },
+          {
+            model: sqldb.JackpotGameUser,
+            as: 'JackpotGameUsers',
+            required: false,
+            include: [
+              {
+                model: sqldb.JackpotGameUserBid,
+                as: 'JackpotGameUserBids',
+                required: false,
+                attributes: ['bidStartTime', 'bidEndTime', 'bidDuration']
+              }
+            ]
+          }
+        ]
+      }
     ]
   })
   .then(responseWithResult(res))
@@ -134,18 +156,38 @@ exports.show = function(req, res)
       id: req.params.id
     },
     include: [
-        {model: sqldb.User, as: 'CreatedByUser', attributes: ['id', 'name', 'email'], required: false},
-        {model: sqldb.User, as: 'UpdatedByUser', attributes: ['id', 'name', 'email'], required: false},
-        {
-          model     : sqldb.UserJackpot,
-          as        : 'UserJackpots',
-          required  : false,
-          attributes: ['id','status', 'availableBids', 'created_at'],
-          include: [
-            {model: sqldb.User, as: 'BidUser', required: false, attributes: ['id','name', 'email']},
-            {model: sqldb.UserJackpotBid, as: 'UserJackpotBids', required: false,attributes: ['id','bidStartTime', 'bidEndTime', 'bidDuration']},
-          ]
-        }
+      {
+        model: sqldb.JackpotGame,
+        as: 'JackpotGames',
+        required: false,
+        include: [
+          {
+            model: sqldb.User,
+            as: 'LongestBidWinnerUser',
+            required: false,
+            attributes: ['id', 'name', 'email']
+          },
+          {
+            model: sqldb.User,
+            as: 'LastBidWinnerUser',
+            required: false,
+            attributes: ['id', 'name', 'email']
+          },
+          {
+            model: sqldb.JackpotGameUser,
+            as: 'JackpotGameUsers',
+            required: false,
+            include: [
+              {
+                model: sqldb.JackpotGameUserBid,
+                as: 'JackpotGameUserBids',
+                required: false,
+                attributes: ['bidStartTime', 'bidEndTime', 'bidDuration']
+              }
+            ]
+          }
+        ]
+      }
     ]
   })
   .then(handleEntityNotFound(res))

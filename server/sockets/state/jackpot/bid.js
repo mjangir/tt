@@ -1,6 +1,7 @@
 'use strict';
 
 import moment from 'moment';
+import {generateRandomString} from '../../../utils/functions';
 
 /**
  * Constructor
@@ -11,6 +12,7 @@ function Bid(jackptUser)
 	this.startTime 	= new Date();
 	this.endTime 	= null;
 	this.duration 	= null;
+    this.id         = generateRandomString(20, 'aA');
     this.user       = jackptUser.getMetaData();
 }
 

@@ -15,6 +15,7 @@ function User(data)
 	this.isActive 			= true;
 	this.availableBids 		= 10;
 	this.placedBids 		= [];
+	this.lastBid 			= null;
 	this.firstBidStartTime 	= null;
 	this.lastBidStartTime 	= null;
 }
@@ -29,6 +30,9 @@ User.prototype.placeNewBid = function()
 	var bid = new Bid(this);
 
 	this.placedBids.push(bid);
+
+	// Set last bid
+	this.lastBid = bid;
 
 	// Decrease available bid count
 	this.availableBids -= 1;
@@ -67,6 +71,10 @@ User.prototype.getMyLongestBid = function()
     {
     	return null;
     }
+    else if(bids.length == 1)
+    {
+    	return bids[0];
+    }
 
 	longest = bids.reduce(function(l, e)
     {
@@ -88,7 +96,18 @@ User.prototype.getMyLongestBidDuration = function(humanReadable)
 	var longestBid 	= this.getMyLongestBid(),
 		duration 	= null;
 
-	if(longestBid != null)
+	// If user placed no bid
+	if(longestBid == null)
+	{
+		return null;
+	}
+
+	// If his longest bid duration is null, then this is currently leading bid
+	if(longestBid.duration == null)
+	{
+		duration = longestBid.getRealTimeDuration();
+	}
+	else
 	{
 		duration = longestBid.duration;
 	}

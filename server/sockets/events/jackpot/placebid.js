@@ -51,8 +51,9 @@ function handlePlaceNewBid(data, socket)
 
     // Emit user's own  updated data after placing this bid
     socket.emit(EVT_EMIT_MY_BID_PLACED, {
-        availableBids:      jackpotUserInstance.availableBids,
-        totalPlacedBids:    jackpotUserInstance.placedBids.length
+        availableBids:          jackpotUserInstance.availableBids,
+        totalPlacedBids:        jackpotUserInstance.placedBids.length,
+        myLongestBidDuration:   jackpotUserInstance.getMyLongestBidDuration()
     });
 
     // Emit the newly updated jackpot data to all members of its room

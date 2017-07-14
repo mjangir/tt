@@ -345,8 +345,8 @@ module.exports = function(sequelize, DataTypes)
           }
         });
 
-        User.hasMany(models.UserJackpot, {
-          as          : 'UserJackpots',
+        User.hasMany(models.JackpotGameUser, {
+          as          : 'JackpotGames',
           constraints : false,
           foreignKey  : {
             name      : 'userId',

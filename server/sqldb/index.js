@@ -24,11 +24,13 @@ const db = {
 };
 
 // Import Sequelize models
-db.User             = db.sequelize.import('../api/user/user.model');
-db.UserJackpot      = db.sequelize.import('../api/user/user-jackpot.model');
-db.UserJackpotBid   = db.sequelize.import('../api/user/user-jackpot-bid.model');
-db.Jackpot          = db.sequelize.import('../api/jackpot/jackpot.model');
-db.Settings         = db.sequelize.import('../api/settings/settings.model');
+db.User                 = db.sequelize.import('../api/user/user.model');
+db.Settings             = db.sequelize.import('../api/settings/settings.model');
+db.Jackpot              = db.sequelize.import('../api/jackpot/jackpot.model');
+db.JackpotGame          = db.sequelize.import('../api/jackpot/jackpot-game.model');
+db.JackpotGameUser      = db.sequelize.import('../api/jackpot/jackpot-game-user.model');
+db.JackpotGameUserBid   = db.sequelize.import('../api/jackpot/jackpot-game-user-bid.model');
+
 
 // Model Associations for Sequelize
 Object.keys(db).forEach(function(modelName)

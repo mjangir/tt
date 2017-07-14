@@ -2,7 +2,7 @@
 
 module.exports = function(sequelize, DataTypes)
 {
-  var UserJackpotBid = sequelize.define('UserJackpotBid', {
+  var JackpotGameUserBid = sequelize.define('JackpotGameUserBid', {
     id: {
       type            : DataTypes.INTEGER(11),
       allowNull       : false,
@@ -35,17 +35,17 @@ module.exports = function(sequelize, DataTypes)
   },
   {
     freezeTableName   : true,
-    tableName         : 'user_jackpot_bids',
+    tableName         : 'jackpot_game_user_bids',
 
     classMethods:{
       associate:function(models)
       {
-        UserJackpotBid.belongsTo(models.UserJackpot, {
-          as          : 'UserJackpot',
+        JackpotGameUserBid.belongsTo(models.JackpotGameUser, {
+          as          : 'JackpotGameUser',
           constraints : false,
           foreignKey  : {
-            name      : 'userJackpotId',
-            field     : 'user_jackpot_id',
+            name      : 'jackpotGameUserId',
+            field     : 'jackpot_game_user_id',
             allowNull : false
           }
         });
@@ -53,5 +53,5 @@ module.exports = function(sequelize, DataTypes)
     }
   });
 
-  return UserJackpotBid;
+  return JackpotGameUserBid;
 };
