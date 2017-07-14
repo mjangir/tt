@@ -1,5 +1,5 @@
 export default {
-  ip        : process.env.IP || '192.192.8.44',
+  ip        : process.env.IP || 'localhost',
   port      : process.env.PORT || 9000,
   seedDB    : true,
   errors    : {

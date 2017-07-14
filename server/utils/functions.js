@@ -35,6 +35,24 @@ export const userAvatarMulter = function()
     });
 }
 
+export const signupUserPhotoUpload = function()
+{
+    const storage = multer.diskStorage({
+      destination: function (req, file, cb)
+      {
+          cb(null, path.join(__dirname, '../uploads/profile_pics'));
+      },
+      filename: function (req, file, cb)
+      {
+          cb(null, uuid.v4() + path.extname(file.originalname));
+      }
+    });
+
+    return multer({
+        storage: storage
+    });
+}
+
 export const generateRandomString = function(length, chars)
 {
     var mask = '';

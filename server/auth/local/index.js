@@ -45,7 +45,7 @@ router.post('/', function(req, res, next)
       message : 'Authentication Successful!',
       data    : {
         token,
-        user_id
+        user_id: user.id
       }
     });
   })(req, res, next)

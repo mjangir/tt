@@ -7,6 +7,7 @@ import sqldb from '../../sqldb';
 import logger from '../../utils/logger';
 import {sequelizeErrorHandler} from '../../utils/LiveErrorHandler';
 import _ from 'lodash';
+import {signupUserPhotoUpload} from '../../utils/functions';
 
 const User = sqldb.User;
 
@@ -15,6 +16,8 @@ const router = express.Router();
 router.post('/', function(req, res, next)
 {
   let errors = [];
+
+  console.log(req.file);
 
   // Validate all body parameters
   req.checkBody({
