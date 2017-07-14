@@ -34,7 +34,8 @@ export default function()
             gameClockTime,
             doomsDayTime,
             lastBidDuration,
-            longestBidDuration;
+            longestBidDuration,
+            longestBidUserName;
 
         // Run for all jackpots
         for(var i = 0; i < length; i++)
@@ -71,13 +72,20 @@ export default function()
             doomsDayTime        = jackpot.getHumanDoomsDayClock();
             lastBidDuration     = jackpot.getHumanLastBidDuration();
             longestBidDuration  = jackpot.getLongestBidDuration(true);
+            longestBidUserName  = null;
+
+            if(jackpot.getLongestBid() || jackpot.lastBid)
+            {
+                longestBidUserName = jackpot.getLongestBid() == null ? this.lastBid.user.name : jackpot.getLongestBid().user.name;
+            }
 
             // Emit the updated jackpot timer to everybody in its room
             global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_UPDATE_JACKPOT_TIMER, {
                 gameClockTime       : gameClockTime,
                 doomsDayClockTime   : doomsDayTime,
                 lastBidDuration     : lastBidDuration,
-                longestBidDuration  : longestBidDuration
+                longestBidDuration  : longestBidDuration,
+                longestBidUserName  : longestBidUserName
             });
         }
     }, 1000);

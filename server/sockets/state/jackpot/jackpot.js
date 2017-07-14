@@ -463,8 +463,9 @@ Jackpot.prototype.getLongestBidDuration = function(humanReadable, excludeLast)
  */
 Jackpot.prototype.getLongestBid = function()
 {
-	var bids = this.getAllBids(),
-        longest;
+	var bids       = this.getAllBids(),
+        lastBid    = this.lastBid,
+        longestBid;
 
     if(bids.length <= 0)
     {
@@ -475,12 +476,19 @@ Jackpot.prototype.getLongestBid = function()
         return bids[0];
     }
 
-	longest = bids.reduce(function(l, e)
+	longestBid = bids.reduce(function(l, e)
     {
       return e.duration > l.duration ? e : l;
     });
 
-    return longest;
+    if(lastBid != null && longestBid.duration > lastBid.getRealTimeDuration())
+    {
+        return longestBid;
+    }
+    else
+    {
+        return lastBid;
+    }
 }
 
 /**
