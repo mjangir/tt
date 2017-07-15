@@ -52,8 +52,8 @@ export default function()
           amount: 50000,
           gameClockTime: 600,
           doomsDayTime: 259200,
-          gameClockRemaining: 320,
-          doomsDayRemaining: 3600,
+          gameClockRemaining: 600,
+          doomsDayRemaining: 259200,
           uniqueId: generateRandomString(20, 'aA'),
           gameStatus: 'NOT_STARTED',
           createdBy: 1
