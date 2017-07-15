@@ -13,7 +13,7 @@ function User(data)
 	this.metaData 			= data;
 	this.gameStatus 		= 'JOINED';
 	this.isActive 			= true;
-	this.availableBids 		= 10;
+	this.availableBids 		= 25;
 	this.placedBids 		= [];
 	this.lastBid 			= null;
 	this.firstBidStartTime 	= null;
