@@ -24,8 +24,14 @@ const db = {
 };
 
 // Import Sequelize models
+db.Country              = db.sequelize.import('../api/country/country.model');
+db.Role                 = db.sequelize.import('../api/role/role.model');
+db.UserGroup            = db.sequelize.import('../api/user_group/user_group.model');
 db.User                 = db.sequelize.import('../api/user/user.model');
 db.Settings             = db.sequelize.import('../api/settings/settings.model');
+db.LinkCategory         = db.sequelize.import('../api/link_category/link_category.model');
+db.Link                 = db.sequelize.import('../api/link/link.model');
+db.LinkPermission       = db.sequelize.import('../api/link/link_permission.model');
 db.Jackpot              = db.sequelize.import('../api/jackpot/jackpot.model');
 db.JackpotGame          = db.sequelize.import('../api/jackpot/jackpot-game.model');
 db.JackpotGameUser      = db.sequelize.import('../api/jackpot/jackpot-game-user.model');

@@ -71,6 +71,13 @@ module.exports = function(sequelize, DataTypes)
       comment       : "User password"
     },
 
+    forgotPwdSalt: {
+      field         : "forgot_pwd_salt",
+      type          : DataTypes.STRING(255),
+      allowNull     : true,
+      comment       : "Forgot password salt"
+    },
+
     gender : {
       field         : "gender",
       type          : DataTypes.ENUM('MALE','FEMALE'),
@@ -79,20 +86,36 @@ module.exports = function(sequelize, DataTypes)
       comment       : "User gender Male or Female"
     },
 
-    role : {
-      field         : "role",
-      type          : DataTypes.ENUM('USER','ADMIN'),
-      allowNull     : false,
-      defaultValue  : 'USER',
-      comment       : "User Role"
+    birthDate: {
+      field         : "birth_date",
+      type          : DataTypes.DATE,
+      allowNull     : true,
+      defaultValue  : null,
+      comment       : "User Birth Date"
     },
 
-    image: {
-      field         : "image",
+    bloodGroup: {
+      field         : "blood_group",
+      type          : DataTypes.STRING(10),
+      allowNull     : true,
+      defaultValue  : null,
+      comment       : "User Blood Group"
+    },
+
+    phone: {
+      field         : "phone",
+      type          : DataTypes.STRING(15),
+      allowNull     : true,
+      defaultValue  : null,
+      comment       : "User Phone Number"
+    },
+
+    photo: {
+      field         : "photo",
       type          : DataTypes.STRING(255),
       allowNull     : true,
       defaultValue  : null,
-      comment       : "User image"
+      comment       : "User Photo"
     },
 
     status : {
@@ -325,6 +348,37 @@ module.exports = function(sequelize, DataTypes)
     classMethods : {
       associate:function(models)
       {
+        User.belongsTo(models.Country, {
+          as          : 'Country',
+          constraints : false,
+          foreignKey  : {
+            name      : 'countryId',
+            field     : 'country_id',
+            allowNull : true
+          }
+        });
+
+        User.belongsTo(models.Role, {
+          as          : 'Role',
+          constraints : false,
+          foreignKey  : {
+            name      : 'roleId',
+            field     : 'role_id',
+            allowNull : false
+          }
+        });
+
+        User.belongsTo(models.UserGroup, {
+          as          : 'UserGroup',
+          constraints : false,
+          foreignKey  : {
+            name      : 'userGroupId',
+            field     : 'user_group_id',
+            allowNull : false
+          }
+        });
+
+
         User.belongsTo(models.User, {
           as          : 'CreatedByUser',
           constraints : false,
