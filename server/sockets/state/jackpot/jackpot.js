@@ -98,6 +98,10 @@ Jackpot.prototype.getHumanGameClock = function()
 Jackpot.prototype.getHumanDoomsDayClock = function()
 {
 	var time = this.convertSecondsToCounterTime(this.metaData.doomsDayRemaining);
+    if(time.days > 0)
+    {
+        return time.days + ":" +time.hours + ":" + time.minutes + ":" + time.seconds;
+    }
 	return time.hours + ":" + time.minutes + ":" + time.seconds;
 }
 
@@ -294,6 +298,7 @@ Jackpot.prototype.convertSecondsToCounterTime = function(seconds)
     }
 
     return {
+        days: days,
     	hours: hours,
     	minutes: minutes,
     	seconds: remainingSeconds
