@@ -50,8 +50,8 @@ export default function()
         Jackpot.bulkCreate([{
           title: 'First Jackpot',
           amount: 50000,
-          gameClockTime: 320,
-          doomsDayTime: 3600,
+          gameClockTime: 600,
+          doomsDayTime: 259200,
           gameClockRemaining: 320,
           doomsDayRemaining: 3600,
           uniqueId: generateRandomString(20, 'aA'),
