@@ -13,7 +13,7 @@ const User = sqldb.User;
 
 const router = express.Router();
 
-router.post('/', [signupUserPhotoUpload().single('photo')], function(req, res, next)
+router.post('/', function(req, res, next)
 {
   let errors = [];
 

@@ -207,21 +207,18 @@ Jackpot.prototype.getUpdatedJackpotData = function()
 {
 	var placedBids 	= this.getAllBids();
 
-	if(this.isCurrentlyBeingPlayed())
-	{
-		return {
-	        totalUsers 		: Object.keys(this.users).length,
-	        totalBids 		: placedBids.length,
-	        longestBid 		: this.getLongestBid(),
-	        activePlayers 	: this.getActiveUsers().length,
-	        remainingPlayers: this.getInActiveUsers().length,
-	        averageBidBank 	: this.getAverageBidBank(),
-	        canIBid 		: true,
-	        currentBidUser 	: {
-	        	name: this.lastBidUser.getMetaData().name
-	        }
-	    }
-	}
+	return {
+        totalUsers      : Object.keys(this.users).length,
+        totalBids       : placedBids.length,
+        longestBid      : this.getLongestBid(),
+        activePlayers   : this.getActiveUsers().length,
+        remainingPlayers: this.getInActiveUsers().length,
+        averageBidBank  : this.getAverageBidBank(),
+        canIBid         : true,
+        currentBidUser  : {
+            name: this.lastBidUser != null ? this.lastBidUser.getMetaData().name : ""
+        }
+    }
 
 	return {};
 }
@@ -345,7 +342,7 @@ Jackpot.prototype.getActiveUsers = function()
 
 	return Object.keys(this.users).filter(function(id)
 	{
-		return context.users[id].isActive == true;
+		return context.users[id].isActive == true && context.users[id].gameStatus != 'QUITTED';
 	});
 }
 
@@ -360,7 +357,7 @@ Jackpot.prototype.getInActiveUsers = function()
 
 	return Object.keys(this.users).filter(function(id)
 	{
-		return context.users[id].isActive != true;
+		return context.users[id].isActive != true && context.users[id].gameStatus != 'QUITTED';
 	});
 }
 
@@ -571,7 +568,7 @@ Jackpot.prototype.getJackpotCompleteData = function()
         totalUsersParticipated  : jackpotUsersIds.length,
         totalNumberOfBids       : this.getAllBids().length,
         lastBidDuration         : this.getLastBidDuration(),
-        longestBidDuration      : this.getLongestBidDuration(false, true),
+        longestBidDuration      : this.getLongestBidDuration(false),
         longestBidWinnerUserId  : winnerData.longestBidUser.id,
         lastBidWinnerUserId     : winnerData.lastBidUser.id,
         startedOn               : moment(this.metaData.startedOn).format("YYYY-MM-DD HH:mm:ss"),
