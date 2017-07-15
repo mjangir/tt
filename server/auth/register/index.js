@@ -78,7 +78,7 @@ router.post('/', function(req, res, next)
 
           res.status(201).json({
             status: 'success',
-            data: _.assign(entity, {token: token})
+            data: _.assign(entity, {token: token, user_id: entity.id})
           }).end();
         }
       };
