@@ -28,11 +28,19 @@ module.exports = function(sequelize, DataTypes)
   },
   {
     freezeTableName   : true,
-    tableName         : 'roles',
+    tableName         : 'role',
 
     classMethods:{
       associate:function(models){
-        
+        Role.hasMany(models.UserGroup, {
+          as          : 'UserGroups',
+          constraints : true,
+          foreignKey  : {
+            name      : 'roleId',
+            field     : 'role_id',
+            allowNull : false
+          }
+        });
       }
     },
     defaultScope: {

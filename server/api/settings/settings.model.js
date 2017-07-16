@@ -13,21 +13,21 @@ module.exports = function(sequelize, DataTypes)
 
     key : {
       field       : "key",
-      type        : DataTypes.STRING(100),
+      type        : DataTypes.STRING(255),
       allowNull   : false,
       comment     : "Setting Key"
     },
 
     value : {
       field       : "value",
-      type        : DataTypes.STRING(100),
+      type        : DataTypes.TEXT('long'),
       allowNull   : true,
       comment     : "Setting Value"
     }
   },
   {
     freezeTableName   : true,
-    tableName         : 'settings',
+    tableName         : 'setting',
 
     classMethods:{
       associate:function(models){

@@ -70,16 +70,26 @@ module.exports = function(sequelize, DataTypes)
   },
   {
     freezeTableName   : true,
-    tableName         : 'links',
+    tableName         : 'link',
 
     classMethods:{
       associate:function(models){
         Link.belongsTo(models.LinkCategory, {
           as          : 'LinkCategory',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'linkCategoryId',
             field     : 'link_category_id',
+            allowNull : false
+          }
+        });
+
+        Link.hasMany(models.LinkPermission, {
+          as          : 'LinkPermissions',
+          constraints : true,
+          foreignKey  : {
+            name      : 'linkId',
+            field     : 'link_id',
             allowNull : false
           }
         });

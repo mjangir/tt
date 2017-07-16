@@ -89,13 +89,13 @@ module.exports = function(sequelize, DataTypes)
   },
   {
     freezeTableName   : true,
-    tableName         : 'jackpots',
+    tableName         : 'jackpot',
 
     classMethods:{
       associate:function(models){
         Jackpot.belongsTo(models.User, {
           as          : 'CreatedByUser',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'createdBy',
             field     : 'created_by',
@@ -105,7 +105,7 @@ module.exports = function(sequelize, DataTypes)
 
         Jackpot.belongsTo(models.User, {
           as          : 'UpdatedByUser',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'updatedBy',
             field     : 'updated_by',
@@ -115,7 +115,7 @@ module.exports = function(sequelize, DataTypes)
 
         Jackpot.hasMany(models.JackpotGame, {
           as          : 'JackpotGames',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'jackpotId',
             field     : 'jackpot_id',

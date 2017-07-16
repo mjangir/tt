@@ -42,16 +42,26 @@ module.exports = function(sequelize, DataTypes)
   },
   {
     freezeTableName   : true,
-    tableName         : 'user_groups',
+    tableName         : 'user_group',
 
     classMethods:{
       associate:function(models){
         UserGroup.belongsTo(models.Role, {
           as          : 'Role',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'roleId',
             field     : 'role_id',
+            allowNull : false
+          }
+        });
+
+        UserGroup.hasMany(models.User, {
+          as          : 'Users',
+          constraints : true,
+          foreignKey  : {
+            name      : 'userGroupId',
+            field     : 'user_group_id',
             allowNull : false
           }
         });

@@ -35,14 +35,14 @@ module.exports = function(sequelize, DataTypes)
   },
   {
     freezeTableName   : true,
-    tableName         : 'jackpot_game_user_bids',
+    tableName         : 'jackpot_game_user_bid',
 
     classMethods:{
       associate:function(models)
       {
         JackpotGameUserBid.belongsTo(models.JackpotGameUser, {
           as          : 'JackpotGameUser',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'jackpotGameUserId',
             field     : 'jackpot_game_user_id',

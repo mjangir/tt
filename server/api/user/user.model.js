@@ -128,7 +128,7 @@ module.exports = function(sequelize, DataTypes)
   },
   {
     freezeTableName :true,
-    tableName       :'users',
+    tableName       :'user',
 
     // Pre-Save model hooks
     hooks: {
@@ -275,6 +275,8 @@ module.exports = function(sequelize, DataTypes)
         const defaultKeyLength  = 64;
         const salt              = new Buffer(this.salt, 'base64');
 
+        console.log(this.salt);
+
         if(!callback)
         {
           return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength)
@@ -350,7 +352,7 @@ module.exports = function(sequelize, DataTypes)
       {
         User.belongsTo(models.Country, {
           as          : 'Country',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'countryId',
             field     : 'country_id',
@@ -358,19 +360,9 @@ module.exports = function(sequelize, DataTypes)
           }
         });
 
-        User.belongsTo(models.Role, {
-          as          : 'Role',
-          constraints : false,
-          foreignKey  : {
-            name      : 'roleId',
-            field     : 'role_id',
-            allowNull : false
-          }
-        });
-
         User.belongsTo(models.UserGroup, {
           as          : 'UserGroup',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'userGroupId',
             field     : 'user_group_id',
@@ -381,7 +373,7 @@ module.exports = function(sequelize, DataTypes)
 
         User.belongsTo(models.User, {
           as          : 'CreatedByUser',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'createdBy',
             field     : 'created_by',
@@ -391,7 +383,7 @@ module.exports = function(sequelize, DataTypes)
 
         User.belongsTo(models.User, {
           as          : 'UpdatedByUser',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'updatedBy',
             field     : 'updated_by',
@@ -401,7 +393,7 @@ module.exports = function(sequelize, DataTypes)
 
         User.hasMany(models.JackpotGameUser, {
           as          : 'JackpotGames',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'userId',
             field     : 'user_id',

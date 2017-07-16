@@ -1364,3 +1364,106 @@
 {"level":"debug","message":"Create user initializated","timestamp":"2017-07-15T14:01:05.538Z"}
 {"level":"debug","message":"Create user initializated","timestamp":"2017-07-15T14:01:40.344Z"}
 {"date":"Sat Jul 15 2017 23:02:47 GMT+0530 (IST)","process":{"pid":19001,"uid":0,"gid":0,"cwd":"/home/manish/ticktockapp","execPath":"/usr/bin/nodejs","version":"v6.10.2","argv":["/usr/bin/nodejs","/home/manish/ticktockapp/server/tools/migration"],"memoryUsage":{"rss":79970304,"heapTotal":71127040,"heapUsed":34479576,"external":1176253}},"os":{"loadavg":[0.51025390625,0.3349609375,0.25390625],"uptime":29759},"trace":[{"column":31,"file":"/home/manish/ticktockapp/server/api/country/country.model.js","function":"module.exports","line":16,"method":"exports","native":false},{"column":30,"file":"/home/manish/ticktockapp/node_modules/sequelize/lib/sequelize.js","function":"Sequelize.import","line":691,"method":"import","native":false},{"column":46,"file":"/home/manish/ticktockapp/server/sqldb/index.js","function":null,"line":27,"method":null,"native":false},{"column":32,"file":"module.js","function":"Module._compile","line":570,"method":"_compile","native":false},{"column":5,"file":"/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js","function":"normalLoader","line":199,"method":null,"native":false},{"column":7,"file":"/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js","function":"Object.require.extensions.(anonymous function) [as .js]","line":216,"method":"js]","native":false},{"column":32,"file":"module.js","function":"Module.load","line":487,"method":"load","native":false},{"column":12,"file":"module.js","function":"tryModuleLoad","line":446,"method":null,"native":false},{"column":3,"file":"module.js","function":"Module._load","line":438,"method":"_load","native":false},{"column":17,"file":"module.js","function":"Module.require","line":497,"method":"require","native":false},{"column":19,"file":"internal/module.js","function":"require","line":20,"method":null,"native":false},{"column":14,"file":"/home/manish/ticktockapp/server/tools/seed.js","function":null,"line":9,"method":null,"native":false},{"column":32,"file":"module.js","function":"Module._compile","line":570,"method":"_compile","native":false},{"column":5,"file":"/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js","function":"normalLoader","line":199,"method":null,"native":false},{"column":7,"file":"/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js","function":"Object.require.extensions.(anonymous function) [as .js]","line":216,"method":"js]","native":false},{"column":32,"file":"module.js","function":"Module.load","line":487,"method":"load","native":false}],"stack":["TypeError: DataTypes.VARCHAR is not a function","    at module.exports (/home/manish/ticktockapp/server/api/country/country.model.js:16:31)","    at Sequelize.import (/home/manish/ticktockapp/node_modules/sequelize/lib/sequelize.js:691:30)","    at Object.<anonymous> (/home/manish/ticktockapp/server/sqldb/index.js:27:46)","    at Module._compile (module.js:570:32)","    at normalLoader (/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js:199:5)","    at Object.require.extensions.(anonymous function) [as .js] (/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js:216:7)","    at Module.load (module.js:487:32)","    at tryModuleLoad (module.js:446:12)","    at Function.Module._load (module.js:438:3)","    at Module.require (module.js:497:17)","    at require (internal/module.js:20:19)","    at Object.<anonymous> (/home/manish/ticktockapp/server/tools/seed.js:9:14)","    at Module._compile (module.js:570:32)","    at normalLoader (/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js:199:5)","    at Object.require.extensions.(anonymous function) [as .js] (/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js:216:7)","    at Module.load (module.js:487:32)"],"level":"error","message":"uncaughtException: DataTypes.VARCHAR is not a function","timestamp":"2017-07-15T17:32:47.495Z"}
+{"date":"Sun Jul 16 2017 21:54:27 GMT+0530 (IST)","process":{"pid":20916,"uid":1000,"gid":1000,"cwd":"/home/manish/ticktockapp","execPath":"/usr/bin/nodejs","version":"v6.11.1","argv":["/usr/bin/nodejs","/home/manish/ticktockapp/server/tools/migration"],"memoryUsage":{"rss":85045248,"heapTotal":73490432,"heapUsed":48936960,"external":1443661}},"os":{"loadavg":[0.7197265625,0.40576171875,0.2421875],"uptime":23219},"trace":[{"column":13,"file":"/home/manish/ticktockapp/node_modules/sequelize/lib/model.js","function":null,"line":95,"method":null,"native":false},{"column":23,"file":"/home/manish/ticktockapp/node_modules/sequelize/node_modules/lodash/lodash.js","function":null,"line":12666,"method":null,"native":false},{"column":15,"file":"/home/manish/ticktockapp/node_modules/sequelize/node_modules/lodash/lodash.js","function":null,"line":4389,"method":null,"native":false},{"column":24,"file":"/home/manish/ticktockapp/node_modules/sequelize/node_modules/lodash/lodash.js","function":"baseForOwn","line":2652,"method":null,"native":false},{"column":7,"file":"/home/manish/ticktockapp/node_modules/sequelize/node_modules/lodash/lodash.js","function":"Function.mapValues","line":12665,"method":"mapValues","native":false},{"column":43,"file":"/home/manish/ticktockapp/node_modules/sequelize/lib/model.js","function":"new Model","line":78,"method":null,"native":false},{"column":15,"file":"/home/manish/ticktockapp/node_modules/sequelize/lib/sequelize.js","function":"Sequelize.define","line":631,"method":"define","native":false},{"column":28,"file":"/home/manish/ticktockapp/server/api/settings/settings.model.js","function":"module.exports","line":5,"method":"exports","native":false},{"column":30,"file":"/home/manish/ticktockapp/node_modules/sequelize/lib/sequelize.js","function":"Sequelize.import","line":691,"method":"import","native":false},{"column":46,"file":"/home/manish/ticktockapp/server/sqldb/index.js","function":null,"line":31,"method":null,"native":false},{"column":32,"file":"module.js","function":"Module._compile","line":570,"method":"_compile","native":false},{"column":5,"file":"/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js","function":"normalLoader","line":199,"method":null,"native":false},{"column":7,"file":"/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js","function":"Object.require.extensions.(anonymous function) [as .js]","line":216,"method":"js]","native":false},{"column":32,"file":"module.js","function":"Module.load","line":487,"method":"load","native":false},{"column":12,"file":"module.js","function":"tryModuleLoad","line":446,"method":null,"native":false},{"column":3,"file":"module.js","function":"Module._load","line":438,"method":"_load","native":false}],"stack":["Error: Unrecognized data type for field value","    at Model.<anonymous> (/home/manish/ticktockapp/node_modules/sequelize/lib/model.js:95:13)","    at /home/manish/ticktockapp/node_modules/sequelize/node_modules/lodash/lodash.js:12666:23","    at /home/manish/ticktockapp/node_modules/sequelize/node_modules/lodash/lodash.js:4389:15","    at baseForOwn (/home/manish/ticktockapp/node_modules/sequelize/node_modules/lodash/lodash.js:2652:24)","    at Function.mapValues (/home/manish/ticktockapp/node_modules/sequelize/node_modules/lodash/lodash.js:12665:7)","    at new Model (/home/manish/ticktockapp/node_modules/sequelize/lib/model.js:78:43)","    at Sequelize.define (/home/manish/ticktockapp/node_modules/sequelize/lib/sequelize.js:631:15)","    at module.exports (/home/manish/ticktockapp/server/api/settings/settings.model.js:5:28)","    at Sequelize.import (/home/manish/ticktockapp/node_modules/sequelize/lib/sequelize.js:691:30)","    at Object.<anonymous> (/home/manish/ticktockapp/server/sqldb/index.js:31:46)","    at Module._compile (module.js:570:32)","    at normalLoader (/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js:199:5)","    at Object.require.extensions.(anonymous function) [as .js] (/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js:216:7)","    at Module.load (module.js:487:32)","    at tryModuleLoad (module.js:446:12)","    at Function.Module._load (module.js:438:3)"],"level":"error","message":"uncaughtException: Unrecognized data type for field value","timestamp":"2017-07-16T16:24:27.387Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T17:39:19.715Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T17:39:19.742Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T17:39:19.778Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T17:39:19.779Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:01:28.984Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:01:29.072Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:01:29.111Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:01:29.112Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:44:19.010Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:44:19.626Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:44:19.662Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:44:19.662Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:46:58.255Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:46:58.286Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:46:58.320Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:46:58.320Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:47:07.651Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:47:07.659Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:47:07.704Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:47:07.705Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:47:52.177Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:47:52.232Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:47:52.276Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:47:52.276Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:48:33.211Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:48:33.257Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:48:33.292Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:48:33.293Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:48:57.062Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:48:57.067Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:48:57.100Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:48:57.100Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:49:09.537Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:49:09.543Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:49:09.581Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:49:09.582Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:50:58.765Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:50:58.816Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:50:58.859Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:50:58.859Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:51:06.516Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:51:06.521Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:51:06.559Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:51:06.560Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:51:14.164Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:51:14.168Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:51:14.205Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:51:14.205Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:52:27.280Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:52:27.300Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:52:27.336Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:52:27.338Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:52:37.840Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:52:37.856Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:52:37.892Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:52:37.892Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:53:41.632Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:53:41.667Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:53:41.704Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:53:41.704Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:54:06.031Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:54:06.041Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:54:06.084Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:54:06.084Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:54:16.707Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:54:16.712Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:54:16.746Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:54:16.747Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:54:43.135Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:54:43.154Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:54:43.203Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:54:43.203Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:55:03.870Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:55:03.875Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:55:03.911Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:55:03.913Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:55:18.561Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:55:18.573Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:55:18.609Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:55:18.609Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T18:55:52.434Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T18:55:52.478Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T18:55:52.516Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T18:55:52.516Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-16T19:21:40.429Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-16T19:21:40.500Z"}
+{"level":"debug","message":"API ACCESS :: Token could not be validated...","timestamp":"2017-07-16T19:21:40.500Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-16T19:23:37.177Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-16T19:23:37.440Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-16T19:23:37.504Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-16T19:23:37.506Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-16T19:25:10.440Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-16T19:25:10.441Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-16T19:25:10.441Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-16T19:25:57.854Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-16T19:25:57.858Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-16T19:25:57.859Z"}
+{"level":"debug","message":"Create user initializated","timestamp":"2017-07-16T19:25:57.864Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-16T19:27:36.334Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-16T19:27:36.335Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-16T19:27:36.335Z"}
+{"level":"debug","message":"Finding user with given ID","timestamp":"2017-07-16T19:27:36.336Z"}

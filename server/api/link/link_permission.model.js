@@ -20,13 +20,13 @@ module.exports = function(sequelize, DataTypes)
   },
   {
     freezeTableName   : true,
-    tableName         : 'link_permissions',
+    tableName         : 'link_permission',
 
     classMethods:{
       associate:function(models){
         LinkPermission.belongsTo(models.Link, {
           as          : 'Link',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'linkId',
             field     : 'link_id',
@@ -36,7 +36,7 @@ module.exports = function(sequelize, DataTypes)
 
         LinkPermission.belongsTo(models.UserGroup, {
           as          : 'UserGroup',
-          constraints : false,
+          constraints : true,
           foreignKey  : {
             name      : 'groupId',
             field     : 'group_id',

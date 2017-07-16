@@ -27,7 +27,7 @@ module.exports = function(sequelize, DataTypes)
   },
   {
     freezeTableName   : true,
-    tableName         : 'countries',
+    tableName         : 'country',
 
     classMethods:{
       associate:function(models){
