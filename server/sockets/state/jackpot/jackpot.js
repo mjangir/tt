@@ -333,7 +333,15 @@ Jackpot.prototype.updateLastBidDuration = function(newBid, newBidUser)
  */
 Jackpot.prototype.increaseGameClockOnNewBid = function()
 {
-	this.metaData.gameClockRemaining += 10;
+	console.log(this.metaData.gameClockTime);
+	if(this.metaData.gameClockRemaining + 10 >= this.metaData.gameClockTime)
+	{
+		this.metaData.gameClockRemaining = this.metaData.gameClockTime;
+	}
+	else
+	{
+		this.metaData.gameClockRemaining += 10;
+	}
 }
 
 /**
