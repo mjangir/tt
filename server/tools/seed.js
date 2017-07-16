@@ -11,37 +11,51 @@ export default function()
         User.bulkCreate([{
           name: 'Ticktock Admin',
           email: 'admin@admin.com',
-          password: 'password'
+          password: 'password',
+          user_group_id: 1,
+          role_id: 1
         },
         {
           name: 'Manish Jangir',
           email: 'manish@ticktock.com',
-          password: 'password'
+          password: 'password',
+          user_group_id: 1,
+          role_id: 1
         },
         {
           name: 'Viral Solani',
           email: 'viral@ticktock.com',
-          password: 'password'
+          password: 'password',
+          user_group_id: 1,
+          role_id: 1
         },
         {
           name: 'Neeraj Jani',
           email: 'neeraj@ticktock.com',
-          password: 'password'
+          password: 'password',
+          user_group_id: 1,
+          role_id: 1
         },
         {
           name: 'Kevin',
           email: 'kevin@ticktock.com',
-          password: 'password'
+          password: 'password',
+          user_group_id: 1,
+          role_id: 1
         },
         {
           name: 'Anuj',
           email: 'anuj@ticktock.com',
-          password: 'password'
+          password: 'password',
+          user_group_id: 1,
+          role_id: 1
         },
         {
           name: 'Saransh',
           email: 'saransh@ticktock.com',
-          password: 'password'
+          password: 'password',
+          user_group_id: 1,
+          role_id: 1
         }
         ]).then(function(){
             console.log("######### USERS CREATED ######");
