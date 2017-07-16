@@ -8,54 +8,55 @@ export default function()
 {
     sqldb.sequelize.sync({force: true}).then(function()
     {
+
         User.bulkCreate([{
           name: 'Ticktock Admin',
           email: 'admin@admin.com',
           password: 'password',
-          user_group_id: 1,
-          role_id: 1
+          userGroupId: 1,
+          roleId: 1
         },
         {
           name: 'Manish Jangir',
           email: 'manish@ticktock.com',
           password: 'password',
-          user_group_id: 1,
-          role_id: 1
+          userGroupId: 1,
+          roleId: 1
         },
         {
           name: 'Viral Solani',
           email: 'viral@ticktock.com',
           password: 'password',
-          user_group_id: 1,
-          role_id: 1
+          userGroupId: 1,
+          roleId: 1
         },
         {
           name: 'Neeraj Jani',
           email: 'neeraj@ticktock.com',
           password: 'password',
-          user_group_id: 1,
-          role_id: 1
+          userGroupId: 1,
+          roleId: 1
         },
         {
           name: 'Kevin',
           email: 'kevin@ticktock.com',
           password: 'password',
-          user_group_id: 1,
-          role_id: 1
+          userGroupId: 1,
+          roleId: 1
         },
         {
           name: 'Anuj',
           email: 'anuj@ticktock.com',
           password: 'password',
-          user_group_id: 1,
-          role_id: 1
+          userGroupId: 1,
+          roleId: 1
         },
         {
           name: 'Saransh',
           email: 'saransh@ticktock.com',
           password: 'password',
-          user_group_id: 1,
-          role_id: 1
+          userGroupId: 1,
+          roleId: 1
         }
         ]).then(function(){
             console.log("######### USERS CREATED ######");
