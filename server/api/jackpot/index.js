@@ -26,5 +26,14 @@ router.patch('/:id', [auth.isAuthenticated(), validators.update], controller.upd
 // Delete a jackpot
 router.delete('/:id', [auth.isAuthenticated(), validators.destroy], controller.destroy);
 
+// Insert a jackpot in global state
+router.post('/insert-in-socket/:id', [auth.isAuthenticated()], controller.insertInSocket);
+
+// Update a jackpot in global state
+router.post('/update-in-socket/:id', [auth.isAuthenticated()], controller.updateInSocket);
+
+// Update a jackpot in global state
+router.post('/check-socket-game-state/:id', [auth.isAuthenticated()], controller.checkSocketGameState);
+
 //Export the router
 module.exports = router;

@@ -288,3 +288,117 @@ exports.destroy = function(req, res)
   .then(removeEntity(res))
   .catch(sequelizeErrorHandler(res));
 };
+
+/**
+ * Insert a Jackpot in socket
+ *
+ * @param  {Object} req
+ * @param  {Object} res
+ * @return {*}
+ */
+exports.insertInSocket = function(req, res)
+{
+  Jackpot.find({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(handleEntityNotFound(res))
+  .then(function(entity)
+  {
+    if(entity)
+    {
+      var globalJackpotState  = global.globalJackpotSocketState,
+          jackpot             = entity.get({plain: true});
+
+        globalJackpotState.addJackpot(jackpot);
+
+        res.status(200).json({
+          status: 'success',
+          message: 'Jackpot added to global state successfully'
+        }).end();
+    }
+  })
+  .catch(sequelizeErrorHandler(res));
+}
+
+/**
+ * Update a Jackpot in socket
+ *
+ * @param  {Object} req
+ * @param  {Object} res
+ * @return {*}
+ */
+exports.updateInSocket = function(req, res)
+{
+  Jackpot.find({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(handleEntityNotFound(res))
+  .then(function(entity)
+  {
+    if(entity)
+    {
+      var jackpotPlain        = entity.get({plain: true}),
+          globalJackpotState  = global.globalJackpotSocketState,
+          existingJackpot     = globalJackpotState.getJackpot(jackpotPlain.uniqueId);
+
+        if(existingJackpot && existingJackpot.metaData.gameStatus != 'STARTED')
+        {
+          existingJackpot.metaData.title              = jackpotPlain.title;
+          existingJackpot.metaData.amount             = jackpotPlain.amount;
+          existingJackpot.metaData.gameClockTime      = jackpotPlain.gameClockTime;
+          existingJackpot.metaData.gameClockRemaining = jackpotPlain.gameClockRemaining;
+          existingJackpot.metaData.doomsDayTime       = jackpotPlain.doomsDayTime;
+          existingJackpot.metaData.doomsDayRemaining  = jackpotPlain.doomsDayRemaining;
+
+          res.status(200).json({
+            status: 'success',
+            message: 'Jackpot updated to global state successfully'
+          }).end();
+        }
+        else
+        {
+          res.status(200).json({
+            status: 'error',
+            message: 'socket state can\'t be updated because its already running.'
+          }).end();
+        }
+    }
+  })
+  .catch(sequelizeErrorHandler(res));
+}
+
+/**
+ * Check jackpot socket state
+ *
+ * @param  {Object} req
+ * @param  {Object} res
+ * @return {*}
+ */
+exports.checkSocketGameState = function(req, res)
+{
+  Jackpot.find({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(handleEntityNotFound(res))
+  .then(function(entity)
+  {
+    if(entity)
+    {
+      var jackpotPlain        = entity.get({plain: true}),
+          globalJackpotState  = global.globalJackpotSocketState,
+          existingJackpot     = globalJackpotState.getJackpot(jackpotPlain.uniqueId);
+
+        res.status(200).json({
+          status: 'success',
+          state:  existingJackpot ? existingJackpot.metaData.gameStatus : false
+        }).end();
+    }
+  })
+  .catch(sequelizeErrorHandler(res));
+}
