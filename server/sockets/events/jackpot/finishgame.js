@@ -16,7 +16,10 @@ export default function(jackpot, fullData)
     var roomName = jackpot.getRoomName();
 
     // Save jackpot data into database
-    jackpot.saveDataIntoDB(fullData);
+    jackpot.saveDataIntoDB(fullData, function(err)
+    {
+
+    });
 
     // Notify all users that game has been finished
     global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_GAME_FINISHED, {

@@ -10,6 +10,7 @@ import {
 } from '../../events/jackpot/constants';
 
 const UserModel                 = sqldb.User;
+const JackpotModel              = sqldb.Jackpot;
 const JackpotGameModel          = sqldb.JackpotGame;
 const JackpotGameUserModel      = sqldb.JackpotGameUser;
 const JackpotGameUserBidModel   = sqldb.JackpotGameUserBid;
@@ -333,7 +334,6 @@ Jackpot.prototype.updateLastBidDuration = function(newBid, newBidUser)
  */
 Jackpot.prototype.increaseGameClockOnNewBid = function()
 {
-	console.log(this.metaData.gameClockTime);
 	if(this.metaData.gameClockRemaining + 10 >= this.metaData.gameClockTime)
 	{
 		this.metaData.gameClockRemaining = this.metaData.gameClockTime;
@@ -616,9 +616,10 @@ Jackpot.prototype.getJackpotWinner = function()
  * Save Jackpot Data Into DB after game finished
  *
  * @param  {Object} data
+ * @param {Function} callback
  * @return {*}
  */
-Jackpot.prototype.saveDataIntoDB = function(data)
+Jackpot.prototype.saveDataIntoDB = function(data, callback)
 {
     var jackpotCore = data.jackpot,
         users       = data.users,
@@ -671,6 +672,28 @@ Jackpot.prototype.saveDataIntoDB = function(data)
                 as      : 'JackpotGameUserBids'
             }]
         }]
+    }).then(function(res)
+    {
+        // If everything went well, update the jackpot status to finished in main table
+        JackpotModel.find({
+            where: {
+                id: jackpotCore.jackpotId
+            }
+        })
+        .then(function(entity)
+        {
+            entity.updateAttributes({gameStatus: 'FINISHED'})
+            .then(function(updated)
+            {
+                callback.call(global, null);
+            }).catch(function(err)
+            {
+                callback.call(global, err);
+            })
+        });
+    }).catch(function(err)
+    {
+        callback.call(global, err);
     });
 }
 
