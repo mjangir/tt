@@ -1550,3 +1550,49 @@
 {"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-19T05:54:21.807Z"}
 {"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-19T05:54:21.808Z"}
 {"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-19T05:54:21.808Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-20T09:05:51.629Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-20T09:05:51.771Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-20T09:05:51.815Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-20T09:05:51.815Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:09:11.371Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:09:11.371Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:09:11.372Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:09:24.998Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:09:24.999Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:09:24.999Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:09:34.386Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:09:34.386Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:09:34.387Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:09:39.490Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:09:39.490Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:09:39.490Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:09:42.982Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:09:42.983Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:09:42.983Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:10:08.433Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:10:08.434Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:10:08.434Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:11:16.606Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:11:16.606Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:11:16.606Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:12:03.081Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:12:03.081Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:12:03.081Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:12:14.625Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:12:14.626Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:12:14.626Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:12:16.817Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:12:16.817Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:12:16.817Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:12:21.031Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:12:21.031Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:12:21.032Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:13:03.984Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:13:03.984Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:13:03.984Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:13:07.993Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:13:07.993Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:13:07.993Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-20T09:14:33.190Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-20T09:14:33.191Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-20T09:14:33.192Z"}
