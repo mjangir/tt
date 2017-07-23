@@ -185,3 +185,30 @@ exports.destroy = function(req, res)
   .then(removeEntity(res))
   .catch(sequelizeErrorHandler(res));
 };
+
+/**
+ * Update Global Settings
+ *
+ * @param  {Object} req
+ * @param  {Object} res
+ * @return {*}
+ */
+exports.updateGlobalSettingsVar = function(req, res)
+{
+  Settings.findAllSettingsAsJson(function(error, settings)
+  {
+    if(error == null)
+    {
+      global.globalSettings = settings;
+      return res.status(200).json({
+        status: 'success'
+      }).end();
+    }
+    else
+    {
+      return res.status(200).json({
+        status: 'error'
+      }).end();
+    }
+  });
+};

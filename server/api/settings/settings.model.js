@@ -32,6 +32,27 @@ module.exports = function(sequelize, DataTypes)
     classMethods:{
       associate:function(models){
         
+      },
+
+      findAllSettingsAsJson: function(callback)
+      {
+        Settings.findAll({raw: true})
+        .then(function(entities)
+        {
+          var settings = {};
+          if(entities.length > 0)
+          {
+            for(var k in entities)
+            {
+              settings[entities[k].key] = entities[k].value;
+            }
+          }
+          callback(null, settings);
+        })
+        .catch(function(err)
+        {
+          callback(err);
+        });
       }
     }
   });

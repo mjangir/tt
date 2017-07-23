@@ -14,6 +14,8 @@ const JackpotModel              = sqldb.Jackpot;
 const JackpotGameModel          = sqldb.JackpotGame;
 const JackpotGameUserModel      = sqldb.JackpotGameUser;
 const JackpotGameUserBidModel   = sqldb.JackpotGameUserBid;
+const JackpotGameWinnerModel    = sqldb.JackpotGameWinner;
+const SettingsModel             = sqldb.Settings;
 
 /**
  * Jackpot Constructor
@@ -27,7 +29,6 @@ function Jackpot(data)
     this.users      	= {};
     this.lastBid 		= null;
     this.lastBidUser  	= null;
-
     this.setRoomName();
 }
 
@@ -334,13 +335,20 @@ Jackpot.prototype.updateLastBidDuration = function(newBid, newBidUser)
  */
 Jackpot.prototype.increaseGameClockOnNewBid = function()
 {
-	if(this.metaData.gameClockRemaining + 10 >= this.metaData.gameClockTime)
+    var seconds = 10;
+
+    if(global.globalSettings['jackpot_setting_game_clock_seconds_increment_on_bid']) 
+    {
+        seconds = parseInt(global.globalSettings['jackpot_setting_game_clock_seconds_increment_on_bid'], 10);
+    }
+
+	if(this.metaData.gameClockRemaining + seconds >= this.metaData.gameClockTime)
 	{
 		this.metaData.gameClockRemaining = this.metaData.gameClockTime;
 	}
 	else
 	{
-		this.metaData.gameClockRemaining += 10;
+		this.metaData.gameClockRemaining += seconds;
 	}
 }
 
@@ -623,11 +631,14 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
 {
     var jackpotCore = data.jackpot,
         users       = data.users,
+        winnerData  = data.winnerData,
+        jpWinners   = [],
         context     = this,
         insertData;
 
     jackpotCore.JackpotGameUsers = [];
 
+    // Set JackpotGameUsers
     if(users.length > 0)
     {
         for(var k = 0; k < users.length; k++)
@@ -660,6 +671,40 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
         }
     }
 
+    // Setup JackpotGameWinners
+    if(winnerData.bothAreSame == true)
+    {
+        jpWinners.push({
+            isLastBidUser       : 1,
+            isLongestBidUser    : 1,
+            jackpotAmount       : this.metaData.amount,
+            winningAmount       : this.metaData.amount,
+            userId              : winnerData.lastBidUser.id
+        });
+    }
+    else
+    {
+        var percentOfLastBid    = parseInt(global.globalSettings['jackpot_setting_last_bid_percent_amount'], 10),
+            percentOfLongestBid = parseInt(global.globalSettings['jackpot_setting_longest_bid_percent_amount'], 10);
+
+        jpWinners.push({
+            isLastBidUser       : 1,
+            isLongestBidUser    : 0,
+            jackpotAmount       : this.metaData.amount,
+            winningAmount       : parseFloat((this.metaData.amount * percentOfLastBid/100), 10).toFixed(2),
+            userId              : winnerData.lastBidUser.id
+        });
+        jpWinners.push({
+            isLastBidUser       : 0,
+            isLongestBidUser    : 1,
+            jackpotAmount       : this.metaData.amount,
+            winningAmount       : parseFloat((this.metaData.amount * percentOfLongestBid/100), 10).toFixed(2),
+            userId              : winnerData.longestBidUser.id
+        });
+    }
+    jackpotCore.JackpotGameWinners = jpWinners;
+
+    // Now create the base
     JackpotGameModel.create(jackpotCore,
      {
         include: [
@@ -671,6 +716,10 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
                 model   : JackpotGameUserBidModel,
                 as      : 'JackpotGameUserBids'
             }]
+        },
+        {
+            model   : JackpotGameWinnerModel,
+            as      : 'JackpotGameWinners'
         }]
     }).then(function(res)
     {

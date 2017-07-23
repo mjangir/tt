@@ -177,10 +177,10 @@ function createBackendLinkCategoriesLinksAndPermissions()
       alias           : 'admin_jackpots',
       icon            : 'fa fa-tag',
       href            : 'admin/jackpots',
-      actions         : '{"LISTING":"View Jackpots List","ADD":"Add Jackpot","UPDATE":"Update Jackpot","DELETE":"Delete Jackpot","VIEW":"View Jackpot Info","STATUS":"Block\/Unblock Jackpot"}',
+      actions         : '{"LISTING":"View Jackpots List","ADD":"Add Jackpot","UPDATE":"Update Jackpot","DELETE":"Delete Jackpot","VIEW":"View Jackpot Info","STATUS":"Block/Unblock Jackpot", "VIEW_GAME_HISTORY":"View Game History", "VIEW_JACKPOT_GAME_USERS":"View Jackpot Game Users"}',
       LinkPermissions : [{
         groupId   : 1,
-        permissions: '["LISTING", "ADD", "UPDATE", "DELETE", "VIEW", "STATUS"]'
+        permissions: '["LISTING", "ADD", "UPDATE", "DELETE", "VIEW", "STATUS", "VIEW_GAME_HISTORY", "VIEW_JACKPOT_GAME_USERS"]'
       }]
     },
     {
@@ -369,6 +369,26 @@ function createDefaultSettings()
     key   : 'enable_contact_us_auto_reply',
     value : 1
   },
+
+  {
+    key   : 'jackpot_setting_game_clock_seconds_increment_on_bid',
+    value : 10
+  },
+
+  {
+    key   : 'jackpot_setting_default_bid_per_user_per_game',
+    value : 15
+  },
+
+  {
+    key   : 'jackpot_setting_last_bid_percent_amount',
+    value : 50
+  },
+
+  {
+    key   : 'jackpot_setting_longest_bid_percent_amount',
+    value : 50
+  }
   ]);
 }
 

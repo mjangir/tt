@@ -125,9 +125,6 @@ module.exports = function(sequelize, DataTypes)
       }
     },
     defaultScope: {
-      where: {
-        status: 'ACTIVE'
-      }
     },
     scopes: {
       started: {

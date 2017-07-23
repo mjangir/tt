@@ -11,6 +11,7 @@ import battle from './battle';
  */
 export default function(socketio)
 {
+	global.globalSettings 			= null;
     global.globalJackpotSocketState = null;
     global.globalBattleSocketState  = null;
     global.jackpotSocketNamespace   = null;

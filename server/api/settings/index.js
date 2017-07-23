@@ -26,5 +26,8 @@ router.patch('/:id', [auth.isAuthenticated(), validators.update], controller.upd
 // Delete a setting
 router.delete('/:id', [auth.isAuthenticated(), validators.destroy], controller.destroy);
 
+// Update global settings
+router.post('/update-global-settings', [auth.isAuthenticated()], controller.updateGlobalSettingsVar);
+
 //Export the router
 module.exports = router;

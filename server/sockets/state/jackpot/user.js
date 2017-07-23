@@ -10,10 +10,17 @@ import moment from 'moment';
  */
 function User(data)
 {
+	var defAvailableBids = 10;
+
+	if(global.globalSettings['jackpot_setting_default_bid_per_user_per_game']) 
+    {
+        defAvailableBids = parseInt(global.globalSettings['jackpot_setting_default_bid_per_user_per_game'], 10);
+    }
+
 	this.metaData 			= data;
 	this.gameStatus 		= 'JOINED';
 	this.isActive 			= true;
-	this.availableBids 		= 25;
+	this.availableBids 		= defAvailableBids;
 	this.placedBids 		= [];
 	this.lastBid 			= null;
 	this.firstBidStartTime 	= null;

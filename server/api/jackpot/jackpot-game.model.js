@@ -90,6 +90,16 @@ module.exports = function(sequelize, DataTypes)
           }
         });
 
+        JackpotGame.hasMany(models.JackpotGameWinner, {
+          as          : 'JackpotGameWinners',
+          constraints : true,
+          foreignKey  : {
+            name      : 'jackpotGameId',
+            field     : 'jackpot_game_id',
+            allowNull : false
+          }
+        });
+
         JackpotGame.belongsTo(models.Jackpot, {
           as          : 'Jackpot',
           constraints : true,

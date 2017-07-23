@@ -3,6 +3,7 @@
 import logger from '../utils/logger';
 import jackpotState from './state/jackpot';
 import moment from 'moment';
+import sqldb from '../sqldb';
 
 import {
     onPlaceBid,
@@ -14,6 +15,8 @@ import {
     EVT_ON_CLIENT_CONNECTION
 } from './events/jackpot/constants';
 
+const SettingsModel = sqldb.Settings;
+
 /**
  * Configure Jackpot SocketIO
  *
@@ -22,25 +25,30 @@ import {
  */
 export default function(socketio)
 {
-    // Store all jackpots in memory
-    global.globalJackpotSocketState = new jackpotState((function(socketio)
+    SettingsModel.findAllSettingsAsJson(function(error, settings)
     {
-        var IO = socketio;
+        global.globalSettings = settings;
 
-        return function()
+        // Store all jackpots in memory
+        global.globalJackpotSocketState = new jackpotState((function(socketio)
         {
-            // Create Namespace
-            var namespace = socketio.of('jackpot');
+            var IO = socketio;
 
-            // Register as global namespace
-            global.jackpotSocketNamespace = namespace;
+            return function()
+            {
+                // Create Namespace
+                var namespace = socketio.of('jackpot');
 
-            // On connection
-            namespace.on(EVT_ON_CLIENT_CONNECTION, onConnect);
+                // Register as global namespace
+                global.jackpotSocketNamespace = namespace;
 
-            // Start cound down of all jackpot's game clock and doomsday clock
-            jackpotTimer();
-        }
+                // On connection
+                namespace.on(EVT_ON_CLIENT_CONNECTION, onConnect);
 
-    }(socketio)));
+                // Start cound down of all jackpot's game clock and doomsday clock
+                jackpotTimer();
+            }
+
+        }(socketio)));
+    });
 }
