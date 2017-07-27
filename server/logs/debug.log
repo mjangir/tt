@@ -1668,3 +1668,63 @@
 {"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-23T10:07:16.092Z"}
 {"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-23T10:07:16.092Z"}
 {"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-23T10:07:16.092Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-27T07:13:08.375Z"}
+{"level":"debug","message":"LOGIN::User could not be found...","timestamp":"2017-07-27T07:13:08.394Z"}
+{"status":"error","code":401,"message":"Authentication Failed!","level":"debug","timestamp":"2017-07-27T07:13:08.396Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-27T07:13:29.635Z"}
+{"level":"debug","message":"LOGIN::User could not be found...","timestamp":"2017-07-27T07:13:29.642Z"}
+{"status":"error","code":401,"message":"Authentication Failed!","level":"debug","timestamp":"2017-07-27T07:13:29.642Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-27T07:14:05.649Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-27T07:14:05.666Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-27T07:14:05.706Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-27T07:14:05.707Z"}
+{"date":"Thu Jul 27 2017 13:37:51 GMT+0530 (IST)","process":{"pid":7120,"uid":1000,"gid":1000,"cwd":"/home/manish/ticktockapp","execPath":"/usr/bin/nodejs","version":"v6.11.1","argv":["/usr/bin/nodejs","/home/manish/ticktockapp/server/tools/migration"],"memoryUsage":{"rss":89497600,"heapTotal":74596352,"heapUsed":52551272,"external":1738731}},"os":{"loadavg":[0.3212890625,0.2119140625,0.27294921875],"uptime":6217},"trace":[{"column":15,"file":"module.js","function":"Module._resolveFilename","line":469,"method":"_resolveFilename","native":false},{"column":25,"file":"module.js","function":"Module._load","line":417,"method":"_load","native":false},{"column":17,"file":"module.js","function":"Module.require","line":497,"method":"require","native":false},{"column":19,"file":"internal/module.js","function":"require","line":20,"method":null,"native":false},{"column":61,"file":"/home/manish/ticktockapp/node_modules/sequelize/lib/sequelize.js","function":"Sequelize.import","line":686,"method":"import","native":false},{"column":46,"file":"/home/manish/ticktockapp/server/sqldb/index.js","function":null,"line":36,"method":null,"native":false},{"column":32,"file":"module.js","function":"Module._compile","line":570,"method":"_compile","native":false},{"column":5,"file":"/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js","function":"normalLoader","line":199,"method":null,"native":false},{"column":7,"file":"/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js","function":"Object.require.extensions.(anonymous function) [as .js]","line":216,"method":"js]","native":false},{"column":32,"file":"module.js","function":"Module.load","line":487,"method":"load","native":false},{"column":12,"file":"module.js","function":"tryModuleLoad","line":446,"method":null,"native":false},{"column":3,"file":"module.js","function":"Module._load","line":438,"method":"_load","native":false},{"column":17,"file":"module.js","function":"Module.require","line":497,"method":"require","native":false},{"column":19,"file":"internal/module.js","function":"require","line":20,"method":null,"native":false},{"column":14,"file":"/home/manish/ticktockapp/server/tools/seed.js","function":null,"line":9,"method":null,"native":false},{"column":32,"file":"module.js","function":"Module._compile","line":570,"method":"_compile","native":false}],"stack":["Error: Cannot find module '/home/manish/ticktockapp/server/api/jackpot/jackpot-battle-level.model'","    at Function.Module._resolveFilename (module.js:469:15)","    at Function.Module._load (module.js:417:25)","    at Module.require (module.js:497:17)","    at require (internal/module.js:20:19)","    at Sequelize.import (/home/manish/ticktockapp/node_modules/sequelize/lib/sequelize.js:686:61)","    at Object.<anonymous> (/home/manish/ticktockapp/server/sqldb/index.js:36:46)","    at Module._compile (module.js:570:32)","    at normalLoader (/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js:199:5)","    at Object.require.extensions.(anonymous function) [as .js] (/home/manish/ticktockapp/node_modules/babel-core/lib/api/register/node.js:216:7)","    at Module.load (module.js:487:32)","    at tryModuleLoad (module.js:446:12)","    at Function.Module._load (module.js:438:3)","    at Module.require (module.js:497:17)","    at require (internal/module.js:20:19)","    at Object.<anonymous> (/home/manish/ticktockapp/server/tools/seed.js:9:14)","    at Module._compile (module.js:570:32)"],"level":"error","message":"uncaughtException: Cannot find module '/home/manish/ticktockapp/server/api/jackpot/jackpot-battle-level.model'","timestamp":"2017-07-27T08:07:51.127Z"}
+{"level":"debug","message":"LOGIN::Find user by email for authencation...","timestamp":"2017-07-27T10:39:04.080Z"}
+{"level":"debug","message":"LOGIN::User found and now check the password...","timestamp":"2017-07-27T10:39:04.093Z"}
+{"level":"debug","message":"LOGIN::Successful authentication, return the user...","timestamp":"2017-07-27T10:39:04.139Z"}
+{"level":"debug","message":"LOGIN::All things went well. Send JWT token in resposne...","timestamp":"2017-07-27T10:39:04.140Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:17:03.932Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:17:03.932Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:17:03.932Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:17:09.850Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:17:09.851Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:17:09.851Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:17:22.888Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:17:22.888Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:17:22.889Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:17:29.439Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:17:29.439Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:17:29.439Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:17:55.779Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:17:55.779Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:17:55.779Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:19:47.419Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:19:47.419Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:19:47.420Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:20:17.859Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:20:17.859Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:20:17.859Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:22:13.360Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:22:13.360Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:22:13.360Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:22:14.858Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:22:14.858Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:22:14.859Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:22:15.887Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:22:15.887Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:22:15.888Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:22:17.054Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:22:17.055Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:22:17.056Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:22:18.093Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:22:18.094Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:22:18.094Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T14:22:19.363Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T14:22:19.367Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T14:22:19.367Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T15:02:00.992Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T15:02:00.992Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T15:02:00.993Z"}
+{"level":"debug","message":"API ACCESS :: Validate JWT Token Starts.....","timestamp":"2017-07-27T15:03:35.144Z"}
+{"level":"debug","message":"API ACCESS :: Access Token string found in query string ","timestamp":"2017-07-27T15:03:35.144Z"}
+{"level":"debug","message":"API ACCESS :: Call express jwt validator function....","timestamp":"2017-07-27T15:03:35.144Z"}

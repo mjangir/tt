@@ -33,6 +33,7 @@ db.LinkCategory         = db.sequelize.import('../api/link_category/link_categor
 db.Link                 = db.sequelize.import('../api/link/link.model');
 db.LinkPermission       = db.sequelize.import('../api/link/link_permission.model');
 db.Jackpot              = db.sequelize.import('../api/jackpot/jackpot.model');
+db.JackpotBattleLevel   = db.sequelize.import('../api/jackpot/jackpot-battle-level.model');
 db.JackpotGame          = db.sequelize.import('../api/jackpot/jackpot-game.model');
 db.JackpotGameUser      = db.sequelize.import('../api/jackpot/jackpot-game-user.model');
 db.JackpotGameUserBid   = db.sequelize.import('../api/jackpot/jackpot-game-user-bid.model');

@@ -177,10 +177,10 @@ function createBackendLinkCategoriesLinksAndPermissions()
       alias           : 'admin_jackpots',
       icon            : 'fa fa-tag',
       href            : 'admin/jackpots',
-      actions         : '{"LISTING":"View Jackpots List","ADD":"Add Jackpot","UPDATE":"Update Jackpot","DELETE":"Delete Jackpot","VIEW":"View Jackpot Info","STATUS":"Block/Unblock Jackpot", "VIEW_GAME_HISTORY":"View Game History", "VIEW_JACKPOT_GAME_USERS":"View Jackpot Game Users"}',
+      actions         : '{"LISTING":"View Jackpots List","ADD":"Add Jackpot","UPDATE":"Update Jackpot","DELETE":"Delete Jackpot","VIEW":"View Jackpot Info","STATUS":"Block/Unblock Jackpot", "VIEW_GAME_HISTORY":"View Game History", "VIEW_JACKPOT_GAME_USERS":"View Jackpot Game Users", "NORMAL_BID_BATTLE":"View Normal Bid Battle", "GAMBLING_BID_BATTLE":"View Gambling Bid Battle"}',
       LinkPermissions : [{
         groupId   : 1,
-        permissions: '["LISTING", "ADD", "UPDATE", "DELETE", "VIEW", "STATUS", "VIEW_GAME_HISTORY", "VIEW_JACKPOT_GAME_USERS"]'
+        permissions: '["LISTING", "ADD", "UPDATE", "DELETE", "VIEW", "STATUS", "VIEW_GAME_HISTORY", "VIEW_JACKPOT_GAME_USERS", "NORMAL_BID_BATTLE", "GAMBLING_BID_BATTLE"]'
       }]
     },
     {
