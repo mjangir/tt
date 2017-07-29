@@ -4,6 +4,8 @@ import sqldb from '../../../sqldb';
 import User from './user';
 import moment from 'moment';
 import lodash from 'lodash';
+import NormalBattleContainer from '../normal-battle';
+import GamblingBattleContainer from '../gambling-battle';
 
 import {
     EVT_EMIT_UPDATE_JACKPOT_DATA,
@@ -24,11 +26,13 @@ const SettingsModel             = sqldb.Settings;
  */
 function Jackpot(data)
 {
-    data['finishedOn']  = null;
-    this.metaData   	= data;
-    this.users      	= {};
-    this.lastBid 		= null;
-    this.lastBidUser  	= null;
+    data['finishedOn']               = null;
+    this.metaData   	             = data;
+    this.users      	             = {};
+    this.lastBid 		             = null;
+    this.lastBidUser  	             = null;
+    this.normalBattleContainer       = new NormalBattleContainer(this);
+    this.gamblingBattleContainer     = new GamblingBattleContainer(this);
     this.setRoomName();
 }
 
@@ -337,7 +341,7 @@ Jackpot.prototype.increaseGameClockOnNewBid = function()
 {
     var seconds = 10;
 
-    if(global.globalSettings['jackpot_setting_game_clock_seconds_increment_on_bid']) 
+    if(global.globalSettings['jackpot_setting_game_clock_seconds_increment_on_bid'])
     {
         seconds = parseInt(global.globalSettings['jackpot_setting_game_clock_seconds_increment_on_bid'], 10);
     }

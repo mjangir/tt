@@ -34,6 +34,14 @@ module.exports = function(sequelize, DataTypes)
       comment     : "Name Of Level"
     },
 
+    duration : {
+      field         : "duration",
+      type          : DataTypes.INTEGER(11),
+      allowNull     : false,
+      defaultValue  : 0,
+      comment       : "Level Game Duration"
+    },
+
     prizeType: {
       field         : "prize_type",
       type          : DataTypes.ENUM('BID','MONEY'),
