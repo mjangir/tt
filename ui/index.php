@@ -1,219 +1,105 @@
-<?php
-$user = isset($_GET['user']) ? $_GET['user'] : 1;
-?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-	<title></title>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-	<style type="text/css">
-		.jackpot-param {
-			font-size: 14px;
-			color: #f00;
-		}
-	</style>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>TickTock</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 </head>
+
 <body>
 
-<div style="
-    margin: auto;
-    width: 350px;
-    height: 675px;
-    background: #EEE;
-">
-  <div style="
-    float: left;
-    width: 155px;
-    padding: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    border-bottom: 1px solid #ccc;
-    text-align: left;
-" id="jackpot-name"></div>
-    <div style="
-    float: right;
-    width: 155px;
-    padding: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    border-bottom: 1px solid #ccc;
-    text-align: right;
-" id="jackpot-amount"></div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">TickTock UI</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
 
+    <!-- Page Content -->
+    <div class="container">
 
-<div style="
-    margin: auto;
-    width: 350px;
-    height: 500px;
-    background: #EEE;
-">
-  <div style="
-    float: left;
-    width: 155px;
-    padding: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    border-bottom: 1px solid #ccc;
-    text-align: left;
-" id="game-clock"></div>
-    <div style="
-    float: right;
-    width: 155px;
-    padding: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    border-bottom: 1px solid #ccc;
-    text-align: right;
-" id="doomsday-clock"></div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
 
-<div style="
-    padding: 2%;
-    margin-top: 20px;
-    border: 1px solid #ccc;
-    clear: both;
-    margin: 10px;
-    float: left;
-    width: 90%;
-">
-	<h4>Active Players: <span class="jackpot-param" id="active-players"></span></h4>
-	<h4>Remaining Players: <span class="jackpot-param" id="remaining-players"></span></h4>
-	<h4>Average Bid Bank: <span class="jackpot-param" id="average-bid-bank"></span></h4>
-	<h4>Current Bid User: <span class="jackpot-param" id="current-bid-user"></span></h4>
-	<h4>Current Bid Duration: <span class="jackpot-param" id="current-bid-duration"></span></h4>
-    <h4>Longest Bid Duration: <span class="jackpot-param" id="longest-bid-duration"></span></h4>
-	<h4>Total Bids: <span class="jackpot-param" id="total-bids"></span></h4>
-	<h4>Total Users: <span class="jackpot-param" id="total-users"></span></h4>
+            <div id="exTab3"> 
+                <ul class="nav nav-pills" id="ticktock-tabs">
+                    <li class="active">
+                        <a href="#jackpot-tab" data-toggle="tab">Jackpot</a>
+                    </li>
+                    <li>
+                        <a href="#bid-battle-tab" data-toggle="tab">Bid Battle</a>
+                    </li>
+                </ul>
 
-</div>
+            <div class="tab-content clearfix">
+              <div class="tab-pane active" id="jackpot-tab">
+                <?php include_once('jackpot.php');?>
+              </div>
+              <div class="tab-pane" id="bid-battle-tab">
+                <?php include_once('jackpot.php');?>
+              </div>
+            </div>
+        </div>
+        <!-- /.row -->
 
-<div style="
-    padding: 2%;
-    margin-top: 20px;
-    border: 1px solid #ccc;
-    clear: both;
-    margin: 10px;
-    float: left;
-    width: 90%;
-">
-    <h4>My Name: <span class="jackpot-param" id="my-name"></span></h4>
-    <h4>My Available Bids: <span class="jackpot-param" id="my-available-bids"></span></h4>
-    <h4>Total Bids By Me: <span class="jackpot-param" id="total-bids-by-me"></span></h4>
+    </div>
+    <!-- /.container -->
 
-</div>
+    <script type="text/javascript">
+        var USERID = <?php echo isset($_GET['user']) ? $_GET['user'] : 1;?>
+    </script>
 
-<div style="
-    padding: 2%;
-    margin-top: 20px;
-    clear: both;
-    margin: 10px;
-    float: left;
-    width: 90%;
-    text-align: center;
-">
-	<button id="place-bid">Place A Bid</button>
+    <!-- jQuery Version 1.11.1 -->
+    <script src="js/jquery.js"></script>
 
-</div>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 
-  </div>
+    <script src="js/script.js"></script>
 
-  <input type="hidden" name="" id="jackpot_id">
-
-<script type="text/javascript">
-var socket;
-	jQuery(document).ready(function()
-	{
-		socket = io.connect('ws://192.192.8.44:9000/jackpot', {
-			path: '/ticktock/socket.io',
-			query: {
-				userId: <?php echo $user;?>
-			}
-		});
-
-		socket.on('connect', function()
-		{
-			console.log("connected");
-
-			socket.on('disconnect', function(data){
-				console.log("disconnected");
-			});
-
-			socket.on('me_joined', function(data){
-                console.log(data);
-				jQuery('#jackpot_id').val(data.jackpotInfo.uniqueId);
-                jQuery('#jackpot-name').html(data.jackpotInfo.name);
-                jQuery('#jackpot-amount').html(data.jackpotInfo.amount);
-                jQuery('#my-name').html(data.userInfo.name);
-                jQuery('#my-available-bids').html(data.userInfo.availableBids);
-                jQuery('#total-bids-by-me').html(data.userInfo.totalPlacedBids);
-			});
-
-            socket.on('my_bid_placed', function(data){
-                jQuery('#my-available-bids').html(data.availableBids);
-                jQuery('#total-bids-by-me').html(data.totalPlacedBids);
-            });
-
-			// Update timer
-			socket.on('update_jackpot_timer', function(data){
-				jQuery('#game-clock').html(data.gameClockTime);
-				jQuery('#doomsday-clock').html(data.doomsDayClockTime);
-				jQuery('#current-bid-duration').html(data.lastBidDuration);
-                 jQuery('#longest-bid-duration').html(data.longestBidDuration);
-
-			});
-
-			// Updated jackpot data
-			socket.on('updated_jackpot_data', function(data)
-			{
-				if(data.activePlayers)
-				{
-                    console.log(data);
-					jQuery('#active-players').html(data.activePlayers);
-					jQuery('#remaining-players').html(data.remainingPlayers);
-					jQuery('#average-bid-bank').html(data.averageBidBank);
-					jQuery('#total-users').html(data.totalUsers);
-					jQuery('#total-bids').html(data.totalBids);
-					jQuery('#current-bid-user').html(data.currentBidUser.name);
-
-					if(data.canIBid == true)
-					{
-						jQuery('#place-bid').show();
-					}
-				}
-			});
-
-			socket.on('can_i_bid', function(data)
-			{
-				if(data.canIBid == true)
-				{
-					jQuery('#place-bid').show();
-				}
-				else
-				{
-					jQuery('#place-bid').hide();
-				}
-			});
-
-            // Game finished
-            socket.on('game_finished', function(data){
-                console.log(data);
-            });
-
-            // Show quit button
-            socket.on('show_quit_button', function(data){
-                console.log("show quit button");
-            });
-		})
-	});
-
-	jQuery(document).on('click', '#place-bid', function(e)
-	{
-		socket.emit('place_bid', {
-			userId: <?php echo $user;?>,
-			jackpotUniqueId: jQuery('#jackpot_id').val()
-		})
-	});
-</script>
 </body>
+
 </html>
