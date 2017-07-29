@@ -1,9 +1,10 @@
 'use strict';
 
-export const EVT_ON_CLIENT_CONNECTION   = 'connection';
-export const EVT_ON_CLIENT_DISCONNECT   = 'disconnect';
-export const EVT_ON_CLIENT_BID_PLACED   = 'place_bid';
-export const EVT_ON_CLIENT_QUITTED_GAME = 'quit_jackpot_game';
+export const EVT_ON_CLIENT_CONNECTION   	= 'connection';
+export const EVT_ON_CLIENT_DISCONNECT   	= 'disconnect';
+export const EVT_ON_CLIENT_BID_PLACED   	= 'place_bid';
+export const EVT_ON_CLIENT_QUITTED_GAME 	= 'quit_jackpot_game';
+export const EVT_ON_CLIENT_REQUEST_BATTLE 	= 'request_battle';
 
 export const EVT_EMIT_ME_JOINED             = 'me_joined';
 export const EVT_EMIT_MY_BID_PLACED         = 'my_bid_placed';

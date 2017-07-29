@@ -2,26 +2,16 @@ import sqldb from '../../../sqldb';
 import LevelGameUser from './level-game-user';
 import {generateRandomString} from '../../../utils/functions';
 
-const UserModel = sqldb.User;
-
-/**
- * Constructor
- * @param {level}
- */
 function LevelGame(level)
 {
     this.level      = level;
-    this.duration   = level.metaData.duration;
+    this.duration   = parseInt(level.metaData.duration, 10);
     this.status     = 'NOT_STARTED';
     this.gameId     = generateRandomString(20, 'aA');
-    this.users      = {};
+    this.users      = [];
+    this.bids       = [];
 }
 
-/**
- * Count down the timer
- *
- * @return {*}
- */
 LevelGame.prototype.countDown = function()
 {
     if(this.duration  > 0)
@@ -30,10 +20,6 @@ LevelGame.prototype.countDown = function()
     }
 }
 
-/**
- * Set socket room name
- *
- */
 LevelGame.prototype.setRoomName = function()
 {
     var roomPrefix  = 'JACKPOT_NORMAL_BATTLE_LEVEL_ROOM_';
@@ -42,82 +28,66 @@ LevelGame.prototype.setRoomName = function()
     this.roomName   = roomName;
 }
 
-/**
- * Get Socket room name
- *
- * @return {String}
- */
 LevelGame.prototype.getRoomName = function()
 {
     return this.roomName;
 }
 
-/**
- * Get Human Readable Game Clock Time
- *
- * @return {String}
- */
 LevelGame.prototype.getHumanDuration = function()
 {
     var time = this.convertSecondsToCounterTime(this.duration);
     return time.hours + ":" + time.minutes + ":" + time.seconds;
 }
 
-/**
- * Check if LevelGame has user
- *
- * @param  {Integer}  userId
- * @return {Boolean}
- */
 LevelGame.prototype.hasUser = function(userId)
 {
-    return this.users.hasOwnProperty(userId);
+    return this.getUser() !== false ? true : false;
 }
 
-/**
- * Get LevelGame User Instance
- *
- * @param  {Integer}  userId
- * @return {JackpotUser}
- */
 LevelGame.prototype.getUser = function(userId)
 {
-    return this.users[userId] ? this.users[userId] : false;
-}
+    var user;
 
-/**
- * Add a new LevelGame user
- *
- * @param {Integer}   userId
- * @param {Function} callback
- */
-LevelGame.prototype.addUser = function(userId, callback)
-{
-    var context = this;
-
-    if(this.users.hasOwnProperty(userId))
+    for(var k in this.users)
     {
-        callback.call(global, null, this.users[userId]);
+        user = this.users[k];
+
+        if(user.metaData.id == userId)
+        {
+            return user;
+        }
     }
 
-    UserModel.find({
-        where: {id: userId},
-        raw: true
-    })
-    .then(function(user)
-    {
-        context.users[userId] = new LevelGameUser(user);
-        callback.call(global, null, context.users[userId]);
-    })
-    .catch(function(err)
-    {
-        callback.call(global, err);
-    });
+    return false;
 }
 
-LevelGame.prototype.removeUser = function(userId)
+LevelGame.prototype.addUser = function(userId, callback)
 {
+    var context     = this,
+        userExist   = this.getUser(),
+        newUser     = null;
 
+    if(userExist != false)
+    {
+        callback.call(global, null, userExist);
+    }
+    else
+    {
+        UserModel.find({
+            where: {id: userId},
+            raw: true
+        })
+        .then(function(user)
+        {
+            newUser = new LevelGameUser(user);
+            context.push(newUser);
+            callback.call(global, null, newUser);
+        })
+        .catch(function(err)
+        {
+            callback.call(global, err);
+        });
+    }
 }
 
 export default LevelGame;

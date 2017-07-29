@@ -1,5 +1,6 @@
 import sqldb from '../../../sqldb';
 import LevelGame from './level-game';
+import {generateRandomString} from '../../../utils/functions';
 
 const JackpotBattleLevel = sqldb.JackpotBattleLevel;
 
@@ -10,6 +11,7 @@ const JackpotBattleLevel = sqldb.JackpotBattleLevel;
  */
 function Level(container, data)
 {
+	this.uniqueId 		= generateRandomString(20, 'aA');
     this.levelContainer = container;
     this.jackpot        = container.jackpot;
     this.metaData       = data;
