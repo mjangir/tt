@@ -59,60 +59,63 @@ function handleOnQuitGame(data, socket)
         jackpotUser = userJackpot.getUser(userId);
 
         // Leave the romm for this jackpot now
-        socket.leave(userJackpot.getRoomName());
-
-        // Make this user's online staus active for this jackpot and game status too
-        jackpotUser.isActive 	= false;
-        jackpotUser.gameStatus 	= 'QUITTED';
-
-        // Emit event to this user that he has been quitted from this game
-        socket.emit(EVT_EMIT_GAME_QUITTED, {status: true});
-
-        // Get a new jackpot for this user to join a new game
-        pickNewJackpot = stateInst.pickupNewJackpot();
-
-        // If new jackpot found
-        if(pickNewJackpot)
+        socket.leave(userJackpot.getRoomName(), function()
         {
-        	pickNewJackpot.addUser(userId, function(error, jackpotUser)
-	        {
-	            if(error == null)
-	            {
-	                socket.currentRoom  = pickNewJackpot.getRoomName();
-	                socket.jackpot      = pickNewJackpot;
-	                socket.jackpotUser  = jackpotUser;
+            // Make this user's online staus active for this jackpot and game status too
+            jackpotUser.isActive    = false;
+            jackpotUser.gameStatus  = 'QUITTED';
 
-	                socket.join(pickNewJackpot.getRoomName());
+            // Emit event to this user that he has been quitted from this game
+            socket.emit(EVT_EMIT_GAME_QUITTED, {status: true});
 
-	                // User joined to game successfully
-	                socket.emit(EVT_EMIT_ME_JOINED, {
-	                    jackpotInfo:    {
-	                        uniqueId:    pickNewJackpot.getMetaData().uniqueId,
-	                        name:        pickNewJackpot.getMetaData().title,
-	                        amount:      pickNewJackpot.getMetaData().amount
-	                    },
-	                    userInfo: {
-	                        name:               jackpotUser.getMetaData().name,
-	                        availableBids:      jackpotUser.availableBids,
-	                        totalPlacedBids:    jackpotUser.placedBids.length,
-	                    }
-	                });
+            userJackpot.emitUpdatesToItsRoom();
 
-	                pickNewJackpot.emitUpdatesToItsRoom();
+            // Get a new jackpot for this user to join a new game
+            pickNewJackpot = stateInst.pickupNewJackpot();
 
-	                // Emit Can I bid event on join
-	                emitCanIBidOnConnect(socket, pickNewJackpot, jackpotUser);
-	            }
-	            else
-	            {
-	                socket.emit(EVT_EMIT_ME_JOINED_ERR, {error: error});
-	            }
-	        });
-        }
-        else
-        {
-        	socket.emit(EVT_EMIT_NO_JACKPOT_TO_PLAY, {error: "No Jackpot Found To Play. Please try again after some time"});
-        }
+            // If new jackpot found
+            if(pickNewJackpot)
+            {
+                pickNewJackpot.addUser(userId, function(error, jackpotUser)
+                {
+                    if(error == null)
+                    {
+                        socket.currentRoom  = pickNewJackpot.getRoomName();
+                        socket.jackpot      = pickNewJackpot;
+                        socket.jackpotUser  = jackpotUser;
+
+                        socket.join(pickNewJackpot.getRoomName());
+
+                        // User joined to game successfully
+                        socket.emit(EVT_EMIT_ME_JOINED, {
+                            jackpotInfo:    {
+                                uniqueId:    pickNewJackpot.getMetaData().uniqueId,
+                                name:        pickNewJackpot.getMetaData().title,
+                                amount:      pickNewJackpot.getMetaData().amount
+                            },
+                            userInfo: {
+                                name:               jackpotUser.getMetaData().name,
+                                availableBids:      jackpotUser.availableBids,
+                                totalPlacedBids:    jackpotUser.placedBids.length,
+                            }
+                        });
+
+                        pickNewJackpot.emitUpdatesToItsRoom();
+
+                        // Emit Can I bid event on join
+                        emitCanIBidOnConnect(socket, pickNewJackpot, jackpotUser);
+                    }
+                    else
+                    {
+                        socket.emit(EVT_EMIT_ME_JOINED_ERR, {error: error});
+                    }
+                });
+            }
+            else
+            {
+                socket.emit(EVT_EMIT_NO_JACKPOT_TO_PLAY, {error: "No Jackpot Found To Play. Please try again after some time"});
+            }
+        });
     }
     
 }

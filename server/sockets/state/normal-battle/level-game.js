@@ -277,12 +277,12 @@ LevelGame.prototype.updateTimer = function()
     }
 
     // Emit the updated battle timer to everybody in its room
-    // global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_NORMAL_BATTLE_LEVEL_TIMER, {
-    //     battleClock         : durationTime,
-    //     currentBidDuration  : lastBidDuration,
-    //     longestBidDuration  : longestBidDuration,
-    //     longestBidUserName  : longestBidUserName
-    // });
+    global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_NORMAL_BATTLE_LEVEL_TIMER, {
+        battleClock         : durationTime,
+        currentBidDuration  : lastBidDuration,
+        longestBidDuration  : longestBidDuration,
+        longestBidUserName  : longestBidUserName
+    });
 }
 
 LevelGame.prototype.finishGame = function()
@@ -309,7 +309,8 @@ LevelGame.prototype.getDetailedInfoForUI = function()
             normalizedUsers.push({
                 id:         jackpotUser.metaData.id,
                 name:       jackpotUser.metaData.name,
-                picture:    jackpotUser.metaData.photo,
+                //picture:    jackpotUser.metaData.photo,
+                picture:    'http://localhost:9000/images/avatar.jpg',
                 totalBids:  userBids.length
             })
         }
