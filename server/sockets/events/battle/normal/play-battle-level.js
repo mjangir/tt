@@ -12,6 +12,8 @@ export default function(data, socket)
     	response 				= {status: false},
         currentGame,
         currentLevelGameUser,
+        socketCurrentRooms,
+        socketRoomKeys;
 
     currentGame = normalBattleContainer.getRunningGameByUserAndLevel(jackpotUserInstance, data.levelUniqueId);
 
@@ -23,6 +25,21 @@ export default function(data, socket)
     if(currentGame)
     {
         socket.join(currentGame.getRoomName());
+
+        // Leave From All Previous Rooms
+        socketCurrentRooms  = socket.rooms;
+        socketRoomKeys      = Object.keys(socketCurrentRooms);
+
+        if(socketRoomKeys.length > 0)
+        {
+            for(var p in socketRoomKeys)
+            {
+                if(socketRoomKeys[p].indexOf('JACKPOT_NORMAL_BATTLE_LEVEL_ROOM_') > -1)
+                {
+                    socket.leave(socketRoomKeys[p]);
+                }
+            }
+        }
 
         // Get current level game user
         currentLevelGameUser = currentGame.getUser(jackpotUserInstance);

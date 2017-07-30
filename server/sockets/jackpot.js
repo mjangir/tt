@@ -34,6 +34,8 @@ export default function(socketio)
         {
             var IO = socketio;
 
+            global.globalJackpotSocketIO = IO;
+
             return function()
             {
                 // Create Namespace

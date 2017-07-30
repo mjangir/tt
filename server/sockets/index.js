@@ -16,6 +16,7 @@ export default function(socketio)
     global.globalBattleSocketState  = null;
     global.jackpotSocketNamespace   = null;
     global.battleSocketNamespace    = null;
+    global.globalJackpotSocketIO 	= null;
 
     // Configure jackpot socket.io
     jackpot(socketio);
