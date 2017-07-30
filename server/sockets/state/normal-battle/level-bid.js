@@ -7,9 +7,9 @@ import {generateRandomString} from '../../../utils/functions';
  * @param {Container}
  * @param {data}
  */
-function LevelBid(user)
+function LevelBid(levelGameUser)
 {
-    this.user 		= user;
+    this.user 		= levelGameUser;
     this.startTime 	= new Date();
     this.endTime 	= null;
     this.duration 	= null;

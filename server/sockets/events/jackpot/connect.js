@@ -3,12 +3,12 @@
 import onPlaceBid from './placebid';
 import onDisconnect from './disconnect';
 import onQuitGame from './quitgame';
-import onRequestBattle from '../battle/requestbattle';
+import handlePostConnectBattleEvents from '../battle/connect';
+
 import {
     EVT_ON_CLIENT_CONNECTION,
     EVT_ON_CLIENT_DISCONNECT,
     EVT_ON_CLIENT_BID_PLACED,
-    EVT_ON_CLIENT_REQUEST_BATTLE,
     EVT_EMIT_ME_JOINED,
     EVT_EMIT_ME_JOINED_ERR,
     EVT_EMIT_CAN_I_PLACE_BID,
@@ -50,8 +50,8 @@ function handlePostConnectEvents(socket)
     // On quit game by client
     socket.on(EVT_ON_CLIENT_QUITTED_GAME, onQuitGame(socket));
 
-    // On battle tab click request
-    socket.on(EVT_ON_CLIENT_REQUEST_BATTLE, onRequestBattle(socket));
+    // Handle Post Connect Battle Evens
+    handlePostConnectBattleEvents(socket);
 }
 
 /**

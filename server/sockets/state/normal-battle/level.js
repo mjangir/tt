@@ -19,9 +19,65 @@ function Level(container, data)
     this.lastGame       = null;
 }
 
-Level.prototype.createNewGame = function()
+Level.prototype.getAllGames = function()
 {
+	return this.games;
+}
 
+Level.prototype.getRunningGameByUser = function(jackpotUser)
+{
+	var games = this.games,
+		game;
+
+	if(games.length <= 0)
+	{
+		return false;
+	}
+
+	for(var k in games)
+	{
+		game = games[k];
+
+		if((game.isNotStarted() && game.hasUser(jackpotUser)) || (game.isRunning() && game.hasUser(jackpotUser)))
+		{
+			return game;
+		}
+	}
+
+	return false;
+}
+
+Level.prototype.getNewGameByUser = function(jackpotUser)
+{
+	var games 		= this.games,
+		maxUsers 	= this.metaData.minPlayersRequiredToStart,
+		game,
+		returnGame;
+
+	if(games.length <= 0)
+	{
+		returnGame = new LevelGame(this);
+		returnGame.addUser(jackpotUser);
+		this.games.push(returnGame);
+		return returnGame;
+	}
+	else
+	{
+		for(var k in games)
+		{
+			game = games[k];
+			if(game.getAllUsers().length < maxUsers)
+			{
+				game.addUser(jackpotUser);
+				return game;
+			}
+		}
+	}
+
+	returnGame = new LevelGame(this);
+	returnGame.addUser(jackpotUser);
+	this.games.push(returnGame);
+	return returnGame;
 }
 
 Level.prototype.findAllGamesByUser = function(userId)
@@ -42,6 +98,21 @@ Level.prototype.findFirstGameByUser = function(userId)
 Level.prototype.findCurrentPlayingGameForUser = function(userId)
 {
 
+}
+
+Level.prototype.updateTimer = function()
+{
+	var games = this.games,
+        game;
+
+    if(games.length > 0)
+    {
+        for(var k in games)
+        {
+            game = games[k];
+            game.updateTimer();
+        }
+    }
 }
 
 export default Level;

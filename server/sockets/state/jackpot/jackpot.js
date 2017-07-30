@@ -750,5 +750,17 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
     });
 }
 
+Jackpot.prototype.updateNormalBattleTimer = function()
+{
+    var battleContainer = this.normalBattleContainer;
+    battleContainer.updateTimer();
+}
+
+Jackpot.prototype.updateGamblingBattleTimer = function()
+{
+    var battleContainer = this.gamblingBattleContainer;
+    //battleContainer.updateTimer();
+}
+
 // Export Jackpot
 export default Jackpot;

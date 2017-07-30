@@ -87,6 +87,9 @@ export default function()
                 longestBidDuration  : longestBidDuration,
                 longestBidUserName  : longestBidUserName
             });
+
+            jackpot.updateNormalBattleTimer();
+            jackpot.updateGamblingBattleTimer();
         }
     }, 1000);
 }
