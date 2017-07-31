@@ -1,12 +1,22 @@
 import sqldb from '../../../sqldb';
 import LevelGameUser from './level-game-user';
+import LevelBid from './level-bid';
 import {generateRandomString} from '../../../utils/functions';
+import url from 'url';
+import config from '../../../config/environment';
 import {
     EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_DATA,
-    EVT_EMIT_NORMAL_BATTLE_LEVEL_TIMER
+    EVT_EMIT_NORMAL_BATTLE_LEVEL_TIMER,
+    EVT_EMIT_NORMAL_BATTLE_GAME_STARTED
 } from '../../events/battle/constants';
 
-const UserModel = sqldb.User;
+const UserModel     = sqldb.User;
+const avatarUrl     = url.format({
+    protocol:   config.protocol,
+    hostname:   config.ip,
+    port:       config.port,
+    pathname:   'images/avatar.jpg',
+});
 
 function LevelGame(level)
 {
@@ -104,10 +114,39 @@ LevelGame.prototype.addUser = function(jackpotUser)
     return this;
 }
 
+LevelGame.prototype.startGame = function()
+{
+    this.status = 'STARTED';
+
+    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_NORMAL_BATTLE_GAME_STARTED, {status: true});
+}
+
 LevelGame.prototype.getAllUsers = function()
 {
 
     return this.users;
+}
+
+LevelGame.prototype.getAllActiveUsersInfo = function()
+{
+    var users = [],
+        user;
+
+    if(this.users.length > 0)
+    {
+        for(var i in this.users)
+        {
+            user = this.users[i];
+            users.push({
+                userId:     user.jackpotUser.metaData.id,
+                name:       user.jackpotUser.metaData.name,
+                totalBids:  user.bids.length,
+                picture:    avatarUrl,
+            })
+        }
+    }
+
+    return users;
 }
 
 LevelGame.prototype.getLastBidUser = function()
@@ -204,14 +243,19 @@ LevelGame.prototype.getLongestBidDuration = function(humanReadable, excludeLast)
 
 LevelGame.prototype.getHumanLastBidDuration = function()
 {
-    var time = this.getLastBid() != null ? this.convertSecondsToCounterTime(this.getLastBid().getRealTimeDuration()) : {minutes: '00', seconds: '00'};
-    return time.minutes + ":" + time.seconds;
+    var time = this.getLastBid() != null ? this.convertSecondsToCounterTime(this.getLastBid().getRealTimeDuration()) : null;
+
+    if(time !== null)
+    {
+        return time.minutes + ":" + time.seconds;
+    }
+
+    return null;
 }
 
 LevelGame.prototype.getHumanLongestBidDuration = function()
 {
-    var time = this.getLongestBid() != null ? this.convertSecondsToCounterTime(this.getLongestBid().getRealTimeDuration()) : {minutes: '00', seconds: '00'};
-    return time.minutes + ":" + time.seconds;
+    return this.getLongestBidDuration(true);
 }
 
 LevelGame.prototype.convertSecondsToCounterTime = function(seconds)
@@ -246,10 +290,18 @@ LevelGame.prototype.convertSecondsToCounterTime = function(seconds)
     };
 }
 
-LevelGame.prototype.emitUpdatesToItsRoom = function()
+LevelGame.prototype.emitUpdatesToItsRoom = function(excludeSocket)
 {
     var roomName = this.getRoomName();
-    global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_DATA, this.getDetailedInfoForUI());
+
+    if(typeof excludeSocket != 'undefined')
+    {
+        excludeSocket.broadcast.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_DATA, this.getDetailedInfoForUI());
+    }
+    else
+    {
+        global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_DATA, this.getDetailedInfoForUI());
+    }
 }
 
 LevelGame.prototype.updateTimer = function()
@@ -269,17 +321,24 @@ LevelGame.prototype.updateTimer = function()
         durationTime        = this.getHumanDuration(),
         lastBidDuration     = this.getHumanLastBidDuration(),
         longestBidDuration  = this.getHumanLongestBidDuration(),
+        lastBidUserName     = null,
         longestBidUserName  = null;
 
     if(this.getLongestBid() || this.getLastBid())
     {
-        longestBidUserName = this.getLongestBid() == null ? this.getLastBid().user.jackpotUser.metaData.name : this.getLongestBid().jackpotUser.metaData.name;
+        longestBidUserName = this.getLongestBid() == null ? this.getLastBid().user.jackpotUser.metaData.name : this.getLongestBid().user.jackpotUser.metaData.name;
+    }
+
+    if(this.getLastBid() != null)
+    {
+        lastBidUserName = this.getLastBid().user.jackpotUser.metaData.name;
     }
 
     // Emit the updated battle timer to everybody in its room
     global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_NORMAL_BATTLE_LEVEL_TIMER, {
         battleClock         : durationTime,
         currentBidDuration  : lastBidDuration,
+        currentBidUserName  : lastBidUserName,
         longestBidDuration  : longestBidDuration,
         longestBidUserName  : longestBidUserName
     });
@@ -287,7 +346,43 @@ LevelGame.prototype.updateTimer = function()
 
 LevelGame.prototype.finishGame = function()
 {
+    this.status = 'FINISHED';
+}
 
+LevelGame.prototype.placeBid = function(levelGameUser, callback)
+{
+    if(this.lastBid != null)
+    {
+        this.lastBid.updateDuration();
+    }
+
+    var bid = new LevelBid(levelGameUser);
+
+    // Push this bid into game bids
+    this.bids.push(bid);
+
+    // Push this bid into user bids also
+    levelGameUser.bids.push(bid);
+
+    // Update last bid
+    this.lastBid = bid;
+
+    // Decrease a bid of user
+    levelGameUser.decreaseAvailableBids();
+
+    // Increase Game Duration
+    this.duration += 10;
+
+    if(this.duration > this.level.duration)
+    {
+        this.duration = this.level.duration;
+    }
+
+    // Call the callback
+    if(typeof callback == 'function')
+    {
+        callback.call(global, bid);
+    }
 }
 
 LevelGame.prototype.getDetailedInfoForUI = function()
@@ -305,12 +400,12 @@ LevelGame.prototype.getDetailedInfoForUI = function()
         {
             user        = users[k];
             jackpotUser = user.jackpotUser;
-            userBids    = user.getMyAllBids();
+            userBids    = user.getAllBids();
             normalizedUsers.push({
                 id:         jackpotUser.metaData.id,
                 name:       jackpotUser.metaData.name,
                 //picture:    jackpotUser.metaData.photo,
-                picture:    'http://localhost:9000/images/avatar.jpg',
+                picture:    avatarUrl,
                 totalBids:  userBids.length
             })
         }
@@ -318,10 +413,10 @@ LevelGame.prototype.getDetailedInfoForUI = function()
 
     response = {
         users               : normalizedUsers,
-        currentBidUser      : this.getLastBidUser() == null ? null : this.getLastBidUser().jackpotUser.metaData,
+        currentBidUser      : this.getLastBidUser() == null ? null : this.getLastBidUser().jackpotUser.metaData.name,
         currentBidDuration  : this.getLastBid() == null ? null : this.getLastBid().duration,
         longestBidDuration  : this.getLongestBid() == null ? null : this.getLongestBid().duration,
-        longestBidUser      : this.getLongestBidUser() == null ? null : this.getLongestBidUser().jackpotUser.metaData
+        longestBidUser      : this.getLongestBidUser() == null ? null : this.getLongestBidUser().jackpotUser.metaData.name
     }
 
     return response;

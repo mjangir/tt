@@ -15,9 +15,14 @@ function LevelGameUser(levelGame, jackpotUser)
     this.availableBids 	= this.game.level.metaData.defaultAvailableBids;
 }
 
-LevelGameUser.prototype.getMyAllBids = function()
+LevelGameUser.prototype.getAllBids = function()
 {
 	return this.bids;
+}
+
+LevelGameUser.prototype.decreaseAvailableBids = function()
+{
+	this.availableBids -= 1;
 }
 
 export default LevelGameUser;

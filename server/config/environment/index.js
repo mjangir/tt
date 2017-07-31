@@ -6,6 +6,7 @@ import _ from 'lodash';
 const sharedConfig  = require('./shared');
 const envConfig     = require('./' + process.env.NODE_ENV);
 const globalConfig  = {
+  protocol: 'http',
   env     : process.env.NODE_ENV,
   root    : path.normalize(__dirname + '/../../..'),
   port    : process.env.PORT || 9000,
