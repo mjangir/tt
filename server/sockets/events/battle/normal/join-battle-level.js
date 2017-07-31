@@ -1,7 +1,7 @@
 'use strict';
 
 import {
-    EVT_EMIT_UPDATE_MY_NORMAL_BATTLE_INFO
+    EVT_EMIT_RESPONSE_JOIN_NORMAL_BATTLE_LEVEL
 } from '../constants';
 
 export default function(data, socket)
@@ -48,26 +48,34 @@ export default function(data, socket)
             currentLevelGameUser = currentGame.getUser(jackpotUserInstance);
 
             // User joined to game successfully
-            socket.emit(EVT_EMIT_UPDATE_MY_NORMAL_BATTLE_INFO, {
+            socket.emit(EVT_EMIT_RESPONSE_JOIN_NORMAL_BATTLE_LEVEL, {
+
                 jackpotInfo:    {
                     uniqueId:    jackpotInstance.getMetaData().uniqueId,
                     name:        jackpotInstance.getMetaData().title,
                     amount:      jackpotInstance.getMetaData().amount
                 },
-                levelInfo:      {
+                levelInfo: {
+                    duration    : currentGame.getHumanDuration(),
+                    uniqueId    : currentGame.level.uniqueId,
                     levelName   : currentGame.level.metaData.levelName,
                     prizeValue  : currentGame.level.metaData.prizeValue,
                     prizeType   : currentGame.level.metaData.prizeType
                 },
-                userInfo: {
+                myInfo: {
                     userId:             currentLevelGameUser.jackpotUser.getMetaData().id,
                     name:               currentLevelGameUser.jackpotUser.getMetaData().name,
                     availableBids:      currentLevelGameUser.availableBids,
-                    totalPlacedBids:    currentLevelGameUser.bids.length,
-                }
+                    totalPlacedBids:    currentLevelGameUser.bids.length
+                },
+                players             : currentGame.getAllActiveUsersInfo(),
+                currentBidUser      : currentGame.getLastBidUser() == null ? null : currentGame.getLastBidUser().jackpotUser.metaData.name,
+                currentBidDuration  : currentGame.getLastBid() == null ? null : currentGame.getLastBid().duration,
+                longestBidUser      : currentGame.getLongestBidUser() == null ? null : currentGame.getLongestBidUser().jackpotUser.metaData.name,
+                longestBidDuration  : currentGame.getLongestBid() == null ? null : currentGame.getLongestBid().duration,
             });
 
-            currentGame.emitUpdatesToItsRoom(jackpotUserInstance)
+            currentGame.emitUpdatesToItsRoom(socket)
         });
     }
 }

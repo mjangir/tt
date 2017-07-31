@@ -77,6 +77,29 @@ Container.prototype.getLevelByUniqueId = function(levelUniqueId)
     return false;
 }
 
+Container.prototype.getRunningGameByUser = function(jackpotUser)
+{
+    var levels = this.levels,
+        level;
+
+    if(Object.keys(levels).length > 0)
+    {
+        for(var k in levels)
+        {
+            if(levels.hasOwnProperty(k))
+            {
+                level = levels[k];
+                if(level.getRunningGameByUser(jackpotUser) !== false)
+                {
+                    return level.getRunningGameByUser(jackpotUser);
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 Container.prototype.getRunningGameByUserAndLevel = function(jackpotUser, levelUniqueId)
 {
     var level = this.getLevelByUniqueId(levelUniqueId);
