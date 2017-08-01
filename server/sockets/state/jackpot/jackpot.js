@@ -453,7 +453,7 @@ Jackpot.prototype.getLongestBidDuration = function(humanReadable, excludeLast)
         duration,
         time;
 
-    if(longestBid.duration > lastBidRTD)
+    if(longestBid && longestBid.duration > lastBidRTD)
     {
         duration = longestBid.duration;
     }

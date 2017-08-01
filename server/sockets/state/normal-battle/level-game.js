@@ -1,10 +1,11 @@
 import sqldb from '../../../sqldb';
 import LevelGameUser from './level-game-user';
+import LevelBid from './level-bid';
 import {generateRandomString} from '../../../utils/functions';
 import url from 'url';
 import config from '../../../config/environment';
 import {
-    EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_DATA,
+    EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_PLAYER_LIST,
     EVT_EMIT_NORMAL_BATTLE_LEVEL_TIMER,
     EVT_EMIT_NORMAL_BATTLE_GAME_STARTED
 } from '../../events/battle/constants';
@@ -102,20 +103,12 @@ LevelGame.prototype.getUser = function(jackpotUser)
 LevelGame.prototype.addUser = function(jackpotUser)
 {
     var userExist   = this.getUser(jackpotUser),
-        newUser     = null,
-        requiredUsersToPlay;
-
-    requiredUsersToPlay = this.level.metaData.minPlayersRequiredToStart;
+        newUser     = null;
 
     if(!userExist)
     {
         newUser = new LevelGameUser(this, jackpotUser);
         this.users.push(newUser);
-    }
-
-    if(this.users.length == requiredUsersToPlay)
-    {
-        this.startGame();
     }
 
     return this;
@@ -262,14 +255,7 @@ LevelGame.prototype.getHumanLastBidDuration = function()
 
 LevelGame.prototype.getHumanLongestBidDuration = function()
 {
-    var time = this.getLongestBid() != null ? this.convertSecondsToCounterTime(this.getLongestBid().getRealTimeDuration()) : null;
-
-    if(time !== null)
-    {
-        return time.minutes + ":" + time.seconds;
-    }
-
-    return null;
+    return this.getLongestBidDuration(true);
 }
 
 LevelGame.prototype.convertSecondsToCounterTime = function(seconds)
@@ -310,11 +296,11 @@ LevelGame.prototype.emitUpdatesToItsRoom = function(excludeSocket)
 
     if(typeof excludeSocket != 'undefined')
     {
-        excludeSocket.broadcast.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_DATA, this.getDetailedInfoForUI());
+        excludeSocket.broadcast.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_PLAYER_LIST, this.getUpdatedPlayerList());
     }
     else
     {
-        global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_DATA, this.getDetailedInfoForUI());
+        global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_PLAYER_LIST, this.getUpdatedPlayerList());
     }
 }
 
@@ -352,7 +338,7 @@ LevelGame.prototype.updateTimer = function()
     global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_NORMAL_BATTLE_LEVEL_TIMER, {
         battleClock         : durationTime,
         currentBidDuration  : lastBidDuration,
-        currentBidUser      : lastBidUserName,
+        currentBidUserName  : lastBidUserName,
         longestBidDuration  : longestBidDuration,
         longestBidUserName  : longestBidUserName
     });
@@ -360,17 +346,52 @@ LevelGame.prototype.updateTimer = function()
 
 LevelGame.prototype.finishGame = function()
 {
-
+    this.status = 'FINISHED';
 }
 
-LevelGame.prototype.getDetailedInfoForUI = function()
+LevelGame.prototype.placeBid = function(levelGameUser, callback)
+{
+    if(this.lastBid != null)
+    {
+        this.lastBid.updateDuration();
+    }
+
+    var bid = new LevelBid(levelGameUser);
+
+    // Push this bid into game bids
+    this.bids.push(bid);
+
+    // Push this bid into user bids also
+    levelGameUser.bids.push(bid);
+
+    // Update last bid
+    this.lastBid = bid;
+
+    // Decrease a bid of user
+    levelGameUser.decreaseAvailableBids();
+
+    // Increase Game Duration
+    this.duration += 10;
+
+    if(this.duration > this.level.duration)
+    {
+        this.duration = this.level.duration;
+    }
+
+    // Call the callback
+    if(typeof callback == 'function')
+    {
+        callback.call(global, bid);
+    }
+}
+
+LevelGame.prototype.getUpdatedPlayerList = function()
 {
     var users           = this.getAllUsers(),
         normalizedUsers = [],
         user,
         jackpotUser,
-        userBids,
-        response;
+        userBids;
 
     if(users.length > 0)
     {
@@ -378,7 +399,7 @@ LevelGame.prototype.getDetailedInfoForUI = function()
         {
             user        = users[k];
             jackpotUser = user.jackpotUser;
-            userBids    = user.getMyAllBids();
+            userBids    = user.getAllBids();
             normalizedUsers.push({
                 id:         jackpotUser.metaData.id,
                 name:       jackpotUser.metaData.name,
@@ -389,15 +410,7 @@ LevelGame.prototype.getDetailedInfoForUI = function()
         }
     }
 
-    response = {
-        users               : normalizedUsers,
-        currentBidUser      : this.getLastBidUser() == null ? null : this.getLastBidUser().jackpotUser.metaData,
-        currentBidDuration  : this.getLastBid() == null ? null : this.getLastBid().duration,
-        longestBidDuration  : this.getLongestBid() == null ? null : this.getLongestBid().duration,
-        longestBidUser      : this.getLongestBidUser() == null ? null : this.getLongestBidUser().jackpotUser.metaData
-    }
-
-    return response;
+    return {players: normalizedUsers};
 }
 
 export default LevelGame;

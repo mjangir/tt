@@ -14,7 +14,8 @@ export default function(data, socket)
         currentLevelGameUser,
         socketCurrentRooms,
         socketRoomKeys,
-        previousRoomName;
+        previousRoomName,
+        requiredUsersToPlay;
 
     currentGame = normalBattleContainer.getRunningGameByUserAndLevel(jackpotUserInstance, data.levelUniqueId);
 
@@ -56,7 +57,6 @@ export default function(data, socket)
                     amount:      jackpotInstance.getMetaData().amount
                 },
                 levelInfo: {
-                    duration    : currentGame.getHumanDuration(),
                     uniqueId    : currentGame.level.uniqueId,
                     levelName   : currentGame.level.metaData.levelName,
                     prizeValue  : currentGame.level.metaData.prizeValue,
@@ -68,6 +68,10 @@ export default function(data, socket)
                     availableBids:      currentLevelGameUser.availableBids,
                     totalPlacedBids:    currentLevelGameUser.bids.length
                 },
+                gameInfo: {
+                    duration : currentGame.getHumanDuration(),
+                    uniqueId : currentGame.gameId
+                },
                 players             : currentGame.getAllActiveUsersInfo(),
                 currentBidUser      : currentGame.getLastBidUser() == null ? null : currentGame.getLastBidUser().jackpotUser.metaData.name,
                 currentBidDuration  : currentGame.getLastBid() == null ? null : currentGame.getLastBid().duration,
@@ -75,6 +79,15 @@ export default function(data, socket)
                 longestBidDuration  : currentGame.getLongestBid() == null ? null : currentGame.getLongestBid().duration,
             });
 
+            // Start the game in case of min user reached
+            requiredUsersToPlay = currentGame.level.metaData.minPlayersRequiredToStart;
+
+            if(!currentGame.isRunning() && currentGame.users.length == requiredUsersToPlay)
+            {
+                currentGame.startGame();
+            }
+
+            // Broadcast to all users
             currentGame.emitUpdatesToItsRoom(socket)
         });
     }

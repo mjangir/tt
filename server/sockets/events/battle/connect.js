@@ -1,10 +1,12 @@
 import onRequestBattle from './requestbattle';
+import onPlaceBid from './normal/place-bid';
 import joinNormalBattleLevel from './normal/join-battle-level';
 import playGamblingBattleLevel from './gambling/play-battle-level';
 
 import {
 	EVT_ON_CLIENT_REQUEST_BATTLE,
-	EVT_CLIENT_JOIN_NORMAL_BATTLE_LEVEL
+	EVT_CLIENT_JOIN_NORMAL_BATTLE_LEVEL,
+	EVT_CLIENT_REQUEST_PLACE_NORMAL_BATTLE_LEVEL_BID
 } from './constants';
 
 export default function(socket)
@@ -29,4 +31,7 @@ export default function(socket)
 			// }
 		}
     }(socket)));
+
+    // On battle bid
+    socket.on(EVT_CLIENT_REQUEST_PLACE_NORMAL_BATTLE_LEVEL_BID, onPlaceBid(socket))
 }

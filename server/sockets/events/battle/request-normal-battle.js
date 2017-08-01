@@ -49,7 +49,6 @@ export default function(data, socket)
                     amount:      jackpotInstance.getMetaData().amount
                 },
                 levelInfo: {
-                    duration    : currentlyPlayingGame.getHumanDuration(),
                     uniqueId    : currentlyPlayingGame.level.uniqueId,
                     levelName   : currentlyPlayingGame.level.metaData.levelName,
                     prizeValue  : currentlyPlayingGame.level.metaData.prizeValue,
@@ -60,6 +59,10 @@ export default function(data, socket)
                     name:               myGameUserInstance.jackpotUser.getMetaData().name,
                     availableBids:      myGameUserInstance.availableBids,
                     totalPlacedBids:    myGameUserInstance.bids.length
+                },
+                gameInfo: {
+                    duration : currentlyPlayingGame.getHumanDuration(),
+                    uniqueId : currentlyPlayingGame.gameId
                 },
                 players             : currentlyPlayingGame.getAllActiveUsersInfo(),
                 currentBidUser      : currentlyPlayingGame.getLastBidUser() == null ? null : currentlyPlayingGame.getLastBidUser().jackpotUser.metaData.name,

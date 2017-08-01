@@ -100,6 +100,29 @@ Level.prototype.findCurrentPlayingGameForUser = function(userId)
 
 }
 
+Level.prototype.getGameByUniqueId = function(uniqueId)
+{
+	var games = this.games,
+        game;
+
+    if(games.length <= 0)
+    {
+        return false;
+    }
+
+    for(var k in games)
+    {
+        game = games[k];
+
+        if(game.gameId == uniqueId)
+        {
+            return game;
+        }
+    }
+
+    return false;
+}
+
 Level.prototype.updateTimer = function()
 {
 	var games = this.games,
