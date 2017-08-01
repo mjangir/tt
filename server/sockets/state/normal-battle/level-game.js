@@ -5,7 +5,7 @@ import {generateRandomString} from '../../../utils/functions';
 import url from 'url';
 import config from '../../../config/environment';
 import {
-    EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_DATA,
+    EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_PLAYER_LIST,
     EVT_EMIT_NORMAL_BATTLE_LEVEL_TIMER,
     EVT_EMIT_NORMAL_BATTLE_GAME_STARTED
 } from '../../events/battle/constants';
@@ -296,11 +296,11 @@ LevelGame.prototype.emitUpdatesToItsRoom = function(excludeSocket)
 
     if(typeof excludeSocket != 'undefined')
     {
-        excludeSocket.broadcast.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_DATA, this.getDetailedInfoForUI());
+        excludeSocket.broadcast.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_PLAYER_LIST, this.getUpdatedPlayerList());
     }
     else
     {
-        global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_DATA, this.getDetailedInfoForUI());
+        global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_PLAYER_LIST, this.getUpdatedPlayerList());
     }
 }
 
@@ -385,14 +385,13 @@ LevelGame.prototype.placeBid = function(levelGameUser, callback)
     }
 }
 
-LevelGame.prototype.getDetailedInfoForUI = function()
+LevelGame.prototype.getUpdatedPlayerList = function()
 {
     var users           = this.getAllUsers(),
         normalizedUsers = [],
         user,
         jackpotUser,
-        userBids,
-        response;
+        userBids;
 
     if(users.length > 0)
     {
@@ -411,15 +410,7 @@ LevelGame.prototype.getDetailedInfoForUI = function()
         }
     }
 
-    response = {
-        users               : normalizedUsers,
-        currentBidUser      : this.getLastBidUser() == null ? null : this.getLastBidUser().jackpotUser.metaData.name,
-        currentBidDuration  : this.getLastBid() == null ? null : this.getLastBid().duration,
-        longestBidDuration  : this.getLongestBid() == null ? null : this.getLongestBid().duration,
-        longestBidUser      : this.getLongestBidUser() == null ? null : this.getLongestBidUser().jackpotUser.metaData.name
-    }
-
-    return response;
+    return {players: normalizedUsers};
 }
 
 export default LevelGame;
