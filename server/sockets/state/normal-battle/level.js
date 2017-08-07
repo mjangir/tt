@@ -138,4 +138,22 @@ Level.prototype.updateTimer = function()
     }
 }
 
+Level.prototype.getNumberOfWinsByUser = function(jackpotUser)
+{
+    var wins = 0;
+
+    if(this.games.length > 0)
+    {
+        for(var k in this.games)
+        {
+            if(this.games[k].isUserWinner(jackpotUser))
+            {
+                wins += 1;
+            }
+        }
+    }
+
+    return wins;
+}
+
 export default Level;

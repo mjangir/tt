@@ -112,27 +112,65 @@ Container.prototype.getNewGameByUserAndLevel = function(jackpotUser, levelUnique
     return (!level) ? false : level.getNewGameByUser(jackpotUser);
 }
 
-Container.prototype.getBattleLevelListByUser = function(userId)
+Container.prototype.getBattleLevelListByUser = function(jackpotUser)
 {
-    var firstLevel  = this.levels[1],
+    var returnLevels    = [],
+        result          = [],
+        levels          = this.levels,
+        levelOrders     = Object.keys(levels),
+        order,
+        nextOrder,
+        level,
+        minWinsRequired,
         metaData;
 
-    if(!firstLevel)
+        console.log(levelOrders);
+
+    if(levelOrders.length > 0)
     {
-        return [];
+        for(var i in levelOrders)
+        {
+            order           = parseInt(levelOrders[i], 10);
+            nextOrder       = String(order + 1);
+            level           = levels[order];
+            minWinsRequired = parseInt(level.metaData.minWinsToUnlockNextLevel, 10);
+
+            if(order == 1)
+            {
+                returnLevels.push(level);
+            }
+
+            console.log(minWinsRequired, level.getNumberOfWinsByUser(jackpotUser));
+
+            if(minWinsRequired == 0 || level.getNumberOfWinsByUser(jackpotUser) >= minWinsRequired && typeof levels[nextOrder] != 'undefined')
+            {
+                returnLevels.push(levels[nextOrder]);
+            }
+        }
     }
 
-    metaData = firstLevel.metaData;
+    console.log(returnLevels);
 
-    return [{
-        uniqueId                : firstLevel.uniqueId,
-        order                   : metaData.order,
-        levelName               : metaData.levelName,
-        prizeType               : metaData.prizeType,
-        prizeValue              : metaData.prizeValue,
-        defaultAvailableBids    : metaData.defaultAvailableBids,
-        isLastLevel             : metaData.isLastLevel
-    }];
+    if(returnLevels.length > 0)
+    {
+        for(var j in returnLevels)
+        {
+            var thisLevel   = returnLevels[j],
+                metaData    = thisLevel.metaData;
+
+            result.push({
+                uniqueId                : thisLevel.uniqueId,
+                order                   : metaData.order,
+                levelName               : metaData.levelName,
+                prizeType               : metaData.prizeType,
+                prizeValue              : metaData.prizeValue,
+                defaultAvailableBids    : metaData.defaultAvailableBids,
+                isLastLevel             : metaData.isLastLevel
+            });
+        }
+    }
+
+    return result;
 }
 
 Container.prototype.updateTimer = function()

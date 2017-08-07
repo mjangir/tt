@@ -1,7 +1,9 @@
 'use strict';
 
 import {
-    EVT_EMIT_RESPONSE_JOIN_NORMAL_BATTLE_LEVEL
+    EVT_EMIT_RESPONSE_JOIN_NORMAL_BATTLE_LEVEL,
+    EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON,
+    EVT_EMIT_HIDE_NBL_PLACE_BID_BUTTON
 } from '../constants';
 
 export default function(data, socket)
@@ -85,6 +87,17 @@ export default function(data, socket)
             if(!currentGame.isRunning() && currentGame.users.length == requiredUsersToPlay)
             {
                 currentGame.startGame();
+            }
+
+            if( currentGame.isNotStarted() || 
+                (currentGame.getLastBid() != null && 
+                currentGame.getLastBid().user.jackpotUser.metaData.id != currentLevelGameUser.jackpotUser.getMetaData().id))
+            {
+                socket.emit(EVT_EMIT_HIDE_NBL_PLACE_BID_BUTTON);
+            }
+            else
+            {
+                socket.emit(EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON);
             }
 
             // Broadcast to all users

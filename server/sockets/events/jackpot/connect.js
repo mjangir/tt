@@ -88,6 +88,8 @@ export default function(socket)
             socket.jackpot      = userJackpot;
             socket.jackpotUser  = jackpotUser;
 
+            jackpotUser.currentSocket = socket;
+
             socket.join(userJackpot.getRoomName());
 
             // User joined to game successfully
@@ -131,6 +133,8 @@ export default function(socket)
                 socket.currentRoom  = pickNewJackpot.getRoomName();
                 socket.jackpot      = pickNewJackpot;
                 socket.jackpotUser  = jackpotUser;
+
+                jackpotUser.currentSocket = socket;
 
                 socket.join(pickNewJackpot.getRoomName());
 

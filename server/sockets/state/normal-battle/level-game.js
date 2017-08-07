@@ -7,7 +7,10 @@ import config from '../../../config/environment';
 import {
     EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_PLAYER_LIST,
     EVT_EMIT_NORMAL_BATTLE_LEVEL_TIMER,
-    EVT_EMIT_NORMAL_BATTLE_GAME_STARTED
+    EVT_EMIT_NORMAL_BATTLE_GAME_STARTED,
+    EVT_EMIT_NBL_GAME_FINISHED,
+    EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON,
+    EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN
 } from '../../events/battle/constants';
 
 const UserModel     = sqldb.User;
@@ -27,6 +30,7 @@ function LevelGame(level)
     this.users          = [];
     this.bids           = [];
     this.lastBid        = null;
+    this.winner         = null;
 
     this.setRoomName();
 }
@@ -119,6 +123,7 @@ LevelGame.prototype.startGame = function()
     this.status = 'STARTED';
 
     global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_NORMAL_BATTLE_GAME_STARTED, {status: true});
+    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON, {status: true});
 }
 
 LevelGame.prototype.getAllUsers = function()
@@ -347,6 +352,12 @@ LevelGame.prototype.updateTimer = function()
 LevelGame.prototype.finishGame = function()
 {
     this.status = 'FINISHED';
+
+    // Declare Winner
+    this.declareWinner();
+
+    // Increase winner jackpot bids
+    this.updateWinnerJackpotInstance();
 }
 
 LevelGame.prototype.placeBid = function(levelGameUser, callback)
@@ -373,15 +384,15 @@ LevelGame.prototype.placeBid = function(levelGameUser, callback)
     // Increase Game Duration
     this.duration += 10;
 
-    if(this.duration > this.level.duration)
+    if(this.duration >= this.level.metaData.duration)
     {
-        this.duration = this.level.duration;
+        this.duration = this.level.metaData.duration;
     }
 
     // Call the callback
     if(typeof callback == 'function')
     {
-        callback.call(global, bid);
+        callback.call(global, bid, levelGameUser);
     }
 }
 
@@ -411,6 +422,96 @@ LevelGame.prototype.getUpdatedPlayerList = function()
     }
 
     return {players: normalizedUsers};
+}
+
+LevelGame.prototype.declareWinner = function()
+{
+    var lastBidUser,
+        longestBidUser,
+        bothAreSame = false;
+
+    if(this.getLastBid() != null)
+    {
+        lastBidUser     = this.getLastBid().user;
+        longestBidUser  = this.getLongestBid() != null ? this.getLongestBid().user : null;
+
+        if(this.bids.length == 1 || (longestBidUser != null && lastBidUser.jackpotUser.metaData.id == longestBidUser.jackpotUser.metaData.id))
+        {
+            bothAreSame = true;
+        }
+
+        this.winner     = {
+            lastBidWinner       : lastBidUser,
+            longestBidWinner    : longestBidUser,
+            bothAreSame         : bothAreSame
+        }
+    }
+}
+
+LevelGame.prototype.isUserWinner = function(jackpotUser)
+{
+    var result = false;
+
+    if(this.winner != null)
+    {
+        if(
+            (this.winner.lastBidWinner.jackpotUser.metaData.id == jackpotUser.metaData.id) ||
+            (this.winner.longestBidWinner != null && this.winner.longestBidWinner.jackpotUser.metaData.id == jackpotUser.metaData.id)
+        )
+        {
+            result = true;
+        }
+    }
+
+    return result;
+}
+
+LevelGame.prototype.updateWinnerJackpotInstance = function()
+{
+    var winner                      = this.winner,
+        lastBidWinner,
+        longestBidWinner,
+        lastBidWinnerPercent        = parseInt(this.level.metaData.lastBidWinnerPercent, 10),
+        longestBidWinnerPercent     = parseInt(this.level.metaData.lastBidWinnerPercent, 10),
+        prizeType                   = this.level.metaData.prizeType,
+        prizeValue                  = prizeType == 'BID' ? parseInt(this.level.metaData.prizeValue, 10) : parseFloat(this.level.metaData.prizeValue, 10);
+
+    if(winner != null)
+    {
+        lastBidWinner       = winner.lastBidWinner;
+        longestBidWinner    = winner.longestBidWinner;
+
+        if(prizeType == 'BID' && prizeValue > 0)
+        {
+            if(winner.bothAreSame == true)
+            {
+                lastBidWinner.jackpotUser.availableBids += prizeValue;
+
+                // Update the available bid to socket for last bid winner
+                lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN, {
+                    availableBids: lastBidWinner.jackpotUser.availableBids
+                });
+            }
+            else
+            {
+                lastBidWinner.jackpotUser.availableBids     += parseInt((lastBidWinnerPercent/100 * prizeValue), 10);
+                longestBidWinner.jackpotUser.availableBids  += parseInt((longestBidWinnerPercent/100 * prizeValue), 10);
+
+                // Update the available bid to socket for last bid winner
+                lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN, {
+                    availableBids: lastBidWinner.jackpotUser.availableBids
+                });
+
+                // Update the available bid to socket for last bid winner
+                longestBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN, {
+                    availableBids: longestBidWinner.jackpotUser.availableBids
+                });
+            }
+        }
+        else if(prizeType == 'MONEY' && prizeValue > 0)
+        {
+        }
+    }
 }
 
 export default LevelGame;
