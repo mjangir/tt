@@ -510,6 +510,7 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
         }
         else if(prizeType == 'MONEY' && prizeValue > 0)
         {
+            
         }
     }
 }
