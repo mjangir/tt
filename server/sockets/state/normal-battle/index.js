@@ -151,32 +151,6 @@ Container.prototype.getBattleLevelListByUser = function(jackpotUser)
 
     if(returnLevels.length > 0)
     {
-=======
-    if(levelOrders.length > 0)
-    {
-        for(var i in levelOrders)
-        {
-            order           = levelOrders[i];
-            level           = levels[order];
-            minWinsRequired = parseInt(level.metaData.minWinsToUnlockNextLevel, 10);
-
-            if(order == 1)
-            {
-                returnLevels.push(level);
-            }
-
-            if(minWinsRequired == 0 || level.getNumberOfWinsByUser(jackpotUser) >= minWinsRequired && typeof levels[order + 1] != 'undefined')
-            {
-                returnLevels.push(levels[order + 1]);
-            }
-        }
-    }
-
-    console.log(returnLevels);
-
-    if(returnLevels.length > 0)
-    {
->>>>>>> 069780f48dd47c3bf3d068c6303e4ca7a7d695dc
         for(var j in returnLevels)
         {
             var thisLevel   = returnLevels[j],
