@@ -513,6 +513,8 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
             
         }
     }
+
+    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_NBL_GAME_FINISHED, {status: true});
 }
 
 export default LevelGame;
