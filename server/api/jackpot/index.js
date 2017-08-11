@@ -32,6 +32,9 @@ router.post('/insert-in-socket/:id', [auth.isAuthenticated()], controller.insert
 // Update a jackpot in global state
 router.post('/update-in-socket/:id', [auth.isAuthenticated()], controller.updateInSocket);
 
+// Update jackpot battle levels in socket
+router.post('/update-battle-in-socket/:id', [auth.isAuthenticated()], controller.updateBattleInSocket);
+
 // Update a jackpot in global state
 router.post('/check-socket-game-state/:id', [auth.isAuthenticated()], controller.checkSocketGameState);
 
