@@ -58,6 +58,8 @@ router.post('/', function(req, res, next)
 
   logger.debug("Create user initializated");
 
+  req.body.userGroupId = 2;
+
   let newUser = User.build(req.body);
 
   newUser.save()
