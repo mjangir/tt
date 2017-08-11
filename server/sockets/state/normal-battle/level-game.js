@@ -95,7 +95,7 @@ LevelGame.prototype.getUser = function(jackpotUser)
     {
         levelGameUser = this.users[k];
 
-        if(levelGameUser.jackpotUser.metaData.id == jackpotUser.metaData.id)
+        if(levelGameUser && levelGameUser.jackpotUser.metaData.id == jackpotUser.metaData.id)
         {
             return levelGameUser;
         }
