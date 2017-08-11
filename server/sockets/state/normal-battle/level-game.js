@@ -416,7 +416,8 @@ LevelGame.prototype.getUpdatedPlayerList = function()
                 name:       jackpotUser.metaData.name,
                 //picture:    jackpotUser.metaData.photo,
                 picture:    avatarUrl,
-                totalBids:  userBids.length
+                totalBids:  userBids.length,
+                remainingBids: user.availableBids
             })
         }
     }
