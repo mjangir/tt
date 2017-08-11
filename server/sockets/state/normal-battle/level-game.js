@@ -143,10 +143,11 @@ LevelGame.prototype.getAllActiveUsersInfo = function()
         {
             user = this.users[i];
             users.push({
-                userId:     user.jackpotUser.metaData.id,
-                name:       user.jackpotUser.metaData.name,
-                totalBids:  user.bids.length,
-                picture:    avatarUrl,
+                userId:         user.jackpotUser.metaData.id,
+                name:           user.jackpotUser.metaData.name,
+                totalBids:      user.bids.length,
+                remainingBids:  user.availableBids,
+                picture:        avatarUrl,
             })
         }
     }
