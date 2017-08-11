@@ -153,18 +153,21 @@ Container.prototype.getBattleLevelListByUser = function(jackpotUser)
     {
         for(var j in returnLevels)
         {
-            var thisLevel   = returnLevels[j],
-                metaData    = thisLevel.metaData;
+            if(returnLevels[j])
+            {
+                var thisLevel   = returnLevels[j],
+                    metaData    = thisLevel.metaData;
 
-            result.push({
-                uniqueId                : thisLevel.uniqueId,
-                order                   : metaData.order,
-                levelName               : metaData.levelName,
-                prizeType               : metaData.prizeType,
-                prizeValue              : metaData.prizeValue,
-                defaultAvailableBids    : metaData.defaultAvailableBids,
-                isLastLevel             : metaData.isLastLevel
-            });
+                result.push({
+                    uniqueId                : thisLevel.uniqueId,
+                    order                   : metaData.order,
+                    levelName               : metaData.levelName,
+                    prizeType               : metaData.prizeType,
+                    prizeValue              : metaData.prizeValue,
+                    defaultAvailableBids    : metaData.defaultAvailableBids,
+                    isLastLevel             : metaData.isLastLevel
+                });
+            }
         }
     }
 
