@@ -30,7 +30,14 @@ function emitCanIBidOnConnect(socket, jackpot, jackpotUser)
         jackpotLastBidUserId    = jackpotLastBidUser != null ? jackpotLastBidUser.getMetaData().id : false,
         jackpotUserId           = jackpotUser.getMetaData().id;
 
-    socket.emit(EVT_EMIT_CAN_I_PLACE_BID, {canIBid: (jackpotLastBidUserId != jackpotUserId)});
+    if(Object.keys(jackpot.users).length <= jackpot.getMetaData().minPlayersRequired)
+    {
+        global.jackpotSocketNamespace.in(jackpot.getRoomName()).emit(EVT_EMIT_CAN_I_PLACE_BID, {canIBid: false});
+    }
+    else
+    {
+        socket.emit(EVT_EMIT_CAN_I_PLACE_BID, {canIBid: (jackpotLastBidUserId != jackpotUserId)});
+    }
 }
 
 /**
