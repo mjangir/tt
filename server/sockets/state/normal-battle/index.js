@@ -119,6 +119,7 @@ Container.prototype.getBattleLevelListByUser = function(jackpotUser)
         levels          = this.levels,
         levelOrders     = Object.keys(levels),
         order,
+        nextOrder,
         level,
         minWinsRequired,
         metaData;
@@ -127,7 +128,8 @@ Container.prototype.getBattleLevelListByUser = function(jackpotUser)
     {
         for(var i in levelOrders)
         {
-            order           = levelOrders[i];
+            order           = parseInt(levelOrders[i], 10);
+            nextOrder       = String(order + 1);
             level           = levels[order];
             minWinsRequired = parseInt(level.metaData.minWinsToUnlockNextLevel, 10);
 
@@ -136,9 +138,11 @@ Container.prototype.getBattleLevelListByUser = function(jackpotUser)
                 returnLevels.push(level);
             }
 
-            if(minWinsRequired == 0 || level.getNumberOfWinsByUser(jackpotUser) >= minWinsRequired && typeof levels[order + 1] != 'undefined')
+            console.log(minWinsRequired, level.getNumberOfWinsByUser(jackpotUser));
+
+            if(minWinsRequired == 0 || level.getNumberOfWinsByUser(jackpotUser) >= minWinsRequired && typeof levels[nextOrder] != 'undefined')
             {
-                returnLevels.push(levels[order + 1]);
+                returnLevels.push(levels[nextOrder]);
             }
         }
     }
@@ -149,18 +153,21 @@ Container.prototype.getBattleLevelListByUser = function(jackpotUser)
     {
         for(var j in returnLevels)
         {
-            var thisLevel   = returnLevels[j],
-                metaData    = thisLevel.metaData;
+            if(returnLevels[j])
+            {
+                var thisLevel   = returnLevels[j],
+                    metaData    = thisLevel.metaData;
 
-            result.push({
-                uniqueId                : thisLevel.uniqueId,
-                order                   : metaData.order,
-                levelName               : metaData.levelName,
-                prizeType               : metaData.prizeType,
-                prizeValue              : metaData.prizeValue,
-                defaultAvailableBids    : metaData.defaultAvailableBids,
-                isLastLevel             : metaData.isLastLevel
-            });
+                result.push({
+                    uniqueId                : thisLevel.uniqueId,
+                    order                   : metaData.order,
+                    levelName               : metaData.levelName,
+                    prizeType               : metaData.prizeType,
+                    prizeValue              : metaData.prizeValue,
+                    defaultAvailableBids    : metaData.defaultAvailableBids,
+                    isLastLevel             : metaData.isLastLevel
+                });
+            }
         }
     }
 

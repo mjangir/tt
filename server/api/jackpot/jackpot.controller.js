@@ -6,6 +6,8 @@ import logger from '../../utils/logger';
 import {sequelizeErrorHandler} from '../../utils/LiveErrorHandler';
 import {generateRandomString} from '../../utils/functions';
 import * as constants from '../../config/constants';
+import NormalBattleContainer from '../../sockets/state/normal-battle';
+import GamblingBattleContainer from '../../sockets/state/gambling-battle';
 
 var Jackpot = sqldb.Jackpot;
 
@@ -398,6 +400,51 @@ exports.checkSocketGameState = function(req, res)
           status: 'success',
           state:  existingJackpot ? existingJackpot.metaData.gameStatus : false
         }).end();
+    }
+  })
+  .catch(sequelizeErrorHandler(res));
+}
+
+/**
+ * Update battle in socket
+ *
+ * @param  {Object} req
+ * @param  {Object} res
+ * @return {*}
+ */
+exports.updateBattleInSocket = function(req, res)
+{
+  Jackpot.find({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(handleEntityNotFound(res))
+  .then(function(entity)
+  {
+    if(entity)
+    {
+      var jackpotPlain        = entity.get({plain: true}),
+          globalJackpotState  = global.globalJackpotSocketState,
+          existingJackpot     = globalJackpotState.getJackpot(jackpotPlain.uniqueId);
+
+          if(existingJackpot && existingJackpot.metaData.gameStatus != 'STARTED')
+          {
+            existingJackpot.normalBattleContainer       = new NormalBattleContainer(existingJackpot);
+            existingJackpot.gamblingBattleContainer     = new GamblingBattleContainer(existingJackpot);
+
+            res.status(200).json({
+              status: 'success',
+              message: 'Jackpot updated to global state successfully'
+            }).end();
+        }
+        else
+        {
+          res.status(200).json({
+            status: 'error',
+            message: 'socket state can\'t be updated because its already running.'
+          }).end();
+        }
     }
   })
   .catch(sequelizeErrorHandler(res));

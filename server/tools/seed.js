@@ -425,7 +425,8 @@ export default function()
         doomsDayRemaining: 259200,
         uniqueId: generateRandomString(20, 'aA'),
         gameStatus: 'NOT_STARTED',
-        createdBy: null
+        createdBy: null,
+        minPlayersRequired: 3
       },
       {
         title: 'Second Jackpot',
@@ -436,7 +437,8 @@ export default function()
         doomsDayRemaining: 1200,
         uniqueId: generateRandomString(20, 'aA'),
         gameStatus: 'NOT_STARTED',
-        createdBy: null
+        createdBy: null,
+        minPlayersRequired: 4
       }
       ]).then(function(){
           console.log("######### JACKPOTS CREATED ######");

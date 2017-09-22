@@ -25,6 +25,14 @@ module.exports = function(sequelize, DataTypes)
       comment     : "Jackpot Winning Amount"
     },
 
+    minPlayersRequired: {
+      field         : "min_players_required",
+      type          : DataTypes.INTEGER(11),
+      allowNull     : false,
+      defaultValue  : 1,
+      comment       : "Minimum Players Required"
+    },
+
     gameClockTime : {
       field         : "game_clock_time",
       type          : DataTypes.INTEGER(11),

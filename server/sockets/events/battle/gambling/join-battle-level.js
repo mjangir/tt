@@ -1,16 +1,16 @@
 'use strict';
 
 import {
-    EVT_EMIT_RESPONSE_JOIN_NORMAL_BATTLE_LEVEL,
-    EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON,
-    EVT_EMIT_HIDE_NBL_PLACE_BID_BUTTON
+    EVT_EMIT_RESPONSE_JOIN_GAMBLING_BATTLE_LEVEL,
+    EVT_EMIT_SHOW_GBL_PLACE_BID_BUTTON,
+    EVT_EMIT_HIDE_GBL_PLACE_BID_BUTTON
 } from '../constants';
 
 export default function(data, socket)
 {
 	var jackpotInstance         = global.globalJackpotSocketState.getJackpot(data.jackpotUniqueId),
     	jackpotUserInstance     = jackpotInstance.getUser(data.userId),
-    	normalBattleContainer   = jackpotInstance.normalBattleContainer,
+    	gamblingBattleContainer   = jackpotInstance.gamblingBattleContainer,
     	response 				= {status: false},
         currentGame,
         currentLevelGameUser,
@@ -19,11 +19,11 @@ export default function(data, socket)
         previousRoomName,
         requiredUsersToPlay;
 
-    currentGame = normalBattleContainer.getRunningGameByUserAndLevel(jackpotUserInstance, data.levelUniqueId);
+    currentGame = gamblingBattleContainer.getRunningGameByUserAndLevel(jackpotUserInstance, data.levelUniqueId);
 
     if(!currentGame)
     {
-    	currentGame = normalBattleContainer.getNewGameByUserAndLevel(jackpotUserInstance, data.levelUniqueId);
+    	currentGame = gamblingBattleContainer.getNewGameByUserAndLevel(jackpotUserInstance, data.levelUniqueId, data.gamblingBids);
     }
 
     if(currentGame)
@@ -36,7 +36,7 @@ export default function(data, socket)
         {
             for(var p in socketRoomKeys)
             {
-                if(socketRoomKeys[p].indexOf('JACKPOT_NORMAL_BATTLE_LEVEL_ROOM_') > -1)
+                if(socketRoomKeys[p].indexOf('JACKPOT_GAMBLING_BATTLE_LEVEL_ROOM_') > -1)
                 {
                     previousRoomName = socketRoomKeys[p];
                 }
@@ -51,7 +51,7 @@ export default function(data, socket)
             currentLevelGameUser = currentGame.getUser(jackpotUserInstance);
 
             // User joined to game successfully
-            socket.emit(EVT_EMIT_RESPONSE_JOIN_NORMAL_BATTLE_LEVEL, {
+            socket.emit(EVT_EMIT_RESPONSE_JOIN_GAMBLING_BATTLE_LEVEL, {
 
                 jackpotInfo:    {
                     uniqueId:    jackpotInstance.getMetaData().uniqueId,
@@ -61,13 +61,14 @@ export default function(data, socket)
                 levelInfo: {
                     uniqueId    : currentGame.level.uniqueId,
                     levelName   : currentGame.level.metaData.levelName,
-                    prizeValue  : currentGame.level.metaData.prizeValue,
-                    prizeType   : currentGame.level.metaData.prizeType
+                    prizeType   : currentGame.level.metaData.prizeType,
+                    minBidsToGamb: currentGame.level.metaData.minBidsToGamb
                 },
                 myInfo: {
                     userId:             currentLevelGameUser.jackpotUser.getMetaData().id,
                     name:               currentLevelGameUser.jackpotUser.getMetaData().name,
                     availableBids:      currentLevelGameUser.availableBids,
+                    bidsForGambling:    currentLevelGameUser.bidsForGambling,
                     totalPlacedBids:    currentLevelGameUser.bids.length
                 },
                 gameInfo: {
@@ -89,15 +90,15 @@ export default function(data, socket)
                 currentGame.startGame();
             }
 
-            if( currentGame.isNotStarted() || 
-                (currentGame.getLastBid() != null && 
+            if( currentGame.isNotStarted() ||
+                (currentGame.getLastBid() != null &&
                 currentGame.getLastBid().user.jackpotUser.metaData.id != currentLevelGameUser.jackpotUser.getMetaData().id))
             {
-                socket.emit(EVT_EMIT_HIDE_NBL_PLACE_BID_BUTTON);
+                socket.emit(EVT_EMIT_HIDE_GBL_PLACE_BID_BUTTON);
             }
             else
             {
-                socket.emit(EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON);
+                socket.emit(EVT_EMIT_SHOW_GBL_PLACE_BID_BUTTON);
             }
 
             // Broadcast to all users

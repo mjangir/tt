@@ -1,7 +1,9 @@
 'use strict';
 
 import {
-	EVT_EMIT_RESPONSE_BATTLE
+	EVT_EMIT_RESPONSE_BATTLE,
+    EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON,
+    EVT_EMIT_HIDE_NBL_PLACE_BID_BUTTON
 } from './constants';
 
 export default function(data, socket)
@@ -76,6 +78,17 @@ export default function(data, socket)
                 battleLevelsList   : battleLevelsList,
                 currentGameInfo    : currentGameInfo
             };
+
+            if( currentlyPlayingGame.isNotStarted() || 
+                (currentlyPlayingGame.getLastBid() != null && 
+                currentlyPlayingGame.getLastBid().user.jackpotUser.metaData.id != myGameUserInstance.jackpotUser.getMetaData().id))
+            {
+                socket.emit(EVT_EMIT_HIDE_NBL_PLACE_BID_BUTTON);
+            }
+            else
+            {
+                socket.emit(EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON);
+            }
 
             socket.emit(EVT_EMIT_RESPONSE_BATTLE, response);
 

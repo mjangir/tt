@@ -25,6 +25,7 @@ function User(data)
 	this.lastBid 			= null;
 	this.firstBidStartTime 	= null;
 	this.lastBidStartTime 	= null;
+	this.currentSocket 		= null;
 }
 
 /**

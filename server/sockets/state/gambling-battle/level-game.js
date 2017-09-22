@@ -5,11 +5,11 @@ import {generateRandomString} from '../../../utils/functions';
 import url from 'url';
 import config from '../../../config/environment';
 import {
-    EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_PLAYER_LIST,
-    EVT_EMIT_NORMAL_BATTLE_LEVEL_TIMER,
-    EVT_EMIT_NORMAL_BATTLE_GAME_STARTED,
-    EVT_EMIT_NBL_GAME_FINISHED,
-    EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON,
+    EVT_EMIT_UPDATE_GAMBLING_BATTLE_LEVEL_PLAYER_LIST,
+    EVT_EMIT_GAMBLING_BATTLE_LEVEL_TIMER,
+    EVT_EMIT_GAMBLING_BATTLE_GAME_STARTED,
+    EVT_EMIT_GBL_GAME_FINISHED,
+    EVT_EMIT_SHOW_GBL_PLACE_BID_BUTTON,
     EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN
 } from '../../events/battle/constants';
 
@@ -63,7 +63,7 @@ LevelGame.prototype.countDown = function()
 
 LevelGame.prototype.setRoomName = function()
 {
-    var roomPrefix  = 'JACKPOT_NORMAL_BATTLE_LEVEL_ROOM_';
+    var roomPrefix  = 'JACKPOT_GAMBLING_BATTLE_LEVEL_ROOM_';
     var uniqueId    = this.gameId;
     var roomName    = roomPrefix + uniqueId;
     this.roomName   = roomName;
@@ -104,14 +104,14 @@ LevelGame.prototype.getUser = function(jackpotUser)
     return false;
 }
 
-LevelGame.prototype.addUser = function(jackpotUser)
+LevelGame.prototype.addUser = function(jackpotUser, gamblingBids)
 {
     var userExist   = this.getUser(jackpotUser),
         newUser     = null;
 
     if(!userExist)
     {
-        newUser = new LevelGameUser(this, jackpotUser);
+        newUser = new LevelGameUser(this, jackpotUser, gamblingBids);
         this.users.push(newUser);
     }
 
@@ -122,8 +122,8 @@ LevelGame.prototype.startGame = function()
 {
     this.status = 'STARTED';
 
-    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_NORMAL_BATTLE_GAME_STARTED, {status: true});
-    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON, {status: true});
+    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_GAMBLING_BATTLE_GAME_STARTED, {status: true});
+    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_SHOW_GBL_PLACE_BID_BUTTON, {status: true});
 }
 
 LevelGame.prototype.getAllUsers = function()
@@ -302,11 +302,11 @@ LevelGame.prototype.emitUpdatesToItsRoom = function(excludeSocket)
 
     if(typeof excludeSocket != 'undefined')
     {
-        excludeSocket.broadcast.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_PLAYER_LIST, this.getUpdatedPlayerList());
+        excludeSocket.broadcast.in(roomName).emit(EVT_EMIT_UPDATE_GAMBLING_BATTLE_LEVEL_PLAYER_LIST, this.getUpdatedPlayerList());
     }
     else
     {
-        global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_LEVEL_PLAYER_LIST, this.getUpdatedPlayerList());
+        global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_UPDATE_GAMBLING_BATTLE_LEVEL_PLAYER_LIST, this.getUpdatedPlayerList());
     }
 }
 
@@ -341,7 +341,7 @@ LevelGame.prototype.updateTimer = function()
     }
 
     // Emit the updated battle timer to everybody in its room
-    global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_NORMAL_BATTLE_LEVEL_TIMER, {
+    global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_GAMBLING_BATTLE_LEVEL_TIMER, {
         battleClock         : durationTime,
         currentBidDuration  : lastBidDuration,
         currentBidUserName  : lastBidUserName,
@@ -476,7 +476,16 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
         lastBidWinnerPercent        = parseInt(this.level.metaData.lastBidWinnerPercent, 10),
         longestBidWinnerPercent     = parseInt(this.level.metaData.lastBidWinnerPercent, 10),
         prizeType                   = this.level.metaData.prizeType,
-        prizeValue                  = prizeType == 'BID' ? parseInt(this.level.metaData.prizeValue, 10) : parseFloat(this.level.metaData.prizeValue, 10);
+        users                       = this.users,
+        prizeValue                  = 0;
+
+    if(users.length > 0)
+    {
+        for(var i in users)
+        {
+            prizeValue += parseInt(users[i].bidsForGambling, 10);
+        }
+    }
 
     if(winner != null)
     {
@@ -509,10 +518,6 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
                     availableBids: longestBidWinner.jackpotUser.availableBids
                 });
             }
-        }
-        else if(prizeType == 'MONEY' && prizeValue > 0)
-        {
-
         }
     }
 
