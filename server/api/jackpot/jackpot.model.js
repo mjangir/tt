@@ -33,6 +33,13 @@ module.exports = function(sequelize, DataTypes)
       comment       : "Minimum Players Required"
     },
 
+    durationSetting: {
+      field       : "duration_setting",
+      type        : DataTypes.TEXT,
+      allowNull   : true,
+      comment     : "Duration Settings"
+    },
+
     gameClockTime : {
       field         : "game_clock_time",
       type          : DataTypes.INTEGER(11),

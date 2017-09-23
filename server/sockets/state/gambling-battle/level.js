@@ -136,4 +136,15 @@ Level.prototype.getNumberOfWinsByUser = function(jackpotUser)
     return wins;
 }
 
+Level.prototype.updateNewJackpotAmount = function(amount)
+{
+	if(this.games.length > 0)
+    {
+        for(var k in this.games)
+        {
+            this.games[k].updateNewJackpotAmount(amount)
+        }
+    }
+}
+
 export default Level;

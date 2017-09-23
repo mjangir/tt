@@ -44,6 +44,9 @@ export default function()
             jackpot     = jackpotInstances[uniqueId];
             metaData    = jackpot.getMetaData();
 
+            // Update the amount increase
+            jackpot.updateJackpotAmountOnParticularDuration();
+
             // If both game and dooms day clock has become zero
             // Finish this game
             if(metaData.gameClockRemaining == 0 && metaData.gameStatus == 'STARTED')

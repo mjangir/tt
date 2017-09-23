@@ -19,6 +19,8 @@ export const EVT_EMIT_NBL_GAME_FINISHED                         = 'normal_battle
 
 export const EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN 	= 'update_available_bid_after_battle_win';
 
+export const EVT_EMIT_UPDATE_NORMAL_BATTLE_JACKPOT_AMOUNT 		= 'update_normal_battle_jackpot_amount';
+
 // For Gambling
 export const EVT_CLIENT_JOIN_GAMBLING_BATTLE_LEVEL                = 'request_join_gambling_battle_level';
 export const EVT_CLIENT_REQUEST_PLACE_GAMBLING_BATTLE_LEVEL_BID   = 'request_place_gambling_battle_level_bid';
@@ -33,3 +35,5 @@ export const EVT_EMIT_GAMBLING_BATTLE_GAME_STARTED                = 'gambling_ba
 export const EVT_EMIT_HIDE_GBL_PLACE_BID_BUTTON                 = 'hide_gambling_battle_level_place_bid_button';
 export const EVT_EMIT_SHOW_GBL_PLACE_BID_BUTTON                 = 'show_gambling_battle_level_place_bid_button';
 export const EVT_EMIT_GBL_GAME_FINISHED                         = 'gambling_battle_level_game_finished';
+
+export const EVT_EMIT_UPDATE_GAMBLING_BATTLE_JACKPOT_AMOUNT 	= 'update_gambling_battle_jackpot_amount';

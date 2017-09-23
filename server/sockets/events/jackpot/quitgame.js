@@ -7,6 +7,7 @@ import {
     EVT_EMIT_ME_JOINED,
     EVT_EMIT_ME_JOINED_ERR
 } from './constants';
+import {convertAmountToCommaString} from '../../../utils/functions';
 
 /**
  * Emit can I bid on connect
@@ -91,7 +92,7 @@ function handleOnQuitGame(data, socket)
                             jackpotInfo:    {
                                 uniqueId:    pickNewJackpot.getMetaData().uniqueId,
                                 name:        pickNewJackpot.getMetaData().title,
-                                amount:      pickNewJackpot.getMetaData().amount
+                                amount:      convertAmountToCommaString(pickNewJackpot.getMetaData().amount)
                             },
                             userInfo: {
                                 name:               jackpotUser.getMetaData().name,

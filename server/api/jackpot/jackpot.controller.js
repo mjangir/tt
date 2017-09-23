@@ -347,10 +347,15 @@ exports.updateInSocket = function(req, res)
           globalJackpotState  = global.globalJackpotSocketState,
           existingJackpot     = globalJackpotState.getJackpot(jackpotPlain.uniqueId);
 
+        if(existingJackpot)
+        {
+          existingJackpot.metaData.title            = jackpotPlain.title;
+          existingJackpot.metaData.amount           = jackpotPlain.amount;
+          existingJackpot.metaData.durationSetting  = jackpotPlain.durationSetting;
+        }
+
         if(existingJackpot && existingJackpot.metaData.gameStatus != 'STARTED')
         {
-          existingJackpot.metaData.title              = jackpotPlain.title;
-          existingJackpot.metaData.amount             = jackpotPlain.amount;
           existingJackpot.metaData.gameClockTime      = jackpotPlain.gameClockTime;
           existingJackpot.metaData.gameClockRemaining = jackpotPlain.gameClockRemaining;
           existingJackpot.metaData.doomsDayTime       = jackpotPlain.doomsDayTime;
@@ -365,7 +370,7 @@ exports.updateInSocket = function(req, res)
         {
           res.status(200).json({
             status: 'error',
-            message: 'socket state can\'t be updated because its already running.'
+            message: 'current jackpot game clock can\'t be updated because its already running.'
           }).end();
         }
     }

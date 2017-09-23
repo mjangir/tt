@@ -10,7 +10,8 @@ import {
     EVT_EMIT_NORMAL_BATTLE_GAME_STARTED,
     EVT_EMIT_NBL_GAME_FINISHED,
     EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON,
-    EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN
+    EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN,
+    EVT_EMIT_UPDATE_NORMAL_BATTLE_JACKPOT_AMOUNT
 } from '../../events/battle/constants';
 
 const UserModel     = sqldb.User;
@@ -514,9 +515,33 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
         {
 
         }
-    }
 
-    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_NBL_GAME_FINISHED, {status: true});
+        global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_NBL_GAME_FINISHED, {
+            status:             true,
+            lastBidWinner:      {
+                id:             lastBidWinner.jackpotUser.metaData.id,
+                name:           lastBidWinner.jackpotUser.metaData.name,
+                availableBids:  lastBidWinner.jackpotUser.availableBids
+            },
+            longestBidWinner:   {
+                id:             longestBidWinner.jackpotUser.metaData.id,
+                name:           longestBidWinner.jackpotUser.metaData.name,
+                availableBids:  longestBidWinner.jackpotUser.availableBids
+            },
+            bothAreSame:        winner.bothAreSame
+        });
+    }
+    else
+    {
+        global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_NBL_GAME_FINISHED, {
+            status:             true
+        });
+    }
+}
+
+LevelGame.prototype.updateNewJackpotAmount = function(amount)
+{
+    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_UPDATE_NORMAL_BATTLE_JACKPOT_AMOUNT, {amount: amount});
 }
 
 export default LevelGame;

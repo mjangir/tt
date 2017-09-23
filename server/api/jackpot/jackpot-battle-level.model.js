@@ -61,7 +61,7 @@ module.exports = function(sequelize, DataTypes)
     minBidsToGamb: {
       field           : 'min_bids_to_gamb',
       type            : DataTypes.INTEGER(11),
-      allowNull       : false,
+      allowNull       : true,
       defaultValue    : 1,
       comment         : "Min Bids To Gamb"
     },

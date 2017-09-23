@@ -5,7 +5,7 @@ import handleGamblingBattleRequest from './request-gambling-battle';
 
 function getAppropriateBattleType()
 {
-    return 'GAMBLING';
+    return 'NORMAL';
 }
 
 /**

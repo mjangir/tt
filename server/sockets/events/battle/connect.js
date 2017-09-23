@@ -16,19 +16,21 @@ export default function(socket)
 	// On battle tab click request
     socket.on(EVT_ON_CLIENT_REQUEST_BATTLE, onRequestBattle(socket));
 
-  //   // On NORMAL battle tab click request
-  //   socket.on(EVT_CLIENT_JOIN_NORMAL_BATTLE_LEVEL, (function(socket){
-  //   	return function(data)
-		// {
-  //           joinNormalBattleLevel(data, socket);
-		// }
-  //   }(socket)));
+    // On NORMAL battle tab click request
+    socket.on(EVT_CLIENT_JOIN_NORMAL_BATTLE_LEVEL, (function(socket){
+    	return function(data)
+		{
+            joinNormalBattleLevel(data, socket);
+		}
+    }(socket)));
 
-  //   // On GAMBLING battle tab click request
-  //   socket.on(EVT_CLIENT_JOIN_GAMBLING_BATTLE_LEVEL, (function(socket){
-  //       return function(data)
-  //       {
-  //           joinGamblingBattleLevel(data, socket);
-  //       }
-  //   }(socket)));
+    // On GAMBLING battle tab click request
+    socket.on(EVT_CLIENT_JOIN_GAMBLING_BATTLE_LEVEL, (function(socket){
+        return function(data)
+        {
+            joinGamblingBattleLevel(data, socket);
+        }
+    }(socket)));
+
+    socket.on(EVT_CLIENT_REQUEST_PLACE_NORMAL_BATTLE_LEVEL_BID, onPlaceBid(socket))
 }

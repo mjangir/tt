@@ -5,6 +5,7 @@ import {
     EVT_EMIT_SHOW_GBL_PLACE_BID_BUTTON,
     EVT_EMIT_HIDE_GBL_PLACE_BID_BUTTON
 } from '../constants';
+import {convertAmountToCommaString} from '../../../../utils/functions';
 
 export default function(data, socket)
 {
@@ -56,7 +57,7 @@ export default function(data, socket)
                 jackpotInfo:    {
                     uniqueId:    jackpotInstance.getMetaData().uniqueId,
                     name:        jackpotInstance.getMetaData().title,
-                    amount:      jackpotInstance.getMetaData().amount
+                    amount:      convertAmountToCommaString(jackpotInstance.getMetaData().amount)
                 },
                 levelInfo: {
                     uniqueId    : currentGame.level.uniqueId,

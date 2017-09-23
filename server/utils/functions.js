@@ -64,3 +64,8 @@ export const generateRandomString = function(length, chars)
     for (var i = length; i > 0; --i) result += mask[Math.floor(Math.random() * mask.length)];
     return result;
 }
+
+export const convertAmountToCommaString = function(amt)
+{
+  return Number(amt).toLocaleString();
+}

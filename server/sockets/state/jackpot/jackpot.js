@@ -6,9 +6,11 @@ import moment from 'moment';
 import lodash from 'lodash';
 import NormalBattleContainer from '../normal-battle';
 import GamblingBattleContainer from '../gambling-battle';
+import {convertAmountToCommaString} from '../../../utils/functions';
 
 import {
     EVT_EMIT_UPDATE_JACKPOT_DATA,
+    EVT_EMIT_UPDATE_JACKPOT_AMOUNT
 } from '../../events/jackpot/constants';
 
 const UserModel                 = sqldb.User;
@@ -174,6 +176,88 @@ Jackpot.prototype.startGame = function()
 {
     this.metaData.startedOn     = new Date();
     this.metaData.gameStatus    = 'STARTED';
+    this.updateStatusInDb('STARTED');
+}
+
+Jackpot.prototype.updateStatusInDb = function(status)
+{
+    JackpotModel.find({
+        where: {
+            id: this.metaData.id
+        }
+    })
+    .then(function(entity)
+    {
+        entity.updateAttributes({gameStatus: status})
+        .then(function(updated)
+        {
+            
+        }).catch(function(err)
+        {
+            
+        })
+    });
+}
+
+Jackpot.prototype.updateJackpotAmountOnParticularDuration = function()
+{
+    if(this.metaData.durationSetting)
+    {
+        try
+        {
+            var setting         = JSON.parse(this.metaData.durationSetting),
+                data            = {},
+                secondsPassed   = this.metaData.doomsDayTime - this.metaData.doomsDayRemaining,
+                sendingAmount;
+
+            if(Array.isArray(setting) && setting.length > 0)
+            {
+                for(var k in setting)
+                {
+                    data[setting[k]['seconds']] = setting[k]['amount'];
+                }
+
+                if(secondsPassed > 0 && Object.keys(data).length > 0 && data.hasOwnProperty(secondsPassed))
+                {
+                    this.metaData.amount    = data[secondsPassed];
+                    sendingAmount           = convertAmountToCommaString(this.metaData.amount);
+                    this.emitUpdatedAmountToJackpotAndItsBattles(sendingAmount);
+                    this.updateNewAmountToDb(this.metaData.amount);
+                }
+            }
+        }
+        catch(error)
+        {
+
+        }
+    }
+}
+
+Jackpot.prototype.updateNewAmountToDb = function(amt)
+{
+    JackpotModel.find({
+        where: {
+            id: this.metaData.id
+        }
+    })
+    .then(function(entity)
+    {
+        entity.updateAttributes({amount: amt})
+        .then(function(updated)
+        {
+            
+        }).catch(function(err)
+        {
+            
+        })
+    });
+}
+
+Jackpot.prototype.emitUpdatedAmountToJackpotAndItsBattles = function(amount)
+{
+    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_UPDATE_JACKPOT_AMOUNT, {amount: amount});
+    this.normalBattleContainer.updateNewJackpotAmount(amount);
+    this.gamblingBattleContainer.updateNewJackpotAmount(amount);
 }
 
 /**

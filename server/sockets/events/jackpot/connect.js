@@ -4,6 +4,7 @@ import onPlaceBid from './placebid';
 import onDisconnect from './disconnect';
 import onQuitGame from './quitgame';
 import handlePostConnectBattleEvents from '../battle/connect';
+import {convertAmountToCommaString} from '../../../utils/functions';
 
 import {
     EVT_ON_CLIENT_CONNECTION,
@@ -104,7 +105,7 @@ export default function(socket)
                 jackpotInfo:    {
                     uniqueId:    userJackpot.getMetaData().uniqueId,
                     name:        userJackpot.getMetaData().title,
-                    amount:      userJackpot.getMetaData().amount
+                    amount:      convertAmountToCommaString(userJackpot.getMetaData().amount)
                 },
                 userInfo: {
                     name:               jackpotUser.getMetaData().name,
@@ -150,7 +151,7 @@ export default function(socket)
                     jackpotInfo:    {
                         uniqueId:    pickNewJackpot.getMetaData().uniqueId,
                         name:        pickNewJackpot.getMetaData().title,
-                        amount:      pickNewJackpot.getMetaData().amount
+                        amount:      convertAmountToCommaString(pickNewJackpot.getMetaData().amount)
                     },
                     userInfo: {
                         name:               jackpotUser.getMetaData().name,
