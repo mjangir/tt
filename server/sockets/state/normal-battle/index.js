@@ -135,19 +135,24 @@ Container.prototype.getBattleLevelListByUser = function(jackpotUser)
 
             if(order == 1)
             {
+                level.isLocked = false;
                 returnLevels.push(level);
             }
 
-            console.log(minWinsRequired, level.getNumberOfWinsByUser(jackpotUser));
-
-            if(minWinsRequired == 0 || level.getNumberOfWinsByUser(jackpotUser) >= minWinsRequired && typeof levels[nextOrder] != 'undefined')
+            if(typeof levels[nextOrder] != 'undefined')
             {
+                if(minWinsRequired == 0 || level.getNumberOfWinsByUser(jackpotUser) >= minWinsRequired)
+                {
+                    levels[nextOrder].isLocked = false;
+                }
+                else
+                {
+                    levels[nextOrder].isLocked = true;
+                }
                 returnLevels.push(levels[nextOrder]);
             }
         }
     }
-
-    console.log(returnLevels);
 
     if(returnLevels.length > 0)
     {
@@ -160,6 +165,7 @@ Container.prototype.getBattleLevelListByUser = function(jackpotUser)
 
                 result.push({
                     uniqueId                : thisLevel.uniqueId,
+                    isLocked                : thisLevel.isLocked,
                     order                   : metaData.order,
                     levelName               : metaData.levelName,
                     prizeType               : metaData.prizeType,
