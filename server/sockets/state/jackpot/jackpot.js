@@ -260,6 +260,12 @@ Jackpot.prototype.emitUpdatedAmountToJackpotAndItsBattles = function(amount)
     this.gamblingBattleContainer.updateNewJackpotAmount(amount);
 }
 
+Jackpot.prototype.emitJackpotFinishedToItsBattles = function()
+{
+    this.normalBattleContainer.emitMainJackpotFinished();
+    this.gamblingBattleContainer.emitMainJackpotFinished();
+}
+
 /**
  * Finish Jackpot Game
  *
@@ -278,13 +284,14 @@ Jackpot.prototype.finishGame = function(callback)
 
         callback.call(global, this, jackpotFullData);
     }
+    this.emitJackpotFinishedToItsBattles();
 }
 
 /**
  * Emit Jackpot newly updated data to every person in that room
  *
  * @return {*}
- */
+ */mit
 Jackpot.prototype.emitUpdatesToItsRoom = function()
 {
     var roomName = this.getRoomName();

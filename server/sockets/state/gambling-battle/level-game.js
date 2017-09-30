@@ -11,7 +11,8 @@ import {
     EVT_EMIT_GBL_GAME_FINISHED,
     EVT_EMIT_SHOW_GBL_PLACE_BID_BUTTON,
     EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN,
-    EVT_EMIT_UPDATE_GAMBLING_BATTLE_JACKPOT_AMOUNT
+    EVT_EMIT_UPDATE_GAMBLING_BATTLE_JACKPOT_AMOUNT,
+    EVT_EMIT_GAMBLING_BATTLE_MAIN_JACKPOT_FINISHED
 } from '../../events/battle/constants';
 
 const UserModel     = sqldb.User;
@@ -528,6 +529,11 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
 LevelGame.prototype.updateNewJackpotAmount = function(amount)
 {
     global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_UPDATE_GAMBLING_BATTLE_JACKPOT_AMOUNT, {amount: amount});
+}
+
+LevelGame.prototype.emitMainJackpotFinished = function(amount)
+{
+    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_GAMBLING_BATTLE_MAIN_JACKPOT_FINISHED, {status: true});
 }
 
 export default LevelGame;

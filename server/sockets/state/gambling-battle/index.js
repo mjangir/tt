@@ -197,5 +197,23 @@ Container.prototype.updateNewJackpotAmount = function(amount)
     }
 }
 
+Container.prototype.emitMainJackpotFinished = function()
+{
+    var levels = this.levels,
+        level;
+
+    if(Object.keys(levels).length > 0)
+    {
+        for(var k in levels)
+        {
+            if(levels.hasOwnProperty(k))
+            {
+                level = levels[k];
+                level.emitMainJackpotFinished();
+            }
+        }
+    }
+}
+
 // Export Jackpot
 export default Container;

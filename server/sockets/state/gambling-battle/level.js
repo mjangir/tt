@@ -147,4 +147,15 @@ Level.prototype.updateNewJackpotAmount = function(amount)
     }
 }
 
+Level.prototype.emitMainJackpotFinished = function()
+{
+	if(this.games.length > 0)
+    {
+        for(var k in this.games)
+        {
+            this.games[k].emitMainJackpotFinished()
+        }
+    }
+}
+
 export default Level;
