@@ -291,7 +291,7 @@ Jackpot.prototype.finishGame = function(callback)
  * Emit Jackpot newly updated data to every person in that room
  *
  * @return {*}
- */mit
+ */
 Jackpot.prototype.emitUpdatesToItsRoom = function()
 {
     var roomName = this.getRoomName();
