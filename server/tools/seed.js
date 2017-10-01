@@ -420,32 +420,32 @@ export default function()
 
         
       // Create Jackpots
-      Jackpot.bulkCreate([{
-        title: 'First Jackpot',
-        amount: 50000,
-        gameClockTime: 600,
-        doomsDayTime: 259200,
-        gameClockRemaining: 600,
-        doomsDayRemaining: 259200,
-        uniqueId: generateRandomString(20, 'aA'),
-        gameStatus: 'NOT_STARTED',
-        createdBy: null,
-        minPlayersRequired: 3
-      },
-      {
-        title: 'Second Jackpot',
-        amount: 30000,
-        gameClockTime: 120,
-        doomsDayTime: 1200,
-        gameClockRemaining: 120,
-        doomsDayRemaining: 1200,
-        uniqueId: generateRandomString(20, 'aA'),
-        gameStatus: 'NOT_STARTED',
-        createdBy: null,
-        minPlayersRequired: 4
-      }
-      ]).then(function(){
-          console.log("######### JACKPOTS CREATED ######");
-      });
+      // Jackpot.bulkCreate([{
+      //   title: 'First Jackpot',
+      //   amount: 50000,
+      //   gameClockTime: 600,
+      //   doomsDayTime: 259200,
+      //   gameClockRemaining: 600,
+      //   doomsDayRemaining: 259200,
+      //   uniqueId: generateRandomString(20, 'aA'),
+      //   gameStatus: 'NOT_STARTED',
+      //   createdBy: null,
+      //   minPlayersRequired: 3
+      // },
+      // {
+      //   title: 'Second Jackpot',
+      //   amount: 30000,
+      //   gameClockTime: 120,
+      //   doomsDayTime: 1200,
+      //   gameClockRemaining: 120,
+      //   doomsDayRemaining: 1200,
+      //   uniqueId: generateRandomString(20, 'aA'),
+      //   gameStatus: 'NOT_STARTED',
+      //   createdBy: null,
+      //   minPlayersRequired: 4
+      // }
+      // ]).then(function(){
+      //     console.log("######### JACKPOTS CREATED ######");
+      // });
     });
 }
