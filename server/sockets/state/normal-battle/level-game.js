@@ -12,7 +12,8 @@ import {
     EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON,
     EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN,
     EVT_EMIT_UPDATE_NORMAL_BATTLE_JACKPOT_AMOUNT,
-    EVT_EMIT_NORMAL_BATTLE_MAIN_JACKPOT_FINISHED
+    EVT_EMIT_NORMAL_BATTLE_MAIN_JACKPOT_FINISHED,
+    EVT_EMIT_UPDATE_HOME_JACKPOT_BATTLE_INFO
 } from '../../events/battle/constants';
 
 const UserModel     = sqldb.User;
@@ -491,6 +492,8 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
             {
                 lastBidWinner.jackpotUser.availableBids += prizeValue;
 
+                lastBidUser.jackpotUser.totalNormalBattleWins += 1;
+
                 // Update the available bid to socket for last bid winner
                 lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN, {
                     availableBids: lastBidWinner.jackpotUser.availableBids
@@ -501,6 +504,10 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
                 lastBidWinner.jackpotUser.availableBids     += parseInt((lastBidWinnerPercent/100 * prizeValue), 10);
                 longestBidWinner.jackpotUser.availableBids  += parseInt((longestBidWinnerPercent/100 * prizeValue), 10);
 
+                // Update battle wins
+                lastBidUser.jackpotUser.totalNormalBattleWins       += 1;
+                longestBidWinner.jackpotUser.totalNormalBattleWins  += 1;
+
                 // Update the available bid to socket for last bid winner
                 lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN, {
                     availableBids: lastBidWinner.jackpotUser.availableBids
@@ -509,6 +516,18 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
                 // Update the available bid to socket for last bid winner
                 longestBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN, {
                     availableBids: longestBidWinner.jackpotUser.availableBids
+                });
+
+                // Update battle info on home screen for last bid user
+                lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_HOME_JACKPOT_BATTLE_INFO, {
+                    battleWins: lastBidUser.jackpotUser.totalNormalBattleWins + lastBidUser.jackpotUser.totalGamblingBattleWins,
+                    battleStreak: 5
+                });
+
+                // Update battle info on home screen for longest bid user
+                longestBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_HOME_JACKPOT_BATTLE_INFO, {
+                    battleWins: longestBidWinner.jackpotUser.totalNormalBattleWins + longestBidWinner.jackpotUser.totalGamblingBattleWins,
+                    battleStreak: 5
                 });
             }
         }

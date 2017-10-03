@@ -17,15 +17,17 @@ function User(data)
         defAvailableBids = parseInt(global.globalSettings['jackpot_setting_default_bid_per_user_per_game'], 10);
     }
 
-	this.metaData 			= data;
-	this.gameStatus 		= 'JOINED';
-	this.isActive 			= true;
-	this.availableBids 		= defAvailableBids;
-	this.placedBids 		= [];
-	this.lastBid 			= null;
-	this.firstBidStartTime 	= null;
-	this.lastBidStartTime 	= null;
-	this.currentSocket 		= null;
+	this.metaData 				= data;
+	this.gameStatus 			= 'JOINED';
+	this.isActive 				= true;
+	this.availableBids 			= defAvailableBids;
+	this.placedBids 			= [];
+	this.lastBid 				= null;
+	this.firstBidStartTime 		= null;
+	this.lastBidStartTime 		= null;
+	this.currentSocket 			= null;
+	this.totalNormalBattleWins 	= 0;
+	this.totalGamblingBattleWins= 0;
 }
 
 /**

@@ -4,7 +4,7 @@ import sqldb from '../../../sqldb';
  * Constructor
  * @param {data}
  */
-function LevelGameUser(levelGame, jackpotUser)
+function LevelGameUser(levelGame, jackpotUser, socket)
 {
 	this.game 			= levelGame,
     this.jackpotUser   	= jackpotUser;
@@ -12,6 +12,7 @@ function LevelGameUser(levelGame, jackpotUser)
     this.gameStatus 	= 'JOINED';
     this.joinedOn   	= new Date();
     this.bids 			= [];
+    this.socket 		= socket;
     this.availableBids 	= this.game.level.metaData.defaultAvailableBids;
 }
 
