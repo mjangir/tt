@@ -492,11 +492,16 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
             {
                 lastBidWinner.jackpotUser.availableBids += prizeValue;
 
-                lastBidUser.jackpotUser.totalNormalBattleWins += 1;
+                lastBidWinner.jackpotUser.totalNormalBattleWins += 1;
 
                 // Update the available bid to socket for last bid winner
                 lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN, {
                     availableBids: lastBidWinner.jackpotUser.availableBids
+                });
+
+                lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_HOME_JACKPOT_BATTLE_INFO, {
+                    battleWins: lastBidWinner.jackpotUser.totalNormalBattleWins + lastBidWinner.jackpotUser.totalGamblingBattleWins,
+                    battleStreak: 5
                 });
             }
             else
@@ -505,7 +510,7 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
                 longestBidWinner.jackpotUser.availableBids  += parseInt((longestBidWinnerPercent/100 * prizeValue), 10);
 
                 // Update battle wins
-                lastBidUser.jackpotUser.totalNormalBattleWins       += 1;
+                lastBidWinner.jackpotUser.totalNormalBattleWins     += 1;
                 longestBidWinner.jackpotUser.totalNormalBattleWins  += 1;
 
                 // Update the available bid to socket for last bid winner
@@ -520,7 +525,7 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
 
                 // Update battle info on home screen for last bid user
                 lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_HOME_JACKPOT_BATTLE_INFO, {
-                    battleWins: lastBidUser.jackpotUser.totalNormalBattleWins + lastBidUser.jackpotUser.totalGamblingBattleWins,
+                    battleWins: lastBidWinner.jackpotUser.totalNormalBattleWins + lastBidWinner.jackpotUser.totalGamblingBattleWins,
                     battleStreak: 5
                 });
 
