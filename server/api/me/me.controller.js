@@ -4,8 +4,17 @@ import sqldb from '../../sqldb';
 import logger from '../../utils/logger';
 import {sequelizeErrorHandler} from '../../utils/LiveErrorHandler';
 import * as constants from '../../config/constants';
+import config from '../../config/environment';
+import url from 'url';
 
 let User = sqldb.User;
+
+const defaultAvatarUrl     = url.format({
+    protocol:   config.protocol,
+    hostname:   config.ip,
+    port:       config.port,
+    pathname:   'images/avatar.jpg',
+});
 
 /**
  * Get profile
@@ -29,6 +38,20 @@ const index = function(req, res)
   .then(function(user)
   {
     user = user.get({plain: true});
+
+    if(user.photo == null)
+    {
+      user.photo = defaultAvatarUrl;
+    }
+    else
+    {
+      user.photo = url.format({
+          protocol:   config.protocol,
+          hostname:   config.ip,
+          port:       config.port,
+          pathname:   'uploads/' + user.photo,
+      });
+    }
 
     return res.status(200).json({
       'status': 'success',
@@ -97,15 +120,20 @@ const avatar = function(req, res)
     {
       return function(entity)
       {
-        return entity.updateAttributes({image: filename})
+        return entity.updateAttributes({photo: filename})
           .then(function(updated)
           {
-            const image = updated.get({plain: true}).image;
+            const image = updated.get({plain: true}).photo;
             return res.status(200).json({
               'code': 200,
               'status': 'success',
-              'message': 'Profile picture successfully',
-              'image': image
+              'message': 'Profile picture updated successfully',
+              'image': url.format({
+                  protocol:   config.protocol,
+                  hostname:   config.ip,
+                  port:       config.port,
+                  pathname:   'uploads/' + image
+              })
             });
           });
       };

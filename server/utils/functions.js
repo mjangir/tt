@@ -22,7 +22,7 @@ export const userAvatarMulter = function()
     const storage = multer.diskStorage({
       destination: function (req, file, cb)
       {
-          cb(null, path.join(__dirname, '../uploads/users/' + req.user.user_id));
+          cb(null, path.join(__dirname, '../../client/uploads/'));
       },
       filename: function (req, file, cb)
       {
