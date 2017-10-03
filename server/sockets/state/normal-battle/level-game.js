@@ -494,6 +494,17 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
 
                 lastBidWinner.jackpotUser.totalNormalBattleWins += 1;
 
+                lastBidWinner.jackpotUser.normalBattleStreakArray.push('WINNER');
+
+                // Update Streak Array
+                for(var k in this.users)
+                {
+                    if(this.users[k] && this.users[k].jackpotUser.metaData.id != lastBidWinner.jackpotUser.metaData.id)
+                    {
+                        this.users[k].jackpotUser.normalBattleStreakArray.push('LOOSER');
+                    }
+                }
+
                 // Update the available bid to socket for last bid winner
                 lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN, {
                     availableBids: lastBidWinner.jackpotUser.availableBids
@@ -501,7 +512,7 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
 
                 lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_HOME_JACKPOT_BATTLE_INFO, {
                     battleWins: lastBidWinner.jackpotUser.totalNormalBattleWins + lastBidWinner.jackpotUser.totalGamblingBattleWins,
-                    battleStreak: 5
+                    battleStreak: lastBidWinner.jackpotUser.getNormalBattleStreak()
                 });
             }
             else
@@ -512,6 +523,19 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
                 // Update battle wins
                 lastBidWinner.jackpotUser.totalNormalBattleWins     += 1;
                 longestBidWinner.jackpotUser.totalNormalBattleWins  += 1;
+
+                lastBidWinner.jackpotUser.normalBattleStreakArray.push('WINNER');
+                longestBidWinner.jackpotUser.normalBattleStreakArray.push('WINNER');
+
+                for(var j in this.users)
+                {
+                    if(this.users[j] && 
+                        this.users[j].jackpotUser.metaData.id != lastBidWinner.jackpotUser.metaData.id && 
+                        this.users[j].jackpotUser.metaData.id != longestBidWinner.jackpotUser.metaData.id)
+                    {
+                        this.users[j].jackpotUser.normalBattleStreakArray.push('LOOSER');
+                    }
+                }
 
                 // Update the available bid to socket for last bid winner
                 lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN, {
@@ -526,13 +550,13 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
                 // Update battle info on home screen for last bid user
                 lastBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_HOME_JACKPOT_BATTLE_INFO, {
                     battleWins: lastBidWinner.jackpotUser.totalNormalBattleWins + lastBidWinner.jackpotUser.totalGamblingBattleWins,
-                    battleStreak: 5
+                    battleStreak: lastBidWinner.jackpotUser.getNormalBattleStreak()
                 });
 
                 // Update battle info on home screen for longest bid user
                 longestBidWinner.jackpotUser.currentSocket.emit(EVT_EMIT_UPDATE_HOME_JACKPOT_BATTLE_INFO, {
                     battleWins: longestBidWinner.jackpotUser.totalNormalBattleWins + longestBidWinner.jackpotUser.totalGamblingBattleWins,
-                    battleStreak: 5
+                    battleStreak: longestBidWinner.jackpotUser.getNormalBattleStreak()
                 });
             }
         }

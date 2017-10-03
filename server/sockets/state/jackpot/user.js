@@ -2,6 +2,7 @@
 
 import Bid from './bid';
 import moment from 'moment';
+import _ from 'lodash';
 
 /**
  * Constructor
@@ -17,17 +18,19 @@ function User(data)
         defAvailableBids = parseInt(global.globalSettings['jackpot_setting_default_bid_per_user_per_game'], 10);
     }
 
-	this.metaData 				= data;
-	this.gameStatus 			= 'JOINED';
-	this.isActive 				= true;
-	this.availableBids 			= defAvailableBids;
-	this.placedBids 			= [];
-	this.lastBid 				= null;
-	this.firstBidStartTime 		= null;
-	this.lastBidStartTime 		= null;
-	this.currentSocket 			= null;
-	this.totalNormalBattleWins 	= 0;
-	this.totalGamblingBattleWins= 0;
+	this.metaData 					= data;
+	this.gameStatus 				= 'JOINED';
+	this.isActive 					= true;
+	this.availableBids 				= defAvailableBids;
+	this.placedBids 				= [];
+	this.lastBid 					= null;
+	this.firstBidStartTime 			= null;
+	this.lastBidStartTime 			= null;
+	this.currentSocket 				= null;
+	this.totalNormalBattleWins 		= 0;
+	this.totalGamblingBattleWins 	= 0;
+	this.normalBattleStreakArray 	= [];
+	this.gamblingBattleStreakArray 	= [];
 }
 
 /**
@@ -155,6 +158,45 @@ User.prototype.getMyBids = function(raw)
 	}
 
 	return [];
+}
+
+User.prototype.getNormalBattleStreak = function()
+{
+	return this.getBattleStreak(this.normalBattleStreakArray);
+}
+
+User.prototype.getGamblingBattleStreak = function()
+{
+	return this.getBattleStreak(this.gamblingBattleStreakArray);
+}
+
+User.prototype.getBattleStreak = function(input)
+{
+	var output 		= [],
+		winnerData 	= [];
+
+	for (var i=0; i<input.length; i++)
+	{
+	    if (!output[output.length-1] || output[output.length-1].value != input[i])
+	    {
+	    	output.push({value: input[i], times: 1})
+	    }
+	    else
+	    {
+	    	output[output.length-1].times++;
+	    }
+	}
+
+	winnerData = _.filter(output, {value: 'WINNER'});
+
+	if(winnerData.length == 0)
+	{
+		return 0;
+	}
+
+	return _.max(winnerData.map(function(a){
+				return a.times;
+			}));
 }
 
 // Export User
