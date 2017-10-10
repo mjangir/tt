@@ -56,6 +56,22 @@ module.exports = function(sequelize, DataTypes)
       comment       : "Jackpot Dooms Day Clock Time (in seconds)"
     },
 
+    increaseAmountSeconds : {
+      field         : "increase_amount_seconds",
+      type          : DataTypes.INTEGER(11),
+      allowNull     : true,
+      defaultValue  : null,
+      comment       : "Increase Amount Seconds"
+    },
+
+    increaseAmount : {
+      field         : "increase_amount",
+      type          : DataTypes.INTEGER(11),
+      allowNull     : true,
+      defaultValue  : null,
+      comment       : "Increase Amount"
+    },
+
     gameClockRemaining : {
       field         : "game_clock_remaining",
       type          : DataTypes.INTEGER(11),

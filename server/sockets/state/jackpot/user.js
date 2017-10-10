@@ -160,17 +160,67 @@ User.prototype.getMyBids = function(raw)
 	return [];
 }
 
-User.prototype.getNormalBattleStreak = function()
+User.prototype.getNormalBattleCurrentStreak = function()
 {
-	return this.getBattleStreak(this.normalBattleStreakArray);
+	var input = this.normalBattleStreakArray;
+	return this.getBattleCurrentStreak(input);
 }
 
-User.prototype.getGamblingBattleStreak = function()
+User.prototype.getGamblingBattleCurrentStreak = function()
 {
-	return this.getBattleStreak(this.gamblingBattleStreakArray);
+	var input = this.gamblingBattleStreakArray;
+	return this.getBattleCurrentStreak(input);
 }
 
-User.prototype.getBattleStreak = function(input)
+User.prototype.getNormalBattleLongestStreak = function()
+{
+	var input = this.normalBattleStreakArray;
+	return this.getBattleLongestStreak(input);
+}
+
+User.prototype.getGamblingBattleLongestStreak = function()
+{
+	var input = this.gamblingBattleStreakArray;
+	return this.getBattleLongestStreak(input);
+}
+
+User.prototype.getBattleCurrentStreak = function(input)
+{
+	var winnerData 	= this.getBattleStreakData(input);
+
+	if(input.length == 0 || input[input.length - 1] == 'LOOSER')
+	{
+		return 0;
+	}
+
+	if(winnerData.length == 0)
+	{
+		return 0;
+	}
+
+	return winnerData[winnerData.length - 1]['times'];
+}
+
+User.prototype.getBattleLongestStreak = function(input)
+{
+	var winnerData 	= this.getBattleStreakData(input);
+
+	if(input.length == 0 || input[input.length - 1] == 'LOOSER')
+	{
+		return 0;
+	}
+
+	if(winnerData.length == 0)
+	{
+		return 0;
+	}
+
+	return _.max(winnerData.map(function(a){
+		return a.times;
+	}));
+}
+
+User.prototype.getBattleStreakData = function(input)
 {
 	var output 		= [],
 		winnerData 	= [];
@@ -189,14 +239,7 @@ User.prototype.getBattleStreak = function(input)
 
 	winnerData = _.filter(output, {value: 'WINNER'});
 
-	if(winnerData.length == 0)
-	{
-		return 0;
-	}
-
-	return _.max(winnerData.map(function(a){
-				return a.times;
-			}));
+	return winnerData;
 }
 
 // Export User
