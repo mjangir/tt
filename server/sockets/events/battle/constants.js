@@ -23,6 +23,7 @@ export const EVT_EMIT_UPDATE_NORMAL_BATTLE_JACKPOT_AMOUNT 		= 'update_normal_bat
 export const EVT_EMIT_NORMAL_BATTLE_MAIN_JACKPOT_FINISHED 		= 'normal_battle_main_jackpot_finished';
 
 export const EVT_EMIT_UPDATE_HOME_JACKPOT_BATTLE_INFO 			= 'update_home_jackpot_battle_info';
+export const EVT_EMIT_NORMAL_BATTLE_GAME_IS_ABOUT_TO_START      = 'normal_battle_game_about_to_start';
 
 // For Gambling
 export const EVT_CLIENT_JOIN_GAMBLING_BATTLE_LEVEL                = 'request_join_gambling_battle_level';

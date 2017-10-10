@@ -42,6 +42,14 @@ module.exports = function(sequelize, DataTypes)
       comment       : "Level Game Duration"
     },
 
+    incrementSeconds : {
+      field         : "increment_seconds",
+      type          : DataTypes.INTEGER(11),
+      allowNull     : false,
+      defaultValue  : 0,
+      comment       : "Level Game Increment Seconds"
+    },
+
     prizeType: {
       field         : "prize_type",
       type          : DataTypes.ENUM('BID','MONEY'),

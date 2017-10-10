@@ -132,7 +132,7 @@ export default function(socket)
     }
 
     // If this is really new user, add him/her to this jackpot room
-    if(typeof pickNewJackpot != 'undefined')
+    if(typeof pickNewJackpot != 'undefined' && pickNewJackpot !== false)
     {
         pickNewJackpot.addUser(userId, function(error, jackpotUser)
         {

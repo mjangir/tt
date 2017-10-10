@@ -41,6 +41,10 @@ JackpotState.prototype.init = function()
                 context.callback.call(global);
             }
         }
+        else
+        {
+            context.callback.call(global);
+        }
     }).catch(function(error)
     {
         return false;

@@ -19,7 +19,7 @@ function handlePlaceNewBid(data, socket)
         newBid;
 
     // If jackpot or user ID is not valid, throw error
-    if(!data.jackpotUniqueId || !data.userId || !global.globalJackpotSocketState.hasJackpot(data.jackpotUniqueId))
+    if(data && (!data.jackpotUniqueId || !data.userId || !global.globalJackpotSocketState.hasJackpot(data.jackpotUniqueId)))
     {
         socket.emit('place_bid_error', {
             error: "Invalid User or Jackpot ID"
@@ -33,7 +33,7 @@ function handlePlaceNewBid(data, socket)
     }
 
     // If this is first bid and jackpot is not started, start it
-    if(jackpotInstance.isNotStarted())
+    if(jackpotInstance && jackpotInstance.isNotStarted())
     {
         jackpotInstance.startGame();
     }

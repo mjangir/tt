@@ -13,7 +13,8 @@ import {
     EVT_EMIT_UPDATE_AVAILABLE_BID_AFTER_BATTLE_WIN,
     EVT_EMIT_UPDATE_NORMAL_BATTLE_JACKPOT_AMOUNT,
     EVT_EMIT_NORMAL_BATTLE_MAIN_JACKPOT_FINISHED,
-    EVT_EMIT_UPDATE_HOME_JACKPOT_BATTLE_INFO
+    EVT_EMIT_UPDATE_HOME_JACKPOT_BATTLE_INFO,
+    EVT_EMIT_NORMAL_BATTLE_GAME_IS_ABOUT_TO_START
 } from '../../events/battle/constants';
 
 const UserModel     = sqldb.User;
@@ -123,10 +124,34 @@ LevelGame.prototype.addUser = function(jackpotUser)
 
 LevelGame.prototype.startGame = function()
 {
-    this.status = 'STARTED';
+    var context = this,
+        time    = 10 * 1000,
+        i       = 1000,
+        countdn = time,
+        interval;
 
-    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_NORMAL_BATTLE_GAME_STARTED, {status: true});
-    global.jackpotSocketNamespace.in(this.getRoomName()).emit(EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON, {status: true});
+    interval = (function(i, time, context)
+    {
+        return setInterval(function()
+        {
+            if(i > time)
+            {
+                context.status = 'STARTED';
+                global.jackpotSocketNamespace.in(context.getRoomName()).emit(EVT_EMIT_NORMAL_BATTLE_GAME_STARTED, {status: true});
+                global.jackpotSocketNamespace.in(context.getRoomName()).emit(EVT_EMIT_SHOW_NBL_PLACE_BID_BUTTON, {status: true});
+                clearInterval(interval);
+            }
+            else
+            {
+                global.jackpotSocketNamespace.in(context.getRoomName()).emit(EVT_EMIT_NORMAL_BATTLE_GAME_IS_ABOUT_TO_START, {time: parseInt(countdn/1000, 10)});
+                countdn -= 1000;
+            }
+
+            i += 1000;
+
+        }, i);
+
+    }(i, time, context));
 }
 
 LevelGame.prototype.getAllUsers = function()
@@ -386,7 +411,7 @@ LevelGame.prototype.placeBid = function(levelGameUser, callback)
     levelGameUser.decreaseAvailableBids();
 
     // Increase Game Duration
-    this.duration += 10;
+    this.duration += this.level.metaData.incrementSeconds;
 
     if(this.duration >= this.level.metaData.duration)
     {
@@ -529,8 +554,8 @@ LevelGame.prototype.updateWinnerJackpotInstance = function()
 
                 for(var j in this.users)
                 {
-                    if(this.users[j] && 
-                        this.users[j].jackpotUser.metaData.id != lastBidWinner.jackpotUser.metaData.id && 
+                    if(this.users[j] &&
+                        this.users[j].jackpotUser.metaData.id != lastBidWinner.jackpotUser.metaData.id &&
                         this.users[j].jackpotUser.metaData.id != longestBidWinner.jackpotUser.metaData.id)
                     {
                         this.users[j].jackpotUser.normalBattleStreakArray.push('LOOSER');
