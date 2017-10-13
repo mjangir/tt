@@ -13,7 +13,7 @@ function User(data)
 {
 	var defAvailableBids = 10;
 
-	if(global.globalSettings['jackpot_setting_default_bid_per_user_per_game']) 
+	if(global.globalSettings['jackpot_setting_default_bid_per_user_per_game'])
     {
         defAvailableBids = parseInt(global.globalSettings['jackpot_setting_default_bid_per_user_per_game'], 10);
     }
@@ -158,6 +158,38 @@ User.prototype.getMyBids = function(raw)
 	}
 
 	return [];
+}
+
+User.prototype.getNormalBattleTotalWins = function()
+{
+	return this.normalBattleStreakArray.reduce(function(n, val)
+	{
+	    return n + (val === 'WINNER');
+	}, 0);
+}
+
+User.prototype.getGamblingBattleTotalWins = function()
+{
+	return this.gamblingBattleStreakArray.reduce(function(n, val)
+	{
+	    return n + (val === 'WINNER');
+	}, 0);
+}
+
+User.prototype.getNormalBattleTotalLosses = function()
+{
+	return this.normalBattleStreakArray.reduce(function(n, val)
+	{
+	    return n + (val === 'LOOSER');
+	}, 0);
+}
+
+User.prototype.getGamblingBattleTotalLosses = function()
+{
+	return this.gamblingBattleStreakArray.reduce(function(n, val)
+	{
+	    return n + (val === 'LOOSER');
+	}, 0);
 }
 
 User.prototype.getNormalBattleStreak = function()
