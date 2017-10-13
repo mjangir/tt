@@ -35,6 +35,7 @@ function Jackpot(data)
     this.lastBidUser  	             = null;
     this.normalBattleContainer       = new NormalBattleContainer(this);
     this.gamblingBattleContainer     = new GamblingBattleContainer(this);
+    this.lastSecondWhenAmountChanged = 0;
     this.setRoomName();
 }
 
@@ -201,35 +202,50 @@ Jackpot.prototype.updateStatusInDb = function(status)
 
 Jackpot.prototype.updateJackpotAmountOnParticularDuration = function()
 {
+    if(this.metaData.increaseAmountSeconds && this.metaData.increaseAmount)
+    {
+        var secondsPassed   = this.metaData.doomsDayTime - this.metaData.doomsDayRemaining,
+            sendingAmount;
+
+        if((this.lastSecondWhenAmountChanged + this.metaData.increaseAmountSeconds) == secondsPassed)
+        {
+            this.lastSecondWhenAmountChanged = secondsPassed;
+            this.metaData.amount    = this.metaData.amount + parseInt(this.metaData.increaseAmount, 10);
+            sendingAmount           = convertAmountToCommaString(this.metaData.amount);
+            this.emitUpdatedAmountToJackpotAndItsBattles(sendingAmount);
+            this.updateNewAmountToDb(this.metaData.amount);
+        }
+    }
+
     if(this.metaData.durationSetting)
     {
-        try
-        {
-            var setting         = JSON.parse(this.metaData.durationSetting),
-                data            = {},
-                secondsPassed   = this.metaData.doomsDayTime - this.metaData.doomsDayRemaining,
-                sendingAmount;
+        // try
+        // {
+        //     var setting         = JSON.parse(this.metaData.durationSetting),
+        //         data            = {},
+        //         secondsPassed   = this.metaData.doomsDayTime - this.metaData.doomsDayRemaining,
+        //         sendingAmount;
 
-            if(Array.isArray(setting) && setting.length > 0)
-            {
-                for(var k in setting)
-                {
-                    data[setting[k]['seconds']] = setting[k]['amount'];
-                }
+        //     if(Array.isArray(setting) && setting.length > 0)
+        //     {
+        //         for(var k in setting)
+        //         {
+        //             data[setting[k]['seconds']] = setting[k]['amount'];
+        //         }
 
-                if(secondsPassed > 0 && Object.keys(data).length > 0 && data.hasOwnProperty(secondsPassed))
-                {
-                    this.metaData.amount    = data[secondsPassed];
-                    sendingAmount           = convertAmountToCommaString(this.metaData.amount);
-                    this.emitUpdatedAmountToJackpotAndItsBattles(sendingAmount);
-                    this.updateNewAmountToDb(this.metaData.amount);
-                }
-            }
-        }
-        catch(error)
-        {
+        //         if(secondsPassed > 0 && Object.keys(data).length > 0 && data.hasOwnProperty(secondsPassed))
+        //         {
+        //             this.metaData.amount    = data[secondsPassed];
+        //             sendingAmount           = convertAmountToCommaString(this.metaData.amount);
+        //             this.emitUpdatedAmountToJackpotAndItsBattles(sendingAmount);
+        //             this.updateNewAmountToDb(this.metaData.amount);
+        //         }
+        //     }
+        // }
+        // catch(error)
+        // {
 
-        }
+        // }
     }
 }
 
@@ -764,8 +780,8 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
                 gamblingBattleWins          : user.getGamblingBattleTotalWins(),
                 normalBattleLooses          : user.getNormalBattleTotalLosses(),
                 gamblingBattleLooses        : user.getGamblingBattleTotalLosses(),
-                normalBattleLongestStreak   : '',
-                gamblingBattleLongestStreak : ''
+                normalBattleLongestStreak   : user.getNormalBattleLongestStreak(),
+                gamblingBattleLongestStreak : user.getGamblingBattleLongestStreak()
             };
 
             jackpotCore.JackpotGameUsers.push(jpUser);
