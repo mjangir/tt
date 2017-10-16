@@ -32,6 +32,48 @@ module.exports = function(sequelize, DataTypes)
       comment     : "Longest bid duration of this user"
     },
 
+    normalBattleWins : {
+      field       : "normal_battle_wins",
+      type        : DataTypes.INTEGER(11),
+      allowNull   : true,
+      comment     : ""
+    },
+
+    gamblingBattleWins : {
+      field       : "gambling_battle_wins",
+      type        : DataTypes.INTEGER(11),
+      allowNull   : true,
+      comment     : ""
+    },
+
+    normalBattleLooses : {
+      field       : "normal_battle_looses",
+      type        : DataTypes.INTEGER(11),
+      allowNull   : true,
+      comment     : ""
+    },
+
+    gamblingBattleLooses : {
+      field       : "gambling_battle_looses",
+      type        : DataTypes.INTEGER(11),
+      allowNull   : true,
+      comment     : ""
+    },
+
+    normalBattleLongestStreak : {
+      field       : "normal_battle_longest_streak",
+      type        : DataTypes.INTEGER(11),
+      allowNull   : true,
+      comment     : ""
+    },
+
+    gamblingBattleLongestStreak : {
+      field       : "gambling_battle_longest_streak",
+      type        : DataTypes.INTEGER(11),
+      allowNull   : true,
+      comment     : ""
+    },
+
     joinedOn : {
       field         : "joined_on",
       type          : DataTypes.DATE,

@@ -192,10 +192,10 @@ Jackpot.prototype.updateStatusInDb = function(status)
         entity.updateAttributes({gameStatus: status})
         .then(function(updated)
         {
-            
+
         }).catch(function(err)
         {
-            
+
         })
     });
 }
@@ -261,10 +261,10 @@ Jackpot.prototype.updateNewAmountToDb = function(amt)
         entity.updateAttributes({amount: amt})
         .then(function(updated)
         {
-            
+
         }).catch(function(err)
         {
-            
+
         })
     });
 }
@@ -770,12 +770,18 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
             }
 
             jpUser  = {
-                remainingAvailableBids  : user.availableBids,
-                totalNumberOfBids       : user.totalBids,
-                longestBidDuration      : user.longestBidDuration,
-                joinedOn                : user.firstBidStartTime,
-                userId                  : user.userId,
-                JackpotGameUserBids     : jpBids
+                remainingAvailableBids      : user.availableBids,
+                totalNumberOfBids           : user.totalBids,
+                longestBidDuration          : user.longestBidDuration,
+                joinedOn                    : user.firstBidStartTime,
+                userId                      : user.userId,
+                JackpotGameUserBids         : jpBids,
+                normalBattleWins            : user.getNormalBattleTotalWins(),
+                gamblingBattleWins          : user.getGamblingBattleTotalWins(),
+                normalBattleLooses          : user.getNormalBattleTotalLosses(),
+                gamblingBattleLooses        : user.getGamblingBattleTotalLosses(),
+                normalBattleLongestStreak   : user.getNormalBattleLongestStreak(),
+                gamblingBattleLongestStreak : user.getGamblingBattleLongestStreak()
             };
 
             jackpotCore.JackpotGameUsers.push(jpUser);
