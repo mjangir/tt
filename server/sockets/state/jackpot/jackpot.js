@@ -745,7 +745,8 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
         winnerData  = data.winnerData,
         jpWinners   = [],
         context     = this,
-        insertData;
+        insertData,
+        jpUserInstance;
 
     jackpotCore.JackpotGameUsers = [];
 
@@ -769,6 +770,9 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
                 });
             }
 
+
+            jpUserInstance = this.getUser(user.userId);
+
             jpUser  = {
                 remainingAvailableBids      : user.availableBids,
                 totalNumberOfBids           : user.totalBids,
@@ -776,12 +780,12 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
                 joinedOn                    : user.firstBidStartTime,
                 userId                      : user.userId,
                 JackpotGameUserBids         : jpBids,
-                normalBattleWins            : user.getNormalBattleTotalWins(),
-                gamblingBattleWins          : user.getGamblingBattleTotalWins(),
-                normalBattleLooses          : user.getNormalBattleTotalLosses(),
-                gamblingBattleLooses        : user.getGamblingBattleTotalLosses(),
-                normalBattleLongestStreak   : user.getNormalBattleLongestStreak(),
-                gamblingBattleLongestStreak : user.getGamblingBattleLongestStreak()
+                normalBattleWins            : jpUserInstance.getNormalBattleTotalWins(),
+                gamblingBattleWins          : jpUserInstance.getGamblingBattleTotalWins(),
+                normalBattleLooses          : jpUserInstance.getNormalBattleTotalLosses(),
+                gamblingBattleLooses        : jpUserInstance.getGamblingBattleTotalLosses(),
+                normalBattleLongestStreak   : jpUserInstance.getNormalBattleLongestStreak(),
+                gamblingBattleLongestStreak : jpUserInstance.getGamblingBattleLongestStreak()
             };
 
             jackpotCore.JackpotGameUsers.push(jpUser);
