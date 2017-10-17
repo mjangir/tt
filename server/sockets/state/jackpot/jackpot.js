@@ -703,8 +703,8 @@ Jackpot.prototype.getJackpotCompleteData = function()
         longestBidDuration      : this.getLongestBidDuration(false),
         longestBidWinnerUserId  : winnerData.longestBidUser.id,
         lastBidWinnerUserId     : winnerData.lastBidUser.id,
-        startedOn               : moment(this.metaData.startedOn).format("YYYY-MM-DD HH:mm:ss"),
-        finishedOn              : moment(this.metaData.finishedOn).format("YYYY-MM-DD HH:mm:ss")
+        startedOn               : this.metaData.startedOn ? moment(this.metaData.startedOn).format("YYYY-MM-DD HH:mm:ss") : new Date(),
+        finishedOn              : this.metaData.finishedOn ? moment(this.metaData.finishedOn).format("YYYY-MM-DD HH:mm:ss") : new Date()
     }
 
     return {
@@ -867,9 +867,12 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
             {
                 callback.call(global, err);
             })
+        }).catch(function(err){
+            
         });
     }).catch(function(err)
     {
+        console.log(err);
         callback.call(global, err);
     });
 }
