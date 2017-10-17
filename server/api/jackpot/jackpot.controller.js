@@ -4,10 +4,11 @@ import _ from 'lodash';
 import sqldb from '../../sqldb';
 import logger from '../../utils/logger';
 import {sequelizeErrorHandler} from '../../utils/LiveErrorHandler';
-import {generateRandomString} from '../../utils/functions';
+import {generateRandomString, findClientsSocket} from '../../utils/functions';
 import * as constants from '../../config/constants';
 import NormalBattleContainer from '../../sockets/state/normal-battle';
 import GamblingBattleContainer from '../../sockets/state/gambling-battle';
+import createConnectionAgain from '../../sockets/events/jackpot/connect';
 
 var Jackpot = sqldb.Jackpot;
 
@@ -314,6 +315,16 @@ exports.insertInSocket = function(req, res)
           jackpot             = entity.get({plain: true});
 
         globalJackpotState.addJackpot(jackpot);
+
+        var connected = findClientsSocket(null, global.jackpotSocketNamespace);
+
+        if(connected.length)
+        {
+            for(var k in connected)
+            {
+                createConnectionAgain(connected[k]);
+            }
+        }
 
         res.status(200).json({
           status: 'success',

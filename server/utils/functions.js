@@ -69,3 +69,29 @@ export const convertAmountToCommaString = function(amt)
 {
   return Number(amt).toLocaleString();
 }
+
+export const findClientsSocket = function(roomId, namespace)
+{
+    var response = [], ns = namespace;
+
+    if (namespace)
+    {
+        for (var id in namespace.connected)
+        {
+            if(roomId)
+            {
+                var index = namespace.connected[id].rooms.indexOf(roomId);
+                
+                if(index !== -1)
+                {
+                    response.push(namespace.connected[id]);
+                }
+            }
+            else
+            {
+                response.push(namespace.connected[id]);
+            }
+        }
+    }
+    return response;
+}

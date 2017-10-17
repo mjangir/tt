@@ -724,10 +724,17 @@ Jackpot.prototype.getJackpotWinner = function()
     var longestBid      = this.getLongestBid(),
         lastBidUser     = this.lastBidUser;
 
-    return {
-        longestBidUser: longestBid.user,
-        lastBidUser:    lastBidUser.getMetaData(),
-        bothAreSame:    longestBid.user.id == lastBidUser.getMetaData().id
+    if(longestBid)
+    {
+        return {
+            longestBidUser: longestBid.user,
+            lastBidUser:    lastBidUser.getMetaData(),
+            bothAreSame:    longestBid.user.id == lastBidUser.getMetaData().id
+        }
+    }
+    else
+    {
+        return false
     }
 }
 
