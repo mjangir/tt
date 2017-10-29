@@ -392,6 +392,10 @@ function createDefaultSettings()
   {
     key   : 'normal_battle_levels_json',
     value : '[{"battle_type":"NORMAL","level_name":"Level 1","duration":"300","prize_type":"BID","prize_value":"10","default_bids":"10","last_bid_winner_percent":"50","longest_bid_winner_percent":"50", "increment_seconds":"5","min_players_to_start":"5","min_wins_to_unlock_next":"5"},{"battle_type":"NORMAL","level_name":"Level 2","duration":"300","prize_type":"BID","prize_value":"10","default_bids":"10","last_bid_winner_percent":"50","longest_bid_winner_percent":"50", "increment_seconds":"5","min_players_to_start":"5","min_wins_to_unlock_next":"3"}]'
+  },
+  {
+    key : 'privacy_text',
+    value : 'No text yet'
   }
   ]);
 }
