@@ -20,6 +20,7 @@ const JackpotGameUserModel      = sqldb.JackpotGameUser;
 const JackpotGameUserBidModel   = sqldb.JackpotGameUserBid;
 const JackpotGameWinnerModel    = sqldb.JackpotGameWinner;
 const SettingsModel             = sqldb.Settings;
+const UserWinningMoneyStatement = sqldb.UserWinningMoneyStatement;
 
 /**
  * Jackpot Constructor
@@ -859,6 +860,19 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
         })
         .then(function(entity)
         {
+            // Update winning money statement
+            if(jpWinners.length > 0)
+            {
+                for(var t in jpWinners)
+                {
+                    UserWinningMoneyStatement.create({
+                        userId: jpWinners[t].userId,
+                        credit: jpWinners[t].winningAmount,
+                        relatedTo: 'JACKPOT'
+                    });
+                }
+            }
+
             entity.updateAttributes({gameStatus: 'FINISHED'})
             .then(function(updated)
             {
