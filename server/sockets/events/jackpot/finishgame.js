@@ -22,7 +22,5 @@ export default function(jackpot, fullData)
     });
 
     // Notify all users that game has been finished
-    global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_GAME_FINISHED, {
-        data: fullData
-    });
+    global.jackpotSocketNamespace.in(roomName).emit(EVT_EMIT_GAME_FINISHED, fullData.winnerData);
 }

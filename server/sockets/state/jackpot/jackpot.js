@@ -20,6 +20,7 @@ const JackpotGameUserModel      = sqldb.JackpotGameUser;
 const JackpotGameUserBidModel   = sqldb.JackpotGameUserBid;
 const JackpotGameWinnerModel    = sqldb.JackpotGameWinner;
 const SettingsModel             = sqldb.Settings;
+const UserWinningMoneyStatement = sqldb.UserWinningMoneyStatement;
 
 /**
  * Jackpot Constructor
@@ -703,8 +704,8 @@ Jackpot.prototype.getJackpotCompleteData = function()
         longestBidDuration      : this.getLongestBidDuration(false),
         longestBidWinnerUserId  : winnerData.longestBidUser.id,
         lastBidWinnerUserId     : winnerData.lastBidUser.id,
-        startedOn               : moment(this.metaData.startedOn).format("YYYY-MM-DD HH:mm:ss"),
-        finishedOn              : moment(this.metaData.finishedOn).format("YYYY-MM-DD HH:mm:ss")
+        startedOn               : this.metaData.startedOn ? moment(this.metaData.startedOn).format("YYYY-MM-DD HH:mm:ss") : new Date(),
+        finishedOn              : this.metaData.finishedOn ? moment(this.metaData.finishedOn).format("YYYY-MM-DD HH:mm:ss") : new Date()
     }
 
     return {
@@ -724,10 +725,17 @@ Jackpot.prototype.getJackpotWinner = function()
     var longestBid      = this.getLongestBid(),
         lastBidUser     = this.lastBidUser;
 
-    return {
-        longestBidUser: longestBid.user,
-        lastBidUser:    lastBidUser.getMetaData(),
-        bothAreSame:    longestBid.user.id == lastBidUser.getMetaData().id
+    if(longestBid)
+    {
+        return {
+            longestBidUser: longestBid.user,
+            lastBidUser:    lastBidUser.getMetaData(),
+            bothAreSame:    longestBid.user.id == lastBidUser.getMetaData().id
+        }
+    }
+    else
+    {
+        return false
     }
 }
 
@@ -745,7 +753,8 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
         winnerData  = data.winnerData,
         jpWinners   = [],
         context     = this,
-        insertData;
+        insertData,
+        jpUserInstance;
 
     jackpotCore.JackpotGameUsers = [];
 
@@ -769,6 +778,9 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
                 });
             }
 
+
+            jpUserInstance = this.getUser(user.userId);
+
             jpUser  = {
                 remainingAvailableBids      : user.availableBids,
                 totalNumberOfBids           : user.totalBids,
@@ -776,12 +788,12 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
                 joinedOn                    : user.firstBidStartTime,
                 userId                      : user.userId,
                 JackpotGameUserBids         : jpBids,
-                normalBattleWins            : user.getNormalBattleTotalWins(),
-                gamblingBattleWins          : user.getGamblingBattleTotalWins(),
-                normalBattleLooses          : user.getNormalBattleTotalLosses(),
-                gamblingBattleLooses        : user.getGamblingBattleTotalLosses(),
-                normalBattleLongestStreak   : user.getNormalBattleLongestStreak(),
-                gamblingBattleLongestStreak : user.getGamblingBattleLongestStreak()
+                normalBattleWins            : jpUserInstance.getNormalBattleTotalWins(),
+                gamblingBattleWins          : jpUserInstance.getGamblingBattleTotalWins(),
+                normalBattleLooses          : jpUserInstance.getNormalBattleTotalLosses(),
+                gamblingBattleLooses        : jpUserInstance.getGamblingBattleTotalLosses(),
+                normalBattleLongestStreak   : jpUserInstance.getNormalBattleLongestStreak(),
+                gamblingBattleLongestStreak : jpUserInstance.getGamblingBattleLongestStreak()
             };
 
             jackpotCore.JackpotGameUsers.push(jpUser);
@@ -848,6 +860,19 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
         })
         .then(function(entity)
         {
+            // Update winning money statement
+            if(jpWinners.length > 0)
+            {
+                for(var t in jpWinners)
+                {
+                    UserWinningMoneyStatement.create({
+                        userId: jpWinners[t].userId,
+                        credit: jpWinners[t].winningAmount,
+                        relatedTo: 'JACKPOT'
+                    });
+                }
+            }
+
             entity.updateAttributes({gameStatus: 'FINISHED'})
             .then(function(updated)
             {
@@ -856,9 +881,12 @@ Jackpot.prototype.saveDataIntoDB = function(data, callback)
             {
                 callback.call(global, err);
             })
+        }).catch(function(err){
+            
         });
     }).catch(function(err)
     {
+        console.log(err);
         callback.call(global, err);
     });
 }

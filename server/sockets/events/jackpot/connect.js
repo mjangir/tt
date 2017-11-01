@@ -4,7 +4,7 @@ import onPlaceBid from './placebid';
 import onDisconnect from './disconnect';
 import onQuitGame from './quitgame';
 import handlePostConnectBattleEvents from '../battle/connect';
-import {convertAmountToCommaString} from '../../../utils/functions';
+import {convertAmountToCommaString, findClientsSocket} from '../../../utils/functions';
 
 import {
     EVT_ON_CLIENT_CONNECTION,
@@ -83,6 +83,8 @@ export default function(socket)
     // If user is already joined to a jackpot
     if(userJackpot)
     {
+        pickNewJackpot = userJackpot;
+
         // Get that JackpotUser instance
         jackpotUser = userJackpot.getUser(userId);
 
@@ -172,7 +174,7 @@ export default function(socket)
         });
     }
     else
-    {
+    {    
         socket.emit(EVT_EMIT_NO_JACKPOT_TO_PLAY, {error: "No Jackpot Found To Play. Please try again after some time"});
     }
 

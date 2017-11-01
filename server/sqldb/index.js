@@ -38,6 +38,7 @@ db.JackpotGame          = db.sequelize.import('../api/jackpot/jackpot-game.model
 db.JackpotGameUser      = db.sequelize.import('../api/jackpot/jackpot-game-user.model');
 db.JackpotGameUserBid   = db.sequelize.import('../api/jackpot/jackpot-game-user-bid.model');
 db.JackpotGameWinner    = db.sequelize.import('../api/jackpot/jackpot-game-winner.model');
+db.UserWinningMoneyStatement = db.sequelize.import('../api/user/user-winning-money-statement.model');
 
 
 // Model Associations for Sequelize
